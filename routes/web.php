@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/landing', [LandingController::class, 'index']);
+Route::get('/login.blade.php', [LoginController::class, 'login']);
+// Route::get('/dashboard.blade.php/{paket}/{harga}', function($paket, $harga){
+//     return view('dashboard', compact('paket', 'harga'));
+// });
+Route::get('/dashboard.blade.php/{paket}/{harga}', [DashboardController::class, 'tampilkan']);
+// [DashboardController::class, 'dashboard']);
