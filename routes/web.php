@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AlbumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,4 @@ Route::get('/login.blade.php', [LoginController::class, 'login']);
 // });
 Route::get('/dashboard.blade.php/{paket}/{harga}', [DashboardController::class, 'tampilkan']);
 // [DashboardController::class, 'dashboard']);
+Route::get('album_view/{id}/{nama}', [AlbumController::class, 'tampilkan']);
