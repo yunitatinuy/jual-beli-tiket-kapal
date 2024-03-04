@@ -3,18 +3,16 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nama</th>
-                <th>Grup</th>
+                <th>Menu</th>
                 <th>Harga</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($data as $datalbumku)
+            @foreach($data as $dataorderku)
             <tr>
-                <td>{{$datalbumku['id']}}</td>
-                <td>{{$datalbumku['nama']}}</td>
-                <td>{{$datalbumku['grup']}}</td>
-                <td>{{$datalbumku['harga']}}</td>
+                <td>{{$dataorderku['id']}}</td>
+                <td>{{$dataorderku['menu']}}</td>
+                <td>{{$dataorderku['harga']}}</td>
             </tr>
             @endforeach
         </tbody>
