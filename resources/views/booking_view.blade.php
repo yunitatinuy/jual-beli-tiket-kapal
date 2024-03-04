@@ -1,0 +1,22 @@
+<html>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama</th>
+                <th>Waktu</th>
+                <th>Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($data as $bookingku)
+            <tr>
+                <td>{{$bookingku['id']}}</td>
+                <td>{{$bookingku['nama']}}</td>
+                <td>{{$bookingku['waktu']}}</td>
+                <td>{{$bookingku['harga']}}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</html>

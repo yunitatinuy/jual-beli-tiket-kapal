@@ -5,6 +5,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,4 @@ Route::get('/login.blade.php', [LoginController::class, 'login']);
 Route::get('/dashboard.blade.php/{paket}/{harga}', [DashboardController::class, 'tampilkan']);
 // [DashboardController::class, 'dashboard']);
 Route::get('album_view/{id}/{nama}', [AlbumController::class, 'tampilkan']);
+Route::get('/booking_view', [BookingController::class, 'tampilkan']);
