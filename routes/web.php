@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListBarangController;
 use App\Http\Controllers\LandingController;
-use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,16 +17,61 @@ use App\Http\Controllers\BookingController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
+//Route::get('/welcome', function () {
+//return view('welcome');
+//});
+
+//Route::get('/user/{id}', function ($id) {
+//return 'User dengan ID ' . $id;
+//});
+
+//Route::prefix('admin')->group(function () {
+//    Route::get('/dashboard', function () {
+//        return 'Admin Dashboard';
+//    });
+
+//    Route::get('/users', function () {
+//        return 'Admin Users';
+//    });
+//});
+
+// Route::get('/listbarang/{id}/{nama}', function($id, $nama){
+//    return view('list_barang', compact('id', 'nama'));
 // });
 
+//Route::get('/listbarang/{id}/{nama}', [ListBarangController::class, 'tampilkan']);
+
 Route::get('/landing', [LandingController::class, 'index']);
-Route::get('/login.blade.php', [LoginController::class, 'login']);
-// Route::get('/dashboard.blade.php/{paket}/{harga}', function($paket, $harga){
-//     return view('dashboard', compact('paket', 'harga'));
-// });
-Route::get('/dashboard.blade.php/{paket}/{harga}', [DashboardController::class, 'tampilkan']);
-// [DashboardController::class, 'dashboard']);
-Route::get('order_view/{id}/{menu}', [OrderController::class, 'tampilkan']);
-Route::get('/booking_view', [BookingController::class, 'tampilkan']);
+
+Route::get('/dashboard', function () {
+    return view('/admin/dashboard');
+});
+
+Route::get('/kapal', function () {
+    return view('/admin/kapal');
+});
+
+Route::get('/pelabuhan', function () {
+    return view('/admin/pelabuhan');
+});
+
+Route::get('/rute', function () {
+    return view('/admin/rute');
+});
+
+Route::get('/tiket', function () {
+    return view('/admin/tiket');
+});
+
+Route::get('/pengguna', function () {
+    return view('/admin/pengguna');
+});
+
+Route::get('/pesanan', function () {
+    return view('/admin/pesanan');
+});
+
+Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
+
+//Route::get('/', [HomeController::class, 'index']);
+Route::get('/contact', [HomeController::class, 'contact']);
