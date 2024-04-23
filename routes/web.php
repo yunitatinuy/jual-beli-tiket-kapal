@@ -45,32 +45,52 @@ use App\Http\Controllers\LoginController;
 
 Route::get('/landing', [LandingController::class, 'index']);
 
-Route::get('/dashboard', function () {
+Route::get('/admin/dashboard', function () {
     return view('/admin/dashboard');
 });
 
-Route::get('/kapal', function () {
+Route::get('/admin/kapal', function () {
     return view('/admin/kapal');
 });
 
-Route::get('/pelabuhan', function () {
+Route::get('/admin/pelabuhan', function () {
     return view('/admin/pelabuhan');
 });
 
-Route::get('/rute', function () {
+Route::get('/admin/rute', function () {
     return view('/admin/rute');
 });
 
-Route::get('/tiket', function () {
+Route::get('/admin/tiket', function () {
     return view('/admin/tiket');
 });
 
-Route::get('/pengguna', function () {
+Route::get('/admin/pengguna', function () {
     return view('/admin/pengguna');
 });
 
-Route::get('/pesanan', function () {
+Route::get('/admin/pesanan', function () {
     return view('/admin/pesanan');
+});
+
+Route::get('/admin/tambahkapal', function () {
+    return view('/admin/formulir/tambahkapal');
+});
+
+Route::get('/admin/tambahrute', function () {
+    return view('/admin/formulir/tambahrute');
+});
+
+Route::get('/admin/tambahtiket', function () {
+    return view('/admin/formulir/tambahtiket');
+});
+
+Route::get('/admin/tambahpelabuhan', function () {
+    return view('/admin/formulir/tambahpelabuhan');
+});
+
+Route::get('/admin/tambahpengguna', function () {
+    return view('/admin/formulir/tambahpengguna');
 });
 
 Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
