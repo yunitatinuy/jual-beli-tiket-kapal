@@ -8,6 +8,9 @@ class LoginController extends Controller
 {
     public function login()
     {
-        return view('login');
+        return view('/pengguna/login',[
+            'title' => 'login',
+            'active' => 'login'
+        ]);
     }
 }

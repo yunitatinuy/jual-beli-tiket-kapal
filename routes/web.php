@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListBarangController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RegistrasiController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,3 +77,10 @@ Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
 
 //Route::get('/', [HomeController::class, 'index']);
 Route::get('/contact', [HomeController::class, 'contact']);
+
+// pengguna
+Route::get('/login', [LoginController::class, 'login']);
+Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
+Route::get('/dashboard_pengguna', function () {
+    return view('/pengguna/dashboard');
+});
