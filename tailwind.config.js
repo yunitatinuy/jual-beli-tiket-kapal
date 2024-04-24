@@ -10,7 +10,8 @@ export default {
       fontFamily:{
         marko:['Marko One, serif;'],
         inria:['Inria Serif'],
-        inter:['inter']
+        inter:['inter'],
+        jsMath:['jsMath-cmr10']
       },
       backgroundImage:{
         'bground': "url('/public/img/bground.jpg')",

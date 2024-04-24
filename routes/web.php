@@ -93,6 +93,14 @@ Route::get('/admin/tambahpengguna', function () {
     return view('/admin/formulir/tambahpengguna');
 });
 
+Route::get('/sekalipergi', function () {
+    return view('/pengguna/sekalipergi');
+});
+
+Route::get('/pergipulang', function () {
+    return view('/pengguna/pergipulang');
+});
+
 Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
 
 //Route::get('/', [HomeController::class, 'index']);
