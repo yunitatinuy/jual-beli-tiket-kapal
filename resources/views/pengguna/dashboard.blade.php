@@ -56,10 +56,10 @@
 
   <!-- container -->
   <div class="container booking ">
-    <div class="container justify-content-center bg-gradient-to-tr from-sky-700 to-slate-100" style="max-width: 1300px; width: 100%; height:280px; background-color:#c2c1c1; border-radius:30px;">
+    <div class="container justify-content-center bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]" style="max-width: 1300px; width: 100%; height:280px; background-color:#c2c1c1; border-radius:30px;">
       <div class="flex flex-row space-x-5 mx-4 pt-2">
-        <button onclick="tampilkanTampilan(1)" class="hover:bg-slate-300 active:bg-slate-300 focus:outline-none focus:ring focus:ring-slate-300 hover:rounded-xl p-1 px-2">Sekali Pergi</button>
-        <button onclick="tampilkanTampilan(2)" class="hover:bg-slate-300 active:bg-slate-300 focus:outline-none focus:ring focus:ring-slate-300 hover:rounded-xl p-1 px-2">Pulang Pergi</button>
+        <button onclick="tampilkanTampilan(1)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Sekali Pergi</button>
+        <button onclick="tampilkanTampilan(2)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Pulang Pergi</button>
       </div>
         <div class="row ms-2 " style="background-color:;">
           <div class="row">
@@ -71,7 +71,7 @@
 
         <!-- tampilan1 -->
         <div id="tampilan1" class="tampilan">
-        <div class="row" style="background-color:; ">
+        <div class="row">
           <div class="col-lg-1 col-md-2 col-sm-2 ms-4">
             <label class="control-label" id="from-title-label-Ferry">Dari :</label>
             <div id="divPax_Ferry" class="form-group">
@@ -265,7 +265,7 @@
         <!-- tampilan2 end -->
     </div><br>
     <div class="flex justify-end pr-28">
-      <a href="#" class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-sky-300 rounded-lg hover:bg-sky-300 hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300 ">
+      <a href="/login" class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300 ">
         Cari Ferry
         <img src="/img/cari.png" alt="" class="w-4 ms-2">
       </a>
@@ -273,13 +273,6 @@
   </div>
 
   <!-- /.container -->
-
-
-  <!-- FOOTER -->
-  <footer class="container">
-    <p class="float-end"><a href="#">Back to top</a></p>
-    <p>&copy; 2017–2024 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-  </footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>

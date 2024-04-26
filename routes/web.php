@@ -107,11 +107,14 @@ Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
 Route::get('/contact', [HomeController::class, 'contact']);
 
 // pengguna
+// pengguna
 Route::get('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'authenticate']);
+
 Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
-Route::get('/dashboard_pengguna', function () {
-    return view('/pengguna/dashboard');
-});
+Route::post('/registrasi', [RegistrasiController::class, 'store']);
+
+Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
 
 //test kapal
 Route::get('/admin/kapal', [KapalController::class, 'kapal']);
