@@ -7,7 +7,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\KapalController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,9 +49,9 @@ Route::get('/admin/dashboard', function () {
     return view('/admin/dashboard');
 });
 
-Route::get('/admin/kapal', function () {
-    return view('/admin/kapal');
-});
+//Route::get('/admin/kapal', function () {
+//    return view('/admin/kapal');
+//});
 
 Route::get('/admin/pelabuhan', function () {
     return view('/admin/pelabuhan');
@@ -112,3 +112,8 @@ Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
 Route::get('/dashboard_pengguna', function () {
     return view('/pengguna/dashboard');
 });
+
+//test kapal
+Route::get('/admin/kapal', [KapalController::class, 'kapal']);
+Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
+Route::post('/tambah', [KapalController::class, 'simpan']);

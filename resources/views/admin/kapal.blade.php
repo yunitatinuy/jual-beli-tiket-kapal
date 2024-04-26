@@ -16,7 +16,7 @@
             <!-- Tabel dari database nanti nya -->
 
             <div class="mt-7">
-                <a href="/admin/tambahkapal" class="flex items-center p-2 text-gray-900 border-2 rounded-lg bg-slate-100 hover:bg-sky-500 hover:text-white transition duration-700 group">
+                <a href="{{ route('tambah')}}" class="flex items-center p-2 text-gray-900 border-2 rounded-lg bg-slate-100 hover:bg-sky-500 hover:text-white transition duration-700 group">
                     <img src="/img/icons/tambahdata.png" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" fill="currentColor">
                     <span class="flex-1 ms-3 whitespace-nowrap">Tambah Data</span>
                 </a>
