@@ -4,6 +4,7 @@ export default {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.html",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     extend: {
@@ -29,5 +30,6 @@ export default {
       },
     },
   },
-  plugins: [require("tw-elements/plugin.cjs")],
+  plugins: [require("tw-elements/plugin.cjs"),
+  require('flowbite/plugin')],
 }

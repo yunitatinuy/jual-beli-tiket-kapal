@@ -15,4 +15,18 @@ class RegistrasiController extends Controller
             'active' => 'register'
         ]);
     }
+
+    public function store(Request $request) 
+    {
+        $validateData = $request->validate([
+            'name'=>'required|max:255',
+            'email'=>'required|email:dns|unique:users',
+            'password'=>'required|min:5|max:255'
+        ]);
+        
+        User::create($validateData);
+
+        $request->session()->flash('succes','Registrasion succesfull');
+        return redirect('/login');
+    }
 }

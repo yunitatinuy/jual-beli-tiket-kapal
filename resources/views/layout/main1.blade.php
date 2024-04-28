@@ -44,15 +44,13 @@
 </style>
 </head>
 
-<body class="bg-gradient-to-t from-[#D3487A] to-[#DEC3B4]">
+<body class="bg-gradient-to-b from-[#D3487A] to-[#DEC3B4]">
 
-    @include('partials.navbar')
 
-    <div class="container mt-44 ">
+    <div class="container">
       @yield('container')
     </div>
 
-    @include('partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
