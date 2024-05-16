@@ -43,7 +43,10 @@ use App\Http\Controllers\KapalController;
 
 //Route::get('/listbarang/{id}/{nama}', [ListBarangController::class, 'tampilkan']);
 
-Route::get('/landing', [LandingController::class, 'index']);
+Route::get('/', function () {
+    return view('landing');
+});
+
 
 Route::get('/admin/dashboard', function () {
     return view('/admin/dashboard');
@@ -116,7 +119,14 @@ Route::post('/registrasi', [RegistrasiController::class, 'store']);
 
 Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
 
+Route::get('/profil', function () {
+    return view('/pengguna/profil');
+});
+
 //test kapal
 Route::get('/admin/kapal', [KapalController::class, 'kapal']);
 Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
-Route::post('/tambah', [KapalController::class, 'simpan']);
+Route::post('admin/tambahkapal', [KapalController::class, 'simpan']);
+Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
+Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
+Route::post('/edit/{id}', [ProductController::class, 'update']);
