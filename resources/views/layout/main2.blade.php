@@ -44,14 +44,14 @@
 </style>
 </head>
 
-<body class="w-screen h-screen bg-gradient-to-b from-[#D3487A] to-[#DEC3B4]">
+<body class="bg-bground1 bg-cover bg-no-repeat w-full h-full">
 
 @include('partials.navbar')
-    <div class="container pt-32">
+    <div class="container">
       @yield('container')
     </div>
 
-
+    @include('partials.landfoot')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
     </script>
