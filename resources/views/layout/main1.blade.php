@@ -44,7 +44,7 @@
 </style>
 </head>
 
-<body class="bg-gradient-to-b from-[#D3487A] to-[#DEC3B4]">
+<body class="bg-bground1 bg-cover bg-no-repeat w-full h-full">
 
 
     <div class="container">

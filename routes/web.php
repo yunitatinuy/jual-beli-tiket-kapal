@@ -6,6 +6,8 @@ use App\Http\Controllers\ListBarangController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegistrasiController;
+use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KapalController;
 /*
@@ -96,6 +98,27 @@ Route::get('/admin/tambahpengguna', function () {
     return view('/admin/formulir/tambahpengguna');
 });
 
+Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
+
+//Route::get('/', [HomeController::class, 'index']);
+Route::get('/contact', [HomeController::class, 'contact']);
+
+
+// pengguna---------
+Route::get('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'authenticate']);
+
+Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
+Route::post('/registrasi', [RegistrasiController::class, 'store']);
+
+Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
+Route::get('/informasi', [InformasiController::class, 'informasi']);
+Route::get('/pembayaran', [PembayaranController::class, 'pembayaran']);
+
+Route::get('/profil', function () {
+    return view('/pengguna/profil');
+});
+
 Route::get('/sekalipergi', function () {
     return view('/pengguna/sekalipergi');
 });
@@ -104,23 +127,8 @@ Route::get('/pergipulang', function () {
     return view('/pengguna/pergipulang');
 });
 
-Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
-
-//Route::get('/', [HomeController::class, 'index']);
-Route::get('/contact', [HomeController::class, 'contact']);
-
-// pengguna
-// pengguna
-Route::get('/login', [LoginController::class, 'login']);
-Route::post('/login', [LoginController::class, 'authenticate']);
-
-Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
-Route::post('/registrasi', [RegistrasiController::class, 'store']);
-
-Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
-
-Route::get('/profil', function () {
-    return view('/pengguna/profil');
+Route::get('/pesantiket', function () {
+    return view('/pengguna/pesantiket');
 });
 
 //test kapal

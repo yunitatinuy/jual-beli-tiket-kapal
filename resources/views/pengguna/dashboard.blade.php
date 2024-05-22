@@ -3,7 +3,7 @@
 @section('container')
 <main>
     <!-- carousel -->
-<div class="container justify-center max-w-screen-xl w-full">
+<div class="container justify-center max-w-screen-xl w-auto">
     <div id="myCarousel" class="carousel slide mb-14" data-bs-ride="carousel">
             <div class="carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -56,8 +56,8 @@
 
   <!-- container -->
   <div class="container booking ">
-    <div class="container justify-content-center bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]" style="max-width: 1300px; width: 100%; height:280px; background-color:#c2c1c1; border-radius:30px;">
-      <div class="flex flex-row space-x-5 mx-4 pt-2">
+    <div class="container justify-content-center bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4] p-3 w-auto" style=" background-color:#c2c1c1; border-radius:30px;">
+      <div class="flex flex-row space-x-5 mx-4">
         <button onclick="tampilkanTampilan(1)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Sekali Pergi</button>
         <button onclick="tampilkanTampilan(2)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Pulang Pergi</button>
       </div>

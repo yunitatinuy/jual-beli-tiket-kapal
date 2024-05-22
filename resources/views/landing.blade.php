@@ -1,4 +1,4 @@
-@extends('layout.main2')
+@extends('layout.main')
 
 @section('container')
 <main>
@@ -7,27 +7,26 @@
         <span class="text-3xl font-marko uppercase">Anang Ferry</span>
     </div>
     <div>
-    <table class="flex justify-center font-jsMath font-bold">
-        <tbody>
-            <tr>
-                <td rowspan="10" class="pe-4"><img src="/img/logo.png" alt="logo" width="110"></td>
-                <td>Wujudkan</td>
-            </tr>
-            <tr>
-                <td>Perjalanan</td>
-            </tr>
-            <tr>
-                <td>Anda</td>
-            </tr>
-            <tr>
-                <td>Bersama</td>
-            </tr>
-            <tr>
-                <td>Kami</td>
-            </tr>
-        </thead>
-    </table>
-    <br>
+        <table class="flex justify-center font-jsMath font-bold">
+            <tbody>
+                <tr>
+                    <td rowspan="10" class="pe-4"><img src="/img/logo.png" alt="logo" width="110"></td>
+                    <td>Wujudkan</td>
+                </tr>
+                <tr>
+                    <td>Perjalanan</td>
+                </tr>
+                <tr>
+                    <td>Anda</td>
+                </tr>
+                <tr>
+                    <td>Bersama</td>
+                </tr>
+                <tr>
+                    <td>Kami</td>
+                </tr>
+            </thead>
+        </table>
     </div>
 
     <div class="flex justify-center">

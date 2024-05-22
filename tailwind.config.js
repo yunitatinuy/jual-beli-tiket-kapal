@@ -16,6 +16,7 @@ export default {
       },
       backgroundImage:{
         'bground': "url('/public/img/bground.jpg')",
+        'bground1':"url('/public/img/feryy.jpg')",
         'logo': "url('/public/img/logo.jpg')"
       },
       animation: {
