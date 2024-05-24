@@ -131,6 +131,10 @@ Route::get('/pesantiket', function () {
     return view('/pengguna/pesantiket');
 });
 
+Route::get('/pesantiket2', function () {
+    return view('/pengguna/pesantiket2orang');
+});
+
 //test kapal
 Route::get('/admin/kapal', [KapalController::class, 'kapal']);
 Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
