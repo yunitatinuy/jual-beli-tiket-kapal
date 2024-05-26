@@ -20,13 +20,12 @@
         <span></span>Kami</span>
         </div>
     </div>
-    <div class="flex justify-center mt-2">
-        <a href="/dashboard_pengguna" class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300 ">
+    <div class="flex justify-center mt-3">
+        <a href="/dashboard_pengguna" class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-[#1d1d1d] bg-[#f9b488] rounded-lg hover:bg-[#1d1d1d] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none hover:text-[#fec7a5]">
         Cari Tiket
         <img src="/img/cari.png" alt="" class="w-4 ms-2">
         </a>
     </div>
-
 </div>
 </main>
 @endsection

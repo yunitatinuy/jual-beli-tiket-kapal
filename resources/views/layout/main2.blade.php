@@ -32,6 +32,7 @@
 
     <title> Jual Beli Tiket Kapal </title>
     <style>
+      
   .tampilan {
     display: none;
   }
@@ -44,17 +45,119 @@
 </style>
 </head>
 
-<body class="bg-bground1 bg-cover bg-no-repeat w-full h-full">
+<body class="bg-bground1 bg-cover w-full h-full bg-fixed">
 
 @include('partials.navbar')
     <div class="container">
       @yield('container')
     </div>
 
+    <div class="bg-[#fec7a5] p-5">
+  <div class="text-xl font-marko uppercase flex justify-center mb-10"><span>Rute Populer</span></div>
+  <!-- div 3 rute populer -->
+    <div class="flex flex-row">
+
+  <!-- div baris 1 rute populer -->
+  <div>
+  <div class="pl-28">
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    </div>
+    </div>
+
+    <!-- div baris 2 rute populer -->
+    <div class="px-44">
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    </div>
+
+    <!-- div baris 3 rute populer -->
+    <div class="pl-2">
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    <div class="flex flex-row">
+    <img class="w-6" src="/img/icons/dot.png"><p class="font-jsMath">Batam Center ke Harbourfront</p>
+    </div>
+    </div>
+    </div>
+</div>
+
     @include('partials.landfoot')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
     </script>
-</body>
 
+</body>
 </html>

@@ -4,7 +4,7 @@
 <main>
 
     <!-- loc -->
-    <div class="flex flex-wrap justify-between ">
+    <div class="flex flex-wrap justify-between">
     <div class="flex flex-auto justify-start mx-5 mt-10">
         <img src="/img/icons/harbor.png" class="w-7 h-5 ms-2 pr-2">
         <span href="#" class="text-white  px-2 text-sm font-medium bg-neutral-400 rounded-sm">Batam</span>

@@ -18,6 +18,7 @@
         <span href="#" class="text-white  px-2 text-sm font-medium bg-neutral-400 rounded-sm">30/03/2024</span>
     </div>
     </div><br>
+    
 <!-- container -->
 <div class="container booking ">
     <div class="container justify-content-center pt-3 pb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
