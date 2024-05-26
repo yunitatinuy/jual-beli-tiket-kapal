@@ -39,7 +39,8 @@
                     <form action="#">
                         <div class="main-user-info">
                             <div class="user-input-box">
-                                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
+                                <h1 class="font-bold text-l mt-6">DETAIL PENUMPANG 1</h1>
+                                <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
                                     <div class="sm:col-span-3">
                                         <div class="mt-2">
                                             <input type="text" name="Nama Lengkap" id="Nama Lengkap"
@@ -79,11 +80,54 @@
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                     </div>
+                                </div><br>
 
+                                <h1 class="font-bold text-l">DETAIL PENUMPANG 2</h1>
+                                <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            <input type="text" name="Nama Lengkap" id="Nama Lengkap"
+                                                autocomplete="given-name" placeholder="Nama Lengkap"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            <input type="text" name="Jenis Kelamin" id="Jenis Kelamin"
+                                                autocomplete="family-name" placeholder="Jenis Kelamin"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            <input type="text" name="Telepon" id="Telepon" autocomplete="given-name"
+                                                placeholder="Telepon"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            <input type="text" name="Alamat" id="Alamat" autocomplete="family-name"
+                                                placeholder="Alamat"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <div class="mt-2">
+                                            <input type="text" name="Email" id="Email" autocomplete="given-name"
+                                                placeholder="Email"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div class="flex justify-end mx-5 ">
                                     <div href="/login"
-                                        class="inline-flex my-2 w-auto h-auto font-sans px-5 py-3 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                        class="inline-flex w-auto h-auto font-sans px-5 py-3 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
                                         <a class="mx-3">Rp 540.000</a>
                                         <a class="mx-3">PESAN</a>
                                     </div>
