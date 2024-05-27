@@ -1,10 +1,10 @@
 @extends('layout.main')
 
 @section('container')
-<main>
+<main class ="my-8">
     <!-- carousel -->
-<div class="container justify-center max-w-screen-xl w-auto">
-    <div id="myCarousel" class="carousel slide mb-14" data-bs-ride="carousel">
+<div class="container justify-center max-w-screen-xl w-4/5">
+    <div id="myCarousel" class="carousel slide mb-14 bg-cover" data-bs-ride="carousel">
             <div class="carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -12,7 +12,7 @@
             </div>  
         <div class="carousel-inner h-[500px] rounded-3xl">
             <div class="carousel-item active">
-                <img src="img/1.webp" alt="" class="w-full">
+                <img src="img/1.webp" alt="" class="w-full bg-cover">
                 <div class="container">
                     <div class="carousel-caption text-start">
                         <h1>HAI</h1>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="img/2.webp" alt="" class="w-full">
+                <img src="img/2.webp" alt="" class="w-full bg-cover">
                 <div class="container">
                     <div class="carousel-caption">
                     <h1>HAI</h1>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="img/3.jpg" alt="" class="w-full">
+                <img src="img/3.jpg" alt="" class="w-full bg-cover">
                 <div class="container">
                     <div class="carousel-caption text-end">
                     <h1>HAI</h1>
@@ -42,11 +42,11 @@
                 </div>
             </div>
         </div>
-        <button class="carousel-control-prev rounded-3xl" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <button class="carousel-control-prev rounded-3xl hover:bg-transparent" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next rounded-3xl" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <button class="carousel-control-next rounded-3xl hover:bg-transparent" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
         </button>
@@ -56,22 +56,15 @@
 
   <!-- container -->
   <div class="container booking ">
-    <div class="container justify-content-center bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4] p-3 w-auto" style=" background-color:#c2c1c1; border-radius:30px;">
+    <div class="container justify-content-center p-3 w-4/5" style="border-radius:30px;">
       <div class="flex flex-row space-x-5 mx-4">
         <button onclick="tampilkanTampilan(1)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Sekali Pergi</button>
         <button onclick="tampilkanTampilan(2)" class="hover:bg-[#d97398] active:bg-[#d97398] focus:outline-none focus:ring focus:ring-[#d97398] hover:rounded-xl p-1 px-2">Pulang Pergi</button>
       </div>
-        <div class="row ms-2 " style="background-color:;">
-          <div class="row">
-            <div class="col-sm-12">
-              
-            </div>
-          </div>
-        </div><br>
 
         <!-- tampilan1 -->
         <div id="tampilan1" class="tampilan">
-        <div class="row">
+        <div class="flex flex-row my-2">
           <div class="col-lg-1 col-md-2 col-sm-2 ms-4">
             <label class="control-label" id="from-title-label-Ferry">Dari :</label>
             <div id="divPax_Ferry" class="form-group">
@@ -129,7 +122,7 @@
           </div>
         </div><br>
 
-        <div class="row" style=";background-color:; ">
+        <div class="flex flex-row ">
           <div class="col-lg-1 col-md-2 col-sm-2 ms-4">
             <label class="control-label" id="from-title-label-Ferry">Tanggal Berangkat :</label>
             <div id="divPax_Ferry" class="form-group">
@@ -163,7 +156,7 @@
 
         <!-- tampilan2 -->
         <div id="tampilan2" class="tampilan">
-        <div class="row" style="background-color:; ">
+        <div class="flex flex-row">
           <div class="col-lg-1 col-md-2 col-sm-2 ms-4">
             <label class="control-label" id="from-title-label-Ferry">Dari :</label>
             <div id="divPax_Ferry" class="form-group">
@@ -264,7 +257,7 @@
         </div>
         <!-- tampilan2 end -->
     </div><br>
-    <div class="flex justify-end pr-28">
+    <div class="flex justify-end">
       <a href="/login" class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300 ">
         Cari Ferry
         <img src="/img/cari.png" alt="" class="w-4 ms-2">

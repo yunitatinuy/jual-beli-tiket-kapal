@@ -10,6 +10,7 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KapalController;
+use App\Http\Controllers\TransaksiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -114,6 +115,7 @@ Route::post('/registrasi', [RegistrasiController::class, 'store']);
 Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
 Route::get('/informasi', [InformasiController::class, 'informasi']);
 Route::get('/pembayaran', [PembayaranController::class, 'pembayaran']);
+Route::get('/transaksi', [TransaksiController::class, 'transaksi']);
 
 Route::get('/profil', function () {
     return view('/pengguna/profil');
