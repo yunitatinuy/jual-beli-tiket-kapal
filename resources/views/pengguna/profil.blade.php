@@ -3,8 +3,25 @@
 @section('container')
 
 <!-- CONTENT -->
-
-<div class="max-w-2xl mx-auto w-full bg-white p-6 border rounded-lg shadow-lg">
+<div class="flex ">
+    <div class="my-8 bg-slate-600 h-1/3 w-auto rounded-lg flex-none">
+        <div class="m-2">
+            <div class="items-center inline-flex">Profil
+                <img src="/img/icons/user.png" alt="" class="w-4 h-4 mx-2">
+            </div>
+        </div>
+        <div class="m-2">
+            <div class="items-center inline-flex">Pengaturan
+                <img src="/img/icons/setting.png" alt="" class="w-4 h-4 mx-2">
+            </div>
+        </div>
+        <div class="m-2">
+            <div class="items-center inline-flex">Keluar
+                <img src="/img/icons/keluar.png" alt="" class="w-4 h-4 mx-2">
+            </div>
+        </div>
+    </div>
+<div class="max-w-2xl mx-auto w-full bg-slate-600 flex-auto p-6 rounded-lg shadow-xl my-8">
             <div class="pb-4">
             <span class="font-inter font-semibold text-xl ">Detail Pengguna</span>
             </div>
@@ -19,7 +36,7 @@
                         <div class="text-sm text-gray-600">Firjatullah Anang Setiawan</div>
                     </div>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <button class="bg-[#fcc09b] text-white px-4 py-2 rounded-lg hover:bg-[#ac836a]">
                     Edit
                 </button>
             </div>
@@ -30,7 +47,7 @@
                         <div class="text-sm text-gray-600">firjatullahanang@gmail.com</div>
                     </div>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <button class="bg-[#fcc09b] text-white px-4 py-2 rounded-lg hover:bg-[#ac836a]">
                     Edit
                 </button>
             </div>
@@ -41,7 +58,7 @@
                         <div class="text-sm text-gray-600">0812456789008</div>
                     </div>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <button class="bg-[#fcc09b] text-white px-4 py-2 rounded-lg hover:bg-[#ac836a]">
                     Edit
                 </button>
             </div>
@@ -52,7 +69,7 @@
                         <div class="text-sm text-gray-600">*************</div>
                     </div>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <button class="bg-[#fcc09b] text-white px-4 py-2 rounded-lg hover:bg-[#ac836a]">
                     Edit
                 </button>
             </div>
@@ -63,11 +80,11 @@
                         <div class="text-sm text-gray-600"></div>
                     </div>
                 </div>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <button class="bg-[#fcc09b] text-white px-4 py-2 rounded-lg hover:bg-[#ac836a]">
                     Edit
                 </button>
             </div>
         </div>
     </div>
-    
+    </div>  
 @endsection
