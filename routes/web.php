@@ -9,8 +9,9 @@ use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\KapalController;
 use App\Http\Controllers\TransaksiController;
+use App\Livewire\Kapal;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -138,9 +139,11 @@ Route::get('/pesantiket2', function () {
 });
 
 //test kapal
-Route::get('/admin/kapal', [KapalController::class, 'kapal']);
-Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
-Route::post('admin/tambahkapal', [KapalController::class, 'simpan']);
-Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
-Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
-Route::post('/edit/{id}', [ProductController::class, 'update']);
+
+Route::get('/admin/kapal', Kapal::class);
+// Route::get('/admin/kapal', [KapalController::class, 'kapal']);
+// Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
+// Route::post('admin/tambahkapal', [KapalController::class, 'simpan']);
+// Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
+// Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
+// Route::post('/edit/{id}', [ProductController::class, 'update']);

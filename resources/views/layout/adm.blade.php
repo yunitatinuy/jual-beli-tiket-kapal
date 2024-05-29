@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <livewire:styles />
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     <title>Dashboard Admin</title>
@@ -21,12 +22,14 @@
 </head>
 
 <body>
+    <div class="mx-auto max-w-full">
     @include('partials.admnav')
 
     @include('partials.sidebar')
 
     @yield('container')
 
+</div>
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
 </body>
 

@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Kapal extends Model
 {
     use HasFactory;
-    protected $table = 'kapals';
-    protected $filltable = [
+    protected $table = 'kapal'; // sesuaikan dengan nama tabel Anda
+    protected $primaryKey = 'idkapal'; // sesuaikan dengan nama primary key Anda
+    protected $fillable = [
         'namakapal',
         'kelas',
         'jumlahkursi',
     ];
+    public $timestamps = false;
 }
