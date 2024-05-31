@@ -46,11 +46,7 @@
 
 <body class="bg-bground1 bg-cover bg-no-repeat w-full h-full">
 
-
-    <div class="container">
-      @yield('container')
-    </div>
-
+    @yield('container')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">

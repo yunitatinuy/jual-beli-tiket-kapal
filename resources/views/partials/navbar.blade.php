@@ -1,7 +1,7 @@
 <nav class="bg-[#fcc09b] shadow-xl ">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
         <a href="/dashboard_pengguna" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="img/logo3.png" alt="logo" width="50" class="float-left flex flex-col object-cover">
+            <img src="img/logo3.png" alt="logo" class="float-left flex flex-col object-cover w-16">
             <span class="self-center text-3xl font-marko whitespace-nowrap uppercase hover:text-slate-50">Anang Ferry</span>
         </a>
 
