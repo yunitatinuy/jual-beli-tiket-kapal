@@ -1,16 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ListBarangController;
-use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\LoginController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\KapalController;
 use App\Http\Controllers\TransaksiController;
+=======
+use App\Http\Controllers\TransaksiController;
+use App\Livewire\Kapal;
+// use App\Http\Controllers\KapalController;
+use App\Http\Controllers\MailerController;
+>>>>>>> Stashed changes
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -99,10 +103,17 @@ Route::get('/admin/tambahpengguna', function () {
     return view('/admin/formulir/tambahpengguna');
 });
 
+<<<<<<< Updated upstream
 Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
 
 //Route::get('/', [HomeController::class, 'index']);
 Route::get('/contact', [HomeController::class, 'contact']);
+=======
+// Route::get('/list_barang', [ListBarangController::class, 'tampilkan']);
+
+//Route::get('/', [HomeController::class, 'index']);
+// Route::get('/contact', [HomeController::class, 'contact']);
+>>>>>>> Stashed changes
 
 
 // pengguna---------
