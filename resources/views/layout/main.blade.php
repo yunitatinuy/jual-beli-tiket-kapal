@@ -38,16 +38,21 @@
     .tampilan.active {
       display: block;
     }
+
+    button:hover,
+    button.active:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 
 <body>
-  <div class="bg-bground1 bg-scroll bg-cover bg-no-repeat w-full h-full">
-  @include('partials.navbar')
+  <div class="bg-bground1 bg-cover w-full h-full bg-fixed">
+    @include('partials.navbar')
 
-  @yield('container')
+    @yield('container')
 
-  @include('partials.footer')
+    @include('partials.footer')
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
   </script>
