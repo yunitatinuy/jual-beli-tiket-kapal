@@ -34,7 +34,7 @@
 
         @yield('container')
 
-        @livewire('kapal')
+        @livewire('pelabuhan')
 
     </div>
     @livewireScripts

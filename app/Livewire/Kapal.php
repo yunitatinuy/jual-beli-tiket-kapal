@@ -5,10 +5,12 @@ namespace App\Livewire;
 use App\Models\Kapal as ModelsKapal;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Kapal extends Component
 {
     use WithPagination;
+    use LivewireAlert;
 
     public $namakapal;
     public $kelas;
@@ -36,7 +38,7 @@ class Kapal extends Component
         $validated = $this->validate($rules, $pesan);
         ModelsKapal::create($validated);
         $this->reset('namakapal', 'kelas', 'jumlahkursi');
-        session()->flash('success', 'Data berhasil ditambahkan');
+        $this->alert('success', 'Data Berhasil Ditambahkan!');
         $this->resetPage();
     }
 
@@ -45,9 +47,9 @@ class Kapal extends Component
         $kapal = ModelsKapal::find($idkapal);
         if ($kapal) {
             $kapal->delete();
-            session()->flash('message', 'Data berhasil dihapus');
+            $this->alert('success', 'Data Berhasil Dihapus!');
         } else {
-            session()->flash('error', 'Data tidak ditemukan');
+            $this->alert('error', 'Data Tidak Ditemukan!');
         }
     }
 
@@ -81,7 +83,7 @@ class Kapal extends Component
 
         $data = ModelsKapal::find($this->kapalID);
         $data->update($validated);
-        session()->flash('message', 'Data berhasil diperbarui');
+        $this->alert('success', 'Data Berhasil Diupdate!');
 
         $this->clear();
     }
