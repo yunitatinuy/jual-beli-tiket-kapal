@@ -5,18 +5,16 @@
 
     <!-- loc -->
     <div class="flex flex-wrap justify-between my-20">
-        <div class="flex flex-auto justify-start  mb-4 mx-14">
-            <img src="/img/icons/harbor.png" class="w-7 h-5 ms-2 pr-2">
-            <span href="#" class="text-white  px-2 text-sm font-medium bg-neutral-400 rounded-sm">Batam</span>
-            <span href="#" class="px-2 text-sm font-medium"><button
-                    class="hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300"><img
-                        src="/img/icons/swap.png" class="w-4"></span></button>
+        <div class="container w-full flex mb-4">
+            <img src="/img/icons/harbor.png" class="w-7 h-5 ms-16 pr-2">
+            <span href="#" class="text-white px-2 text-sm font-medium bg-neutral-400 rounded-sm">Batam</span>
+            <span href="#" class="px-2 text-sm font-medium"><img src="/img/icons/swap.png" class="w-4"></span>
             <span href="#" class="text-white  px-2 text-sm font-medium bg-neutral-400 rounded-sm">Karimun</span>
         </div>
         <!-- container -->
-        <div class="container booking ">
+        <div class="container booking  ">
             <div class="container justify-content-center pt-3 pb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
-                style="max-width: 1300px; width: 100%; background-color:#c2c1c1; border-radius:30px;">
+                style="width: 95%; background-color:#c2c1c1; border-radius:30px;">
                 <div class="container flex flex-nowrap space-x-12 mx-6 pt-2 items-center">
                     <img src="/img/icons/ships.png" class="w-12">
                     <div class="">
