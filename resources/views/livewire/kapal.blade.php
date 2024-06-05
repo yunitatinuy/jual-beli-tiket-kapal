@@ -9,7 +9,7 @@
     <div class="container font-inter">
         <div class="flex flex-wrap">
             @if (session()->has('success'))
-            <div class="p-4 text-sm text-green-800 rounded-lg bg-green-200 mt-3">
+            <div class="p-4 text-sm text-green-800 rounded-lg bg-green-200 mt-3 animate-fade">
                 {{session('success')}}
             </div>
             @endif
@@ -23,19 +23,27 @@
         </div>
         @endif
 
+        <!-- message berhasil hapus dan update -->
+        <div class="flex flex-wrap font-inter">
+            @if (session()->has('message'))
+            <div class="p-4 text-sm text-green-800 rounded-lg bg-green-200 animate-fade">
+                {{ session('message') }}
+            </div>
+            @endif
+        </div>
+
         <!-- Formulir -->
 
         <div class="container block max-w-2xl overflow-hidden bg-white border border-gray-200 rounded-lg shadow mt-5">
             <form wire:submit="store">
-                <div class="bg-sky-200 p-6">
+                <div class="bg-[#ff9853be] p-6">
                     <span class="font-inter font-semibold text-xl ">Formulir Rute Perjalanan</span>
                 </div>
 
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <input type="text" name="namakapal" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="namakapal" />
+                        <input type="text" name="namakapal" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="namakapal" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nama Kapal</label>
-
                         @error('namakapal')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror
@@ -44,7 +52,7 @@
 
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <input type="text" name="kelas" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="kelas" />
+                        <input type="text" name="kelas" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="kelas" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Kelas</label>
                         @error('kelas')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
@@ -53,7 +61,7 @@
                 </div>
                 <div class="flex p-6 mb-3">
                     <div class="relative z-0 w-full group">
-                        <input type="text" name="jumlahkursi" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="jumlahkursi" />
+                        <input type="text" name="jumlahkursi" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="jumlahkursi" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Jumlah Kursi</label>
                         @error('jumlahkursi')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
@@ -62,14 +70,17 @@
                 </div>
 
         </div><br>
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap gap-3">
             @if ($updateData == false)
-            <button class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none group" type="submit" value="submit" wire:click.prevent="store">
+            <button class="inline-block rounded bg-sky-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-sky-600 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-sky-600 active:shadow-primary-2 motion-reduce:transition-none group" type="submit" value="submit" wire:click.prevent="store()">
                 <span class="flex-1 whitespace-nowrap">Tambah Data</span>
             </button>
             @else
-            <button class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none group" type="submit" value="submit" wire:click="update">
+            <button class="inline-block rounded bg-sky-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-sky-600 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-sky-600 active:shadow-primary-2 motion-reduce:transition-none group" name="submit" wire:click.prevent="update()">
                 <span class="flex-1 whitespace-nowrap">Update</span>
+            </button>
+            <button class="inline-block rounded bg-red-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-red-600 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-red-600 active:shadow-primary-2 motion-reduce:transition-none group" name="submit" wire:click.prevent="cancel()">
+                <span class="flex-1 whitespace-nowrap">Batal</span>
             </button>
             @endif
         </div>
@@ -77,23 +88,9 @@
     </form>
 </div>
 
-{{-- Search --}}
+
 <div class="flex flex-wrap justify-between ">
-    <div class="mt-2">
-        {{ $dataKapal->links() }}
-    </div>
-
-
-    <!-- message berhasil hapus dan update -->
-    <div class="flex flex-wrap font-inter">
-        @if (session()->has('message'))
-        <div class="p-2 mb-4 text-sm text-green-800 rounded-lg bg-green-200">
-            {{ session('message') }}
-        </div>
-        @endif
-    </div>
-
-
+    {{-- Search --}}
     <form class="flex flex-wrap max-w-xs ">
         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
         <div class="relative">
@@ -105,17 +102,22 @@
             <input wire:model.live.debounce.500ms="search" type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search..." required />
         </div>
     </form>
+
+    {{-- Pagination --}}
+    <div class="mt-2">
+        {{ $dataKapal->links('vendor.pagination.tailwind') }}
+    </div>
 </div>
 
 <!-- Tabel dari database nanti nya -->
-<div class="flex flex-col font-inter">
+<div class="flex flex-col font-inter mb-10">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
             <div class="overflow-hidden">
                 <table class="min-w-full text-center text-sm text-surface">
-                    <thead class="bg-sky-200 border-b border-neutral-200 font-medium">
+                    <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
                         <tr>
-                            <th scope="col" class="px-6 py-4">No</th>
+                            <th scope="col" class="px-6 py-4">#</th>
                             <th scope="col" class="px-6 py-4">Kode Kapal</th>
                             <th scope="col" class="px-6 py-4">Nama Kapal</th>
                             <th scope="col" class="px-6 py-4">Kelas</th>
@@ -160,6 +162,6 @@
         </div>
     </div>
 </div>
-<div class="mt-2 mb-14">
-    {{ $dataKapal->links() }}
-</div>
+{{-- <div class="mt-2 mb-14">
+    {{ $dataKapal->links(data: ['scrollTo' => false]) }}
+</div> --}}

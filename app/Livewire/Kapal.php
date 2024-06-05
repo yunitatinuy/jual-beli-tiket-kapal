@@ -83,8 +83,12 @@ class Kapal extends Component
         $data->update($validated);
         session()->flash('message', 'Data berhasil diperbarui');
 
-        $this->reset('namakapal', 'kelas', 'jumlahkursi');
+        $this->clear();
+    }
 
+
+    public function cancel()
+    {
         $this->clear();
     }
 
@@ -97,6 +101,7 @@ class Kapal extends Component
         $this->updateData = false;
         $this->kapalID = '';
         $this->resetValidation();
+        $this->resetPage();
     }
 
     public function render()
