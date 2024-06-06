@@ -3,41 +3,26 @@
 @section('container')
 
 <!-- CONTENT -->
-<div class="flex my-12">
-    <div class="flex flex-col rounded-r-2xl left-0 w-40 bg-white h-full text-gray-600 border-slate-800 z-10 sidebar">
-        <div class="overflow-y-auto overflow-x-hidden flex flex-col justify-between flex-grow">
-            <ul class="flex flex-col py-3 space-y-1">
-                <li>
-                    <a href="#" class="relative flex flex-row items-center h-11 text-gray-600 border-l-4 border-transparent">
-                        <!-- Icono Home de Font Awesome -->
-                        <span class="inline-flex justify-center items-center ml-4">
-                            <i class="fas fa-home"></i>
-                        </span>
-                        <span class="ml-2 text-sm tracking-wide truncate flex">Profil</span><img src="/img/icons/user.png" alt="" class="w-4 h-4 ml-auto mr-4">
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="relative flex flex-row items-center h-11 text-gray-600 border-l-4 border-transparent">
-                        <!-- Icono Check Circle de Font Awesome -->
-                        <span class="inline-flex justify-center items-center ml-4">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Pengaturan</span> <img src="/img/icons/setting.png" alt="" class="w-4 h-4 ml-auto mr-4">
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="relative flex flex-row items-center h-11 text-gray-600 border-l-4 border-transparent">
-                        <!-- Icono Users de Font Awesome -->
-                        <span class="inline-flex justify-center items-center ml-4">
-                            <i class="fas fa-users"></i>
-                        </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Keluar</span> <img src="/img/icons/keluar.png" alt="" class="w-4 h-4 ml-auto mr-4">
-                    </a>
-                </li>
-            </ul>
+
+<!-- <div class="flex flex-col rounded-r-2xl left-0 w-40 bg-white h-full text-gray-600 border-slate-800 z-10 sidebar"> -->
+<div class="w-full flex flex-initial px-3 lg:px-28 text-[#161931]">
+    <aside class="hidden py-4 w-1/3 lg:w-1/4 md:block">
+        <div class="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12">
+
+            <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
+
+            <a href="#" class="flex items-center px-3 py-2.5 font-bold bg-white  text-indigo-900 border rounded-full">
+                Profil
+            </a>
+            <a href="#" class="flex items-center px-3 py-2.5 font-semibold  hover:text-indigo-900 hover:border hover:rounded-full">
+                Pengaturan
+            </a>
+            <a href="#" class="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full  ">
+                Keluar
+            </a>
         </div>
-    </div>
-    <div class="max-w-2xl mx-auto w-full bg-slate-600 flex-auto p-6 rounded-lg shadow-xl">
+    </aside>
+    <div class="max-w-2xl mx-auto w-1/2 flex-initial p-6 rounded-lg shadow-xl">
         <div class="pb-4">
             <span class="font-inter font-semibold text-xl ">Detail Pengguna</span>
         </div>

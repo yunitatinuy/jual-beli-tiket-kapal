@@ -1,6 +1,7 @@
 @extends('layout.main')
 
 @section('container')
+<div class="bg-bground1 bg-scroll bg-cover bg-no-repeat w-full h-full">
 <main class="flex justify-center ">
 <table class="table-auto backdrop-blur-2xl border-separate border-slate-200 border-2 border-spacing-x-28 border-spacing-y-6 w-auto my-10 rounded-xl text-center">
   <thead>
@@ -105,5 +106,6 @@
   </tbody>
 </table>
 </main>
+</div>
 
 @endsection

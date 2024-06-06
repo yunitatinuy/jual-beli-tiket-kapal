@@ -54,106 +54,88 @@
 <!-- carousel end -->
 
 <!-- container -->
-<div class="container -translate-y-28 justify-content-center bg-[#DEC3B4] border-slate-300 border-2 shadow-2xl p-3 w-4/5 font-serif rounded-3xl">
+<div class="container -translate-y-12 justify-content-center bg-[#fec7a4] border-slate-300 border-2 shadow-2xl p-8 w-5/6 font-serif rounded-3xl">
+  <h2 class="font-semibold text-xl mx-2 mb-2">Atur jadwal pelayaran anda</h2>
   <div class="flex flex-row space-x-5 mx-4">
-    <button onclick="tampilkanTampilan(1)" class="rounded-xl hover:bg-[#c1a99d] active:bg-[#c1a99d] focus:outline-none focus:ring focus:ring-slate-50 hover:rounded-xl p-1 px-2">Sekali Pergi</button>
-    <button onclick="tampilkanTampilan(2)" class="rounded-xl hover:bg-[#c1a99d] active:bg-[#c1a99d] focus:outline-none focus:ring focus:ring-slate-50 hover:rounded-xl p-1 px-2">Pulang Pergi</button>
+    <button onclick="tampilkanTampilan(1)" class="p-2 rounded-xl hover:bg-[#c1a99d] active:bg-[#c1a99d] focus:outline-none focus:ring focus:ring-slate-50 hover:rounded-xl px-2">Sekali Pergi</button>
+    <button onclick="tampilkanTampilan(2)" class="p-2 rounded-xl hover:bg-[#c1a99d] active:bg-[#c1a99d] focus:outline-none focus:ring focus:ring-slate-50 hover:rounded-xl px-2">Pulang Pergi</button>
   </div>
 
   <!-- tampilan1 -->
   <div id="tampilan1" class="tampilan">
-    <div class="flex flex-row my-2">
-      <div class="col-lg-1 ms-4">
-        <label class="control-label" id="from-title-label-Ferry">Dari :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">Jakarta</option>
-            <option>Batam</option>
-            <option>Medan</option>
-            <option>Riau</option>
+    <div class="grid gap-4 grid-cols-4 my-3 mx-16">
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dari :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-slate-50 focus:border-slate-50 block w-full p-2.5 ">
+            <option selected>Pilih tempat asal</option>
+            <option value="US">Jakarta</option>
+            <option value="CA">Batam</option>
+            <option value="FR">Medan</option>
+            <option value="DE">Riau</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Ke :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">Jakarta</option>
-            <option>Batam</option>
-            <option>Medan</option>
-            <option>Riau</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ke :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Pilih tempat tujuan</option>
+            <option value="US">Batam</option>
+            <option value="CA">Medan</option>
+            <option value="FR">Jakarta</option>
+            <option value="DE">Riau</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Dewasa :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dewasa :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Jumlah</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">4</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Anak-anak:</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anak - anak :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Jumlah</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">4</option>
           </select>
-        </div>
+        </form>
       </div>
-    </div><br>
-
-    <div class="flex flex-row my-2 ">
-      <div class="col-lg-1 col-md-2 col-sm-2 ms-4">
-        <label class="control-label" id="from-title-label-Ferry">Tanggal Berangkat :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
+    </div>
+    <div class="grid gap-4 grid-cols-4 my-3 mx-16">
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal berangkatan</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Tanggal</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">3</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2">
-      </div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Kelas :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Choose a country</option>
+            <option value="US">VVIP</option>
+            <option value="CA">VIP</option>
+            <option value="FR">Ekonomi</option>
           </select>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -161,109 +143,91 @@
 
   <!-- tampilan2 -->
   <div id="tampilan2" class="tampilan">
-    <div class="flex flex-row my-2">
-      <div class="col-lg-1 ms-4">
-        <label class="control-label" id="from-title-label-Ferry">Dari :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">Jakarta</option>
-            <option>Batam</option>
-            <option>Medan</option>
-            <option>Riau</option>
+    <div class="grid gap-4 grid-cols-4 my-3 mx-16">
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dari :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Pilih tempat asal</option>
+            <option value="US">Jakarta</option>
+            <option value="CA">Batam</option>
+            <option value="FR">Medan</option>
+            <option value="DE">Riau</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Ke :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">Jakarta</option>
-            <option>Batam</option>
-            <option>Medan</option>
-            <option>Riau</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ke :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Pilih tempat tujuan</option>
+            <option value="US">Batam</option>
+            <option value="CA">Medan</option>
+            <option value="FR">Jakarta</option>
+            <option value="DE">Riau</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Dewasa :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dewasa :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Jumlah</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">4</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Anak-anak:</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anak - anak :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Jumlah</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">4</option>
           </select>
-        </div>
+        </form>
       </div>
-    </div><br>
-
-    <div class="flex flex-row my-2">
-      <div class="col-lg-1 ms-4">
-        <label class="control-label" id="from-title-label-Ferry">Tanggal Berangkat :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
+    </div>
+    <div class="grid gap-4 grid-cols-4 my-3 mx-16">
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal berangkatan :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Tanggal</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">3</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Tanggal Pulang :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal pulang :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Tanggal</option>
+            <option value="US">1</option>
+            <option value="CA">2</option>
+            <option value="FR">3</option>
+            <option value="DE">3</option>
           </select>
-        </div>
+        </form>
       </div>
-      <div class="col-lg-2 col-md-2 col-sm-2"></div>
-      <div class="col-lg-1 col-md-2 col-sm-2">
-        <label class="control-label" id="from-title-label-Ferry">Kelas :</label>
-        <div id="divPax_Ferry" class="form-group">
-          <select class="form-control valid rounded-lg" data-val="true" data-val-number="The field Pax must be a number." id="ddlPax_Ferry" name="Pax" fdprocessedid="yzn7p9">
-            <option selected="selected">1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
+      <div>
+        <form class="max-w-sm mx-auto">
+          <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas :</label>
+          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option selected>Choose a country</option>
+            <option value="US">VVIP</option>
+            <option value="CA">VIP</option>
+            <option value="FR">Ekonomi</option>
           </select>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -298,5 +262,4 @@
     }
   }
 </script>
-</body>
 @endsection
