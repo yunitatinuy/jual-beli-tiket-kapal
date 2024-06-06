@@ -10,7 +10,7 @@
           <div class="ml-20">
             <div class="mb-4 flex flex-col items-center justify-center font-semibold uppercase">
               <img src="/img/logo3.png" alt="" width="250">
-              <p class="mt-2 text-center">Jl. Prof. Dr. HAMKA No. 1, Kelurahan Kibing, Kecamatan Batu Aji, Kota Batam, Kepulauan Riau</p>
+              <p class="mt-2 text-center">Jl. Prof. Dr. HAMKA No. 1, Kelurahan Kibing, Kecamatan Batu Aji, Kota Batam, Kepulauan Riau.</p>
             </div>
           </div>
           <!-- Products section -->
