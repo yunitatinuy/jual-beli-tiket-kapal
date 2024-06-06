@@ -6,7 +6,7 @@
             <div class="w-full bg-[#e2ac8b] rounded-xl shadow light:border md:mt-0 sm:max-w-md xl:p-0">
                 <div class="p-6 space-y-4 md:space-y-6">
                     <img src="/img/logo3.png" alt="" class="items-center justify-center w-40 mx-auto">
-                    <form class="space-y-4 md:space-y-6" action="/registrasi" method="post">
+                    <form class="space-y-4 md:space-y-6" action="/register" method="post">
                         @csrf
                         <div>
                             <label for="name"
@@ -32,7 +32,7 @@
                         <div>
                             <label for="password"
                                 class="block mb-2 text-sm font-medium text-gray-900 light:text-white">Confirm Password :</label>
-                            <input type="password" name="password" id="password"
+                            <input type="password" name="c_password" id="c_password"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-4 focus:border-slate-50 focus:bg-slate-300 block w-full p-2.5 "
                                 required="">
                         </div>

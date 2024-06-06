@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListBarangController;
@@ -62,8 +63,8 @@ Route::prefix('admin')->group(function () {
 Route::get('/login', [LoginController::class, 'login']);
 Route::post('/login', [LoginController::class, 'authenticate']);
 
-Route::get('/registrasi', [RegistrasiController::class, 'registrasi']);
-Route::post('/registrasi', [RegistrasiController::class, 'store']);
+Route::get('/register', [RegisterController::class, 'registrasi']);
+Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
 Route::get('/informasi', [InformasiController::class, 'informasi']);

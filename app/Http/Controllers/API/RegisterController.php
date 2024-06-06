@@ -11,7 +11,15 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends BaseController
 {
-    public function register(Request $request): JsonResponse
+    public function registrasi()
+    {
+        return view('/pengguna/registrasi', [
+            'title' => 'Register',
+            'active' => 'register'
+        ]);
+    }
+
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -21,16 +29,16 @@ class RegisterController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error!', $validator->errors());
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
-        $success['name'] = $user->name;
 
-        return $this->sendResponse($success, 'User Register Successfully!');
+        Auth::login($user);
+
+        return redirect('/login')->with('success', 'User registered successfully. Please log in.');
     }
 
 
