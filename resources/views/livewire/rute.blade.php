@@ -2,7 +2,7 @@
 <div class="ms-10 mt-8 me-10 flex flex-col flex-grow">
     <span class="flex items-center p-2 text-gray-900 rounded-lg group">
         <img src="/img/icons/harbor.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true" fill="currentColor">
-        <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Pelabuhan</span>
+        <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Rute Perjalanan</span>
     </span>
 
     <!-- message berhasil tambah data -->
@@ -37,71 +37,73 @@
         <div class="container block max-w-2xl overflow-hidden bg-white border border-gray-200 rounded-lg shadow mt-5">
             <form wire:submit="store">
                 <div class="bg-[#ff9853be] p-6">
-                    <span class="font-inter font-semibold text-xl ">Formulir Rute</span>
+                    <span class="font-inter font-semibold text-xl ">Formulir Rute Perjalanan</span>
                 </div>
 
                 <div class="flex px-6 py-3">
-                    <div class="relativ z-0 w-full group">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">Nama Kapal</label>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected>--- Pilih Nama Kapal ---</option>
-                            @foreach ($dataRute as $key => $value)
-                            <option wire:model="ID_Kapal">{{$value->ID_Kapal}}</option>
+                    <div class="relative z-0 w-full group">
+                        <label for="kapal" class="block mb-2 text-sm font-medium text-gray-900">Nama Kapal</label>
+                        <select name="ID_Kapal" id="ID_Kapal" wire:model="selectedKapal" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>- Pilih Nama Kapal -</option>
+                            @foreach ($kapalList as $kapal)
+                            <option value="{{$kapal->ID_Kapal}}" class="text-gray-900">{{$kapal->Nama_Kapal}}</option>
                             @endforeach
-                            </select>
-                            </div>
-                            @error('ID_Kapal')
-                            <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                            @enderror
-                </div>
-
-                <div class="flex px-6 py-3">
-                    <div class="relativ z-0 w-full group">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">Pelabuhan Asal</label>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected>--- Pilih Pelabuhan Asal ---</option>
-                            @foreach ($dataRute as $key => $value)
-                            <option wire:model="pelabuhanAsal">{{$value->ID_Kapal}}</option>
-                            </select>
-                            @endforeach
-                            </div>
-                            @error('Pelabuhan_Asal')
-                            <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                            @enderror
-                </div>
-
-                <div class="flex px-6 py-3">
-                    <div class="relativ z-0 w-full group">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">Pelabuhan Tujuan</label>
-                        @error('Pelabuhan_Tujuan')
+                        </select>
+                        @error('selectedKapal')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected>--- Pilih Pelabuhan Tujuan ---</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                        </select>
                     </div>
                 </div>
 
                 <div class="flex px-6 py-3">
-                    <div class="relativ z-0 w-full group">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Keberangkatan</label>
+                    <div class="relative z-0 w-full group">
+                        <label for="pelabuhaAsal" class="block mb-2 text-sm font-medium text-gray-900">Pelabuhan Asal</label>
+                        <select id="pelabuhanAsal" wire:model="selectedPelabuhanAsal" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>- Pilih Pelabuhan Asal -</option>
+                            @foreach ($pelabuhanList as $pelabuhan)
+                            <option value="{{$pelabuhan->ID_Pelabuhan}}">{{$pelabuhan->Nama_Pelabuhan}}, {{$pelabuhan->Nama_Kota}}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedPelabuhanAsal')
+                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex px-6 py-3">
+                    <div class="relative z-0 w-full group">
+                        <label for="pelabuhaTujuan" class="block mb-2 text-sm font-medium text-gray-900">Pelabuhan Tujuan</label>
+                        <select id="pelabuhanTujuan" wire:model="selectedPelabuhanTujuan" class="bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>- Pilih Pelabuhan Tujuan -</option>
+                            @foreach ($pelabuhanList as $pelabuhan)
+                            <option value="{{$pelabuhan->ID_Pelabuhan}}">{{$pelabuhan->Nama_Pelabuhan}}, {{$pelabuhan->Nama_Kota}}</option>
+                            @endforeach
+                        </select>
+                        @error('selectedPelabuhanTujuan')
+                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex px-6 py-3">
+                    <div class="relative z-0 w-full group">
+                        <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Keberangkatan</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input datepicker type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
+                            <input type="date" wire:model="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
                         </div>
+                        @error('tanggal')
+                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="flex px-6 py-3">
-                    <div class="relativ z-0 w-full group">
+                    <div class="relative z-0 w-full group">
                         <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Keberangkatan:</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
@@ -109,8 +111,11 @@
                                     <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="time" id="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " min="09:00" max="18:00" value="00:00" required />
+                            <input type="time" wire:model="jam" id="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " min="09:00" max="18:00" value="00:00" required />
                         </div>
+                        @error('jam')
+                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
+                        @enderror
                     </div>
                 </div>
 
@@ -173,28 +178,31 @@
                             <th scope="col" class="px-6 py-4">Aksi</th>
                         </tr>
                     </thead>
+                    @php
+                    use Carbon\Carbon;
+                    @endphp
                     <tbody>
-                        @forelse ($dataRute as $key => $value)
+                        @forelse ($dataRute as $rute)
                         <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{$dataRute->firstitem() + $key}}</td>
+                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
 
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->ID_Rute}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->ID_Kapal}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->Pelabuhan_Asal}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->Pelabuhan_Tujuan}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->Tanggal}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->Jam}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->ID_Rute}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->kapal->Nama_Kapal }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanAsal->Nama_Pelabuhan}}, {{$rute->pelabuhanAsal->Nama_Kota }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanTujuan->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan->Nama_Kota }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{Carbon::parse($rute->Tanggal)->format('d-m-Y')}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{Carbon::parse($rute->Jam)->format('H:i')}}</td>
                             <td class="whitespace-nowrap px-6 py-4">
 
                                 <!-- Edit -->
-                                <button wire:click="edit({{$value->ID_Rute}})" class="flex-none p-2.5 bg-sky-500 rounded-xl hover:rounded-3xl hover:bg-sky-600 transition-all duration-300 text-white" type="button">
+                                <button wire:click="edit({{$rute->ID_Rute}})" class="flex-none p-2.5 bg-sky-500 rounded-xl hover:rounded-3xl hover:bg-sky-600 transition-all duration-300 text-white" type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </button>
 
                                 <!-- Delete -->
-                                <button onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{$value->ID_Rute}})" class="flex-none p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
+                                <button onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{$rute->ID_Rute}})" class="flex-none p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                     </svg>
@@ -203,7 +211,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="font-inter text-base pt-2">Belum Ada Data.</td>
+                            <td colspan="9" class="font-inter text-base pt-2">Belum Ada Data.</td>
                         </tr>
                         @endforelse
                     </tbody>

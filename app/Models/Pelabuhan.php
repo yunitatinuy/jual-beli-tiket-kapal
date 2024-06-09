@@ -21,4 +21,14 @@ class Pelabuhan extends Model
     {
         return $this->hasMany(Rute::class, 'ID_Pelabuhan');
     }
+
+    public function ruteAsal()
+    {
+        return $this->hasMany(Rute::class, 'Pelabuhan_Asal');
+    }
+
+    public function ruteTujuan()
+    {
+        return $this->hasMany(Rute::class, 'Pelabuhan_Tujuan');
+    }
 }
