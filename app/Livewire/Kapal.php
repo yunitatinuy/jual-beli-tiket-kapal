@@ -12,9 +12,9 @@ class Kapal extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $namakapal;
-    public $kelas;
-    public $jumlahkursi;
+    public $Nama_Kapal;
+    public $Kelas;
+    public $Jumlah_Kursi;
 
     public $search;
     public $updateData = false;
@@ -23,28 +23,28 @@ class Kapal extends Component
     public function store()
     {
         $rules = [
-            'namakapal' => 'required',
-            'kelas' => 'required',
-            'jumlahkursi' => 'required|integer',
+            'Nama_Kapal' => 'required',
+            'Kelas' => 'required',
+            'Jumlah_Kursi' => 'required|integer',
         ];
 
         $pesan = [
-            'namakapal.required' => 'Nama Kapal harus diisi.',
-            'kelas.required' => 'Kelas harus diisi.',
-            'jumlahkursi.required' => 'Jumlah Kursi harus diisi.',
-            'jumlahkursi.integer' => 'Jumlah Kursi diisi angka.',
+            'Nama_Kapal.required' => 'Nama Kapal harus diisi.',
+            'Kelas.required' => 'Kelas harus diisi.',
+            'Jumlah_Kursi.required' => 'Jumlah Kursi harus diisi.',
+            'Jumlah_Kursi.integer' => 'Jumlah Kursi diisi angka.',
         ];
 
         $validated = $this->validate($rules, $pesan);
         ModelsKapal::create($validated);
-        $this->reset('namakapal', 'kelas', 'jumlahkursi');
+        $this->reset('Nama_Kapal', 'Kelas', 'Jumlah_Kursi');
         $this->alert('success', 'Data Berhasil Ditambahkan!');
         $this->resetPage();
     }
 
-    public function delete($idkapal)
+    public function delete($ID_Kapal)
     {
-        $kapal = ModelsKapal::find($idkapal);
+        $kapal = ModelsKapal::find($ID_Kapal);
         if ($kapal) {
             $kapal->delete();
             $this->alert('success', 'Data Berhasil Dihapus!');
@@ -53,30 +53,30 @@ class Kapal extends Component
         }
     }
 
-    public function edit($idkapal)
+    public function edit($ID_Kapal)
     {
-        $data = ModelsKapal::find($idkapal);
-        $this->namakapal = $data->namakapal;
-        $this->kelas = $data->kelas;
-        $this->jumlahkursi = $data->jumlahkursi;
+        $data = ModelsKapal::find($ID_Kapal);
+        $this->Nama_Kapal = $data->Nama_Kapal;
+        $this->Kelas = $data->Kelas;
+        $this->Jumlah_Kursi = $data->Jumlah_Kursi;
 
         $this->updateData = true;
-        $this->kapalID = $idkapal;
+        $this->kapalID = $ID_Kapal;
     }
 
     public function update()
     {
         $rules = [
-            'namakapal' => 'required',
-            'kelas' => 'required',
-            'jumlahkursi' => 'required|integer',
+            'Nama_Kapal' => 'required',
+            'Kelas' => 'required',
+            'Jumlah_Kursi' => 'required|integer',
         ];
 
         $pesan = [
-            'namakapal.required' => 'Nama Kapal harus diisi.',
-            'kelas.required' => 'Kelas harus diisi.',
-            'jumlahkursi.required' => 'Jumlah Kursi harus diisi.',
-            'jumlahkursi.integer' => 'Jumlah Kursi diisi angka.',
+            'Nama_Kapal.required' => 'Nama Kapal harus diisi.',
+            'Kelas.required' => 'Kelas harus diisi.',
+            'Jumlah_Kursi.required' => 'Jumlah Kursi harus diisi.',
+            'Jumlah_Kursi.integer' => 'Jumlah Kursi diisi angka.',
         ];
 
         $validated = $this->validate($rules, $pesan);
@@ -96,9 +96,9 @@ class Kapal extends Component
 
     public function clear()
     {
-        $this->namakapal = '';
-        $this->kelas = '';
-        $this->jumlahkursi = '';
+        $this->Nama_Kapal = '';
+        $this->Kelas = '';
+        $this->Jumlah_Kursi = '';
 
         $this->updateData = false;
         $this->kapalID = '';
@@ -111,10 +111,10 @@ class Kapal extends Component
         // $data = ModelsKapal::orderBy('idkapal', 'asc')->paginate(5);
         // return view('livewire.kapal', ['dataKapal' => $data]);
         $search = '%' . $this->search . '%';
-        $data = ModelsKapal::where('namakapal', 'like', $search)
-            ->orWhere('kelas', 'like', $search)
-            ->orWhere('jumlahkursi', 'like', $search)
-            ->orderBy('idkapal', 'desc')
+        $data = ModelsKapal::where('Nama_Kapal', 'like', $search)
+            ->orWhere('Kelas', 'like', $search)
+            ->orWhere('Jumlah_Kursi', 'like', $search)
+            ->orderBy('ID_Kapal', 'desc')
             ->paginate(5);
 
         return view('livewire.kapal', ['dataKapal' => $data]);

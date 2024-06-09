@@ -13,8 +13,8 @@ class Pelabuhan extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $namapelabuhan;
-    public $namakapal;
+    public $Nama_Pelabuhan;
+    public $Nama_Kota;
 
     public $search;
     public $updateData = false;
@@ -23,25 +23,25 @@ class Pelabuhan extends Component
     public function store()
     {
         $rules = [
-            'namapelabuhan' => 'required',
-            'namakapal' => 'required',
+            'Nama_Pelabuhan' => 'required',
+            'Nama_Kota' => 'required',
         ];
 
         $pesan = [
-            'namapelabuhan.required' => 'Nama pelabuhan harus diisi',
-            'namakapal.required' => 'Nama kapal harus diisi',
+            'Nama_Pelabuhan.required' => 'Nama Pelabuhan harus diisi',
+            'Nama_Kota.required' => 'Nama Kota harus diisi',
         ];
 
         $validated = $this->validate($rules, $pesan);
         ModelsPelabuhan::create($validated);
-        $this->reset('namapelabuhan', 'namakapal');
+        $this->reset('Nama_Pelabuhan', 'Nama_Kota');
         $this->alert('success', 'Data berhasil ditambahkan');
         $this->resetPage();
     }
 
-    public function delete($idpelabuhan)
+    public function delete($ID_Pelabuhan)
     {
-        $pelabuhan = ModelsPelabuhan::find($idpelabuhan);
+        $pelabuhan = ModelsPelabuhan::find($ID_Pelabuhan);
         if ($pelabuhan) {
             $pelabuhan->delete();
             $this->alert('success', 'Data Berhasil Dihapus!');
@@ -50,26 +50,26 @@ class Pelabuhan extends Component
         }
     }
 
-    public function edit($idpelabuhan)
+    public function edit($ID_Pelabuhan)
     {
-        $data = ModelsPelabuhan::find($idpelabuhan);
-        $this->namapelabuhan = $data->namapelabuhan;
-        $this->namakapal = $data->namakapal;
+        $data = ModelsPelabuhan::find($ID_Pelabuhan);
+        $this->Nama_Pelabuhan = $data->Nama_Pelabuhan;
+        $this->Nama_Kota = $data->Nama_Kota;
 
         $this->updateData = true;
-        $this->pelabuhanID = $idpelabuhan;
+        $this->pelabuhanID = $ID_Pelabuhan;
     }
 
     public function update()
     {
         $rules = [
-            'namapelabuhan' => 'required',
-            'namakapal' => 'required',
+            'Nama_Pelabuhan' => 'required',
+            'Nama_Kota' => 'required',
         ];
 
         $pesan = [
-            'namapelabuhan.required' => 'Nama pelabuhan harus diisi',
-            'namakapal.required' => 'Nama kapal harus diisi',
+            'Nama_Pelabuhan.required' => 'Nama Pelabuhan harus diisi',
+            'Nama_Kota.required' => 'Nama Kota harus diisi',
         ];
 
         $validated = $this->validate($rules, $pesan);
@@ -88,8 +88,8 @@ class Pelabuhan extends Component
 
     public function clear()
     {
-        $this->namapelabuhan = '';
-        $this->namakapal = '';
+        $this->Nama_Pelabuhan = '';
+        $this->Nama_Kota = '';
 
         $this->updateData = false;
         $this->pelabuhanID = '';
@@ -100,9 +100,9 @@ class Pelabuhan extends Component
     public function render()
     {
         $search = '%' . $this->search . '%';
-        $data = Modelspelabuhan::where('namapelabuhan', 'like', $search)
-            ->orWhere('namakapal', 'like', $search)
-            ->orderBy('idpelabuhan', 'desc')
+        $data = Modelspelabuhan::where('Nama_Pelabuhan', 'like', $search)
+            ->orWhere('Nama_Kota', 'like', $search)
+            ->orderBy('ID_Pelabuhan', 'desc')
             ->paginate(5);
 
         return view('livewire.pelabuhan', ['dataPelabuhan' => $data])

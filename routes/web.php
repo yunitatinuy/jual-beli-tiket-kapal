@@ -13,6 +13,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TransaksiController;
 use App\Livewire\Kapal;
 use App\Livewire\Pelabuhan;
+use App\Livewire\Rute;
+use App\Livewire\Tiket;
 use App\Http\Controllers\KapalController;
 use App\Http\Controllers\MailerController;
 
@@ -95,6 +97,8 @@ Route::get('/pesantiket2', function () {
 
 Route::get('/admin/kapal', Kapal::class);
 Route::get('/admin/pelabuhan', Pelabuhan::class);
+Route::get('/admin/tiket', Tiket::class);
+Route::get('/admin/rute', Rute::class);
 // Route::get('/admin/kapal', [KapalController::class, 'kapal']);
 // Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
 // Route::post('admin/tambahkapal', [KapalController::class, 'simpan']);

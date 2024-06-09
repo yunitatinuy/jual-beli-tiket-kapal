@@ -9,11 +9,16 @@ class Pelabuhan extends Model
 {
     use HasFactory;
     protected $table = 'pelabuhan'; // sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'idpelabuhan'; // sesuaikan dengan nama primary key Anda
+    protected $primaryKey = 'ID_Pelabuhan'; // sesuaikan dengan nama primary key Anda
     protected $fillable = [
-        'namapelabuhan',
-        'namakapal',
+        'Nama_Pelabuhan',
+        'Nama_Kota',
 
     ];
     public $timestamps = false;
+
+    public function rute()
+    {
+        return $this->hasMany(Rute::class, 'ID_Pelabuhan');
+    }
 }
