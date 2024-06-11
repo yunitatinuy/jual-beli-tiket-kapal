@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\API\RegisterController;
 use Illuminate\Support\Facades\Route;
+
+// Controllerr
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListBarangController;
 use App\Http\Controllers\LandingController;
@@ -11,12 +13,14 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\KapalController;
+use App\Http\Controllers\MailerController;
+
+// Livewire
 use App\Livewire\Kapal;
 use App\Livewire\Pelabuhan;
 use App\Livewire\Rute;
 use App\Livewire\Tiket;
-use App\Http\Controllers\KapalController;
-use App\Http\Controllers\MailerController;
 
 Route::get('/', function () {
     return view('landing');
@@ -94,7 +98,6 @@ Route::get('/pesantiket2', function () {
 });
 
 //test kapal
-
 Route::get('/admin/kapal', Kapal::class);
 Route::get('/admin/pelabuhan', Pelabuhan::class);
 Route::get('/admin/tiket', Tiket::class);

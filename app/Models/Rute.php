@@ -34,4 +34,10 @@ class Rute extends Model
     {
         return $this->belongsTo(Pelabuhan::class, 'Pelabuhan_Tujuan', 'ID_Pelabuhan');
     }
+
+    public function tiket()
+    {
+    	return $this->hasOne(Tiket::class, 'ID_Rute');
+    }
+    
 }

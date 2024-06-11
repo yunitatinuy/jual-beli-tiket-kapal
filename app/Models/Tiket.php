@@ -15,7 +15,11 @@ class Tiket extends Model
         'Jumlah_Tiket',
         'Harga_Reguler',
         'Harga_VIP',
-
     ];
     public $timestamps = false;
+    
+    public function rute()
+    {
+        return $this->belongsTo(Rute::class, 'ID_Rute');
+    }
 }
