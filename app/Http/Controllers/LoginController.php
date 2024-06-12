@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
     public function login()
     {
-        return view('/pengguna/login',[
+        return view('pengguna.login', [
             'title' => 'login',
             'active' => 'login'
         ]);
@@ -19,13 +18,19 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-        'email' => 'required|email:dns',
-        'password' => 'required'
+            'email' => 'required|email:dns',
+            'password' => 'required'
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
+
+            $user = Auth::user();
+
+            if ($user->hasRole('admin')) {
+                return redirect('/admin/dashboard');
+            }
+
             return redirect('/dashboard_pengguna');
         }
 

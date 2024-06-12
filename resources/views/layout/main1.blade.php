@@ -21,7 +21,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Marko+One&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Marko+One&display=swap"
+        rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -32,19 +34,22 @@
 
     <title> Jual Beli Tiket Kapal </title>
     <style>
-  .tampilan {
-    display: none;
-  }
-  .tampilan.active {
-    display: block;
-  }
-  button:hover, button.active:hover {
-    background-color: #0056b3;
-  }
-</style>
+        .tampilan {
+            display: none;
+        }
+
+        .tampilan.active {
+            display: block;
+        }
+
+        button:hover,
+        button.active:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
-<body class="bg-bground1 bg-cover bg-no-repeat w-full h-full">
+<body class="w-full h-full bg-no-repeat bg-cover bg-bground1">
 
     @yield('container')
 

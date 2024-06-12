@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterController extends BaseController
+class RegisterController extends Controller
 {
     public function registrasi()
     {
@@ -39,19 +38,5 @@ class RegisterController extends BaseController
         Auth::login($user);
 
         return redirect('/login')->with('success', 'User registered successfully. Please log in.');
-    }
-
-
-    public function login(Request $request): JsonResponse
-    {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->plainTextToken;
-            $success['name'] = $user->name;
-
-            return $this->sendResponse($success, 'User Login Successfully!');
-        } else {
-            return $this->sendError('Unautorised!', ['error' => 'Unautorised']);
-        }
     }
 }
