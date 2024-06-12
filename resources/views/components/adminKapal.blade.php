@@ -30,17 +30,17 @@
     <div class="mx-auto max-w-full">
         @include('partials.admnav')
         @livewire('logout')
-
+        
         @include('partials.sidebar')
-
+        
         @yield('container')
-
-        @livewire('rute')
+        
+        @livewire('kapal')
+        
 
     </div>
     @livewireScripts
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
 

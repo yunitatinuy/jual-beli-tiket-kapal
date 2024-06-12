@@ -16,53 +16,28 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\KapalController;
 use App\Http\Controllers\MailerController;
 
-// Livewire
+// Livewire Controller
+use App\Livewire\AdminDashboard;
 use App\Livewire\Kapal;
 use App\Livewire\Pelabuhan;
+use App\Livewire\Pengguna;
 use App\Livewire\Rute;
 use App\Livewire\Tiket;
+use App\Livewire\Pesanan;
 
 Route::get('/', function () {
     return view('landing');
 });
 
+// Admin
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    });
-    Route::get('/pelabuhan', function () {
-        return view('admin.pelabuhan');
-    });
-    Route::get('/kapal', function () {
-        return view('admin.kapal');
-    });
-    Route::get('/rute', function () {
-        return view('admin.rute');
-    });
-    Route::get('/tiket', function () {
-        return view('admin.tiket');
-    });
-    Route::get('/pengguna', function () {
-        return view('admin.pengguna');
-    });
-    Route::get('/pesanan', function () {
-        return view('admin.pesanan');
-    });
-    Route::get('/tambahkapal', function () {
-        return view('admin.formulir.tambahkapal');
-    });
-    Route::get('/tambahrute', function () {
-        return view('admin.formulir.tambahrute');
-    });
-    Route::get('/tambahtiket', function () {
-        return view('admin.formulir.tambahtiket');
-    });
-    Route::get('/tambahpelabuhan', function () {
-        return view('admin.formulir.tambahpelabuhan');
-    });
-    Route::get('/tambahpengguna', function () {
-        return view('admin.formulir.tambahpengguna');
-    });
+    Route::get('/dashboard', AdminDashboard::class);
+    Route::get('/kapal', Kapal::class);
+    Route::get('/pelabuhan', Pelabuhan::class);
+    Route::get('/tiket', Tiket::class);
+    Route::get('/rute', Rute::class);
+    Route::get('/pengguna', Pengguna::class);
+    Route::get('/pesanan', Pesanan::class);
 });
 
 // pengguna---------
@@ -97,17 +72,18 @@ Route::get('/pesantiket2', function () {
     return view('/pengguna/pesantiket2orang');
 });
 
-//test kapal
-Route::get('/admin/kapal', Kapal::class);
-Route::get('/admin/pelabuhan', Pelabuhan::class);
-Route::get('/admin/tiket', Tiket::class);
-Route::get('/admin/rute', Rute::class);
-// Route::get('/admin/kapal', [KapalController::class, 'kapal']);
-// Route::get('/admin/tambahkapal', [KapalController::class, 'tambah'])->name('tambah');
-// Route::post('admin/tambahkapal', [KapalController::class, 'simpan']);
-// Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
-// Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
-// Route::post('/edit/{id}', [ProductController::class, 'update']);
+// auth for logout - on progress
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', AdminDashboard::class);
+    Route::get('/kapal', Kapal::class);
+    Route::get('/pelabuhan', Pelabuhan::class);
+    Route::get('/tiket', Tiket::class);
+    Route::get('/rute', Rute::class);
+    Route::get('/pengguna', Pengguna::class);
+    Route::get('/pesanan', Pesanan::class);
+    // Tambahkan controller lain yang memerlukan otentikasi di sini
+});
 
 Route::get('send-mail', [MailerController::class, 'index'])->name('send.mail');
 Route::post('send-mail', [MailerController::class, 'store'])->name('send.email.post');

@@ -35,7 +35,7 @@
 
         @yield('container')
 
-        @livewire('rute')
+        @livewire('pesanan')
 
     </div>
     @livewireScripts

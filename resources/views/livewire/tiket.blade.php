@@ -1,7 +1,7 @@
 <!-- CONTENT -->
 <div class="ms-10 mt-8 me-10 flex flex-col flex-grow">
     <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-        <img src="/img/icons/ships.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true" fill="currentColor">
+        <img src="/img/icons/ticket.png" class="flex-shrink-0 w-9 h-9 text-gray-500" aria-hidden="true" fill="currentColor">
         <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Tiket</span>
     </span>
 
@@ -41,20 +41,20 @@
                 </div>
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
+                        <label for="rute" class="block mb-2 text-sm font-medium text-gray-900">Rute Pejalanan</label>
                         <select name="ID_Rute" id="ID_Rute" wire:model="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value=""> - Pilih Rute - </option>
                             @foreach($dataRute as $rute)
-                            <option value="{{ $rute->ID_Rute }}">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }} - {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}</option>
+                            <option value="{{ $rute->ID_Rute }}">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }}, {{$rute->pelabuhanAsal->Nama_Kota }} - {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan->Nama_Kota }}</option>
                             @endforeach
                         </select>
-                        <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">ID Rute</label>
                         @error('ID_Rute')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror
                     </div>
                 </div>
 
-                <div class="flex p-6">
+                <div class="flex px-6 pb-6 pt-3">
                     <div class="relative z-0 w-full group">
                         <input type="text" name="Jumlah_Tiket" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Tiket" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Jumlah Tiket</label>
@@ -132,7 +132,7 @@
                         <tr>
                             <th scope="col" class="px-6 py-4">#</th>
                             <th scope="col" class="px-6 py-4">Kode Tiket</th>
-                            <th scope="col" class="px-6 py-4">Kode Rute</th>
+                            <th scope="col" class="px-6 py-4">Rute Perjalanan</th>
                             <th scope="col" class="px-6 py-4">Jumlah Tiket</th>
                             <th scope="col" class="px-6 py-4">Harga Reguler</th>
                             <th scope="col" class="px-6 py-4">Harga VIP</th>
@@ -168,7 +168,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="font-inter text-base pt-2">Belum Ada Data.</td>
+                            <td colspan="10" class="font-inter text-base pt-2">Belum Ada Data.</td>
                         </tr>
                         @endforelse
                     </tbody>

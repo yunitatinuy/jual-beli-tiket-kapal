@@ -29,6 +29,7 @@
 <body>
     <div class="mx-auto max-w-full">
         @include('partials.admnav')
+        @livewire('logout')
 
         @include('partials.sidebar')
 

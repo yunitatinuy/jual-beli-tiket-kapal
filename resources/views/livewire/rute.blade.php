@@ -1,7 +1,7 @@
 <!-- CONTENT -->
 <div class="ms-10 mt-8 me-10 flex flex-col flex-grow">
     <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-        <img src="/img/icons/harbor.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true" fill="currentColor">
+        <img src="/img/icons/route.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true" fill="currentColor">
         <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Rute Perjalanan</span>
     </span>
 
@@ -102,7 +102,7 @@
                     </div>
                 </div>
 
-                <div class="flex px-6 py-3">
+                <div class="flex px-6 py-3 mb-3">
                     <div class="relative z-0 w-full group">
                         <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Keberangkatan:</label>
                         <div class="relative">

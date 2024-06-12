@@ -134,10 +134,10 @@ class Tiket extends Component
     public function render()
     {
         $search = '%' . $this->search . '%';
-        $dataTiket = ModelsTiket::whereHas('rute', function($query) use ($search) {
-            $query->whereHas('pelabuhanAsal', function($q) use ($search) {
+        $dataTiket = ModelsTiket::whereHas('rute', function ($query) use ($search) {
+            $query->whereHas('pelabuhanAsal', function ($q) use ($search) {
                 $q->where('Nama_Pelabuhan', 'like', $search);
-            })->orWhereHas('pelabuhanTujuan', function($q) use ($search) {
+            })->orWhereHas('pelabuhanTujuan', function ($q) use ($search) {
                 $q->where('Nama_Pelabuhan', 'like', $search);
             });
         })->orWhere('Jumlah_Tiket', 'like', $search)
@@ -157,6 +157,6 @@ class Tiket extends Component
     public function getRute($ID_Rute)
     {
         $rute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])->find($ID_Rute);
-        return $rute ? "{$rute->pelabuhanAsal->Nama_Pelabuhan} - {$rute->pelabuhanTujuan->Nama_Pelabuhan}" : 'Rute Tidak Ditemukan';
+        return $rute ? "{$rute->pelabuhanAsal->Nama_Pelabuhan}, {$rute->pelabuhanAsal->Nama_Kota} - {$rute->pelabuhanTujuan->Nama_Pelabuhan}, {$rute->pelabuhanTujuan->Nama_Kota}" : 'Rute Tidak Ditemukan';
     }
 }

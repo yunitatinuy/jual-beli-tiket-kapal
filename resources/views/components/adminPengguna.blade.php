@@ -35,7 +35,7 @@
 
         @yield('container')
 
-        @livewire('rute')
+        @livewire('pengguna')
 
     </div>
     @livewireScripts

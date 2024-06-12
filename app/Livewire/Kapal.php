@@ -117,6 +117,7 @@ class Kapal extends Component
             ->orderBy('ID_Kapal', 'desc')
             ->paginate(5);
 
-        return view('livewire.kapal', ['dataKapal' => $data]);
+        return view('livewire.kapal', ['dataKapal' => $data])
+        ->layout('components.adminKapal');
     }
 }
