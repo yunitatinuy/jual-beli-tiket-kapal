@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Tiket as ModelsTiket;
 use App\Models\Rute as ModelsRute;
-use App\Models\Pelabuhan as ModelsPelabuhan;
 use Livewire\WithPagination;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -24,16 +23,6 @@ class Tiket extends Component
     public $tiketID;
 
     public $routeInfo;
-
-    public function updatedID_Rute($value)
-    {
-        $rute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])->find($value);
-        if ($rute) {
-            $this->routeInfo = "{$rute->pelabuhanAsal->Nama_Pelabuhan} - {$rute->pelabuhanTujuan->Nama_Pelabuhan}";
-        } else {
-            $this->routeInfo = 'Rute Tidak Ditemukan';
-        }
-    }
 
     public function store()
     {
@@ -109,6 +98,16 @@ class Tiket extends Component
         $this->alert('success', 'Data Berhasil Diupdate!');
 
         $this->clear();
+    }
+
+    public function updatedID_Rute($value)
+    {
+        $rute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])->find($value);
+        if ($rute) {
+            $this->routeInfo = "{$rute->pelabuhanAsal->Nama_Pelabuhan} - {$rute->pelabuhanTujuan->Nama_Pelabuhan}";
+        } else {
+            $this->routeInfo = 'Rute Tidak Ditemukan';
+        }
     }
 
     public function cancel()

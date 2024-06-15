@@ -22,6 +22,7 @@ use App\Livewire\Kapal;
 use App\Livewire\Pelabuhan;
 use App\Livewire\Pengguna;
 use App\Livewire\Rute;
+use App\Livewire\Harga;
 use App\Livewire\Tiket;
 use App\Livewire\Pesanan;
 
@@ -35,6 +36,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/kapal', Kapal::class);
     Route::get('/pelabuhan', Pelabuhan::class);
     Route::get('/tiket', Tiket::class);
+    Route::get('/harga', harga::class);
     Route::get('/rute', Rute::class);
     Route::get('/pengguna', Pengguna::class);
     Route::get('/pesanan', Pesanan::class);

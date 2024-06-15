@@ -45,10 +45,27 @@
                         </a>
                     </li>
                     <li>
-                        <a href="tiket" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group">
+                        <button class="flex items-center w-full p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                             <img src="/img/icons/ticket.png" class="flex-shrink-0 w-6 h-7 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" fill="currentColor">
-                            <span class="flex-1 ms-3 whitespace-nowrap">Tiket</span>
-                        </a>
+                            <span class="flex w-full ms-3 whitespace-nowrap" sidebar-toggle-item>Tiket</span>
+                            <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                            <li>
+                                <a href="tiket" class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-[#ffea95] pl-11">
+                                    <img src="/img/icons/sphere.png" class="flex-shrink-0 w-2 h-2 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" fill="currentColor">
+                                    <span class="flex-1 ms-4 whitespace-nowrap">Tiket Perjalanan</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="harga" class="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-[#ffea95] pl-11">
+                                    <img src="/img/icons/sphere.png" class="flex-shrink-0 w-2 h-2 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" fill="currentColor">
+                                    <span class="flex-1 ms-4 whitespace-nowrap">Harga</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="pengguna" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group">
@@ -64,4 +81,5 @@
                     </li>
                 </ul>
             </div>
+
         </aside>
