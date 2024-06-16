@@ -28,16 +28,20 @@ class Tiket extends Component
     {
         $rules = [
             'ID_Rute' => 'required',
-            'Jumlah_Tiket' => 'required|numeric',
-            'Harga_Reguler' => 'required|numeric|decimal:3',
-            'Harga_VIP' => 'required|numeric|decimal:3',
+            'Jumlah_Tiket' => 'required',
+            'Harga_Reguler' => 'required',
+            'Harga_VIP' => 'required',
         ];
 
         $pesan = [
             'ID_Rute.required' => 'Nama Rute harus diisi.',
             'Jumlah_Tiket.required' => 'Jumlah Tiket harus diisi.',
-            'Harga_Reguler.required|numeric|decimal:3' => 'Harga Reguler harus diisi.',
-            'Harga_VIP.required|numeric|decimal:3' => 'Harga VIP harus diisi.',
+            'Harga_Reguler.required' => 'Harga Reguler harus diisi.',
+            'Harga_Reguler.numeric' => 'Harga Reguler harus diisi.',
+            'Harga_Reguler.decimal' => 'Harga Reguler harus diisi.',
+            'Harga_VIP.required' => 'Harga VIP harus diisi.',
+            'Harga_VIP.numeric' => 'Harga VIP harus diisi.',
+            'Harga_VIP.decimal' => 'Harga VIP harus diisi.',
         ];
 
         $validated = $this->validate($rules, $pesan);
@@ -80,15 +84,19 @@ class Tiket extends Component
         $rules = [
             'ID_Rute' => 'required',
             'Jumlah_Tiket' => 'required',
-            'Harga_Reguler' => 'required|numeric|decimal:3',
-            'Harga_VIP' => 'required|numeric|decimal:3',
+            'Harga_Reguler' => 'required',
+            'Harga_VIP' => 'required',
         ];
 
         $pesan = [
             'ID_Rute.required' => 'Nama Rute harus diisi.',
             'Jumlah_Tiket.required' => 'Jumlah Tiket harus diisi.',
-            'Harga_Reguler.required|numeric|decimal:3' => 'Harga Reguler harus diisi.',
-            'Harga_VIP.required|numeric|decimal:3' => 'Harga VIP harus diisi.',
+            'Harga_Reguler.required' => 'Harga Reguler harus diisi.',
+            'Harga_Reguler.numeric' => 'Harga Reguler harus diisi.',
+            'Harga_Reguler.decimal' => 'Harga Reguler harus diisi.',
+            'Harga_VIP.required' => 'Harga VIP harus diisi.',
+            'Harga_VIP.numeric' => 'Harga VIP harus diisi.',
+            'Harga_VIP.decimal' => 'Harga VIP harus diisi.',
         ];
 
         $validated = $this->validate($rules, $pesan);

@@ -16,7 +16,7 @@ class Rute extends Model
         'Pelabuhan_Tujuan',
         'Tanggal',
         'Jam',
-
+        
     ];
     public $timestamps = false;
 
