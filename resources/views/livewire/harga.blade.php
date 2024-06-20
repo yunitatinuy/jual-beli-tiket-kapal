@@ -42,21 +42,6 @@
 
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <label for="rute" class="block mb-2 text-sm font-medium text-gray-900">Rute Pejalanan</label>
-                        <select name="ID_Rute" id="ID_Rute" wire:model="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value=""> - Pilih Rute - </option>
-                            @foreach($dataRute as $rute)
-                            <option value="{{ $rute->ID_Rute }}">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }}, {{$rute->pelabuhanAsal->Nama_Kota }} - {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan->Nama_Kota }}</option>
-                            @endforeach
-                        </select>
-                        @error('ID_Rute')
-                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="flex px-6 pt-3 pb-6">
-                    <div class="relative z-0 w-full group">
                         <label for="rute" class="block mb-2 text-sm font-medium text-gray-900">Tipe Penumpang</label>
                         <select name="Tipe_Penumpang" id="Tipe_Penumpang" wire:model="Tipe_Penumpang" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value="">Pilih Tipe Penumpang</option>
@@ -138,7 +123,6 @@
                     <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
                         <tr>
                             <th scope="col" class="px-6 py-4">#</th>
-                            <th scope="col" class="px-6 py-4">Rute Perjalanan</th>
                             <th scope="col" class="px-6 py-4">Tipe Penumpang</th>
                             <th scope="col" class="px-6 py-4">Kelas</th>
                             <th scope="col" class="px-6 py-4">Harga</th>
@@ -149,8 +133,6 @@
                         @forelse ($dataHarga as $harga)
                         <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
                             <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
-
-                            <td class="whitespace-nowrap px-6 py-4">{{$this->getRute($harga->ID_Rute)}}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{$harga->Tipe_Penumpang}}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{$harga->Kelas}}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{number_format ($harga->Harga, 3) }}</td>

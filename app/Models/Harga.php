@@ -11,7 +11,6 @@ class Harga extends Model
     protected $table = 'harga'; // sesuaikan dengan nama tabel Anda
     protected $primaryKey = 'ID_Harga'; // sesuaikan dengan nama primary key Anda
     protected $fillable = [
-        'ID_Rute',
         'Tipe_Penumpang',
         'Kelas',
         'Harga',

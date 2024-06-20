@@ -14,7 +14,7 @@ class Harga extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $ID_Rute;
+    public $ID_Harga;
     public $Tipe_Penumpang;
     public $Kelas;
     public $Harga;
@@ -33,14 +33,12 @@ class Harga extends Component
     public function store()
     {
         $rules = [
-            'ID_Rute' => 'required',
             'Tipe_Penumpang' => 'required|in:dewasa,anak',
             'Kelas' => 'required',
             'Harga' => 'required',
         ];
 
         $pesan = [
-            'ID_Rute.required' => 'Rute harus dipilih',
             'Tipe_Penumpang.required' => 'Tipe Penumpang harus dipilih',
             'Tipe_Penumpang.in' => 'Tipe Penumpang harus dewasa atau anak',
             'Kelas.required' => 'Kelas harus diisi',
@@ -51,7 +49,6 @@ class Harga extends Component
         $this->validate($rules, $pesan);
 
         ModelsHarga::create([
-            'ID_Rute' => $this->ID_Rute,
             'Tipe_Penumpang' => $this->Tipe_Penumpang,
             'Kelas' => $this->Kelas,
             'Harga' => $this->Harga,
@@ -77,7 +74,6 @@ class Harga extends Component
     {
         $harga = ModelsHarga::find($ID_Harga);
         $this->hargaId = $harga->ID_Harga;
-        $this->ID_Rute = $harga->ID_Rute;
         $this->Tipe_Penumpang = $harga->Tipe_Penumpang;
         $this->Kelas = $harga->Kelas;
         $this->Harga = $harga->Harga;
@@ -88,14 +84,12 @@ class Harga extends Component
     public function update()
     {
         $rules = [
-            'ID_Rute' => 'required',
             'Tipe_Penumpang' => 'required|in:dewasa,anak',
             'Kelas' => 'required',
             'Harga' => 'required',
         ];
 
         $pesan = [
-            'ID_Rute.required' => 'Rute harus dipilih',
             'Tipe_Penumpang.required' => 'Tipe Penumpang harus dipilih',
             'Tipe_Penumpang.in' => 'Tipe Penumpang harus dewasa atau anak',
             'Kelas.required' => 'Kelas harus diisi',
@@ -108,7 +102,6 @@ class Harga extends Component
         $harga = ModelsHarga::find($this->hargaId);
         if ($harga) {
             $harga->update([
-                'ID_Rute' => $this->ID_Rute,
                 'Tipe_Penumpang' => $this->Tipe_Penumpang,
                 'Kelas' => $this->Kelas,
                 'Harga' => $this->Harga,
@@ -129,7 +122,6 @@ class Harga extends Component
 
     public function clear()
     {
-        $this->ID_Rute = null;
         $this->Tipe_Penumpang = null;
         $this->Kelas = null;
         $this->Harga = null;
@@ -148,12 +140,11 @@ class Harga extends Component
     public function render()
     {
         $search = '%' . $this->search . '%';
-        $data = ModelsHarga::with('rute')
-            ->whereHas('rute', function ($query) use ($search) {
-                $query->where('ID_Rute', 'like', $search);
-            })
-            ->orderBy('ID_Harga', 'desc')
-            ->paginate(5);
+        $data = ModelsHarga::where('Tipe_Penumpang', 'like', $search)
+        ->orWhere('Kelas', 'like', $search)
+        ->orWhere('Harga', 'like', $search)
+        ->orderBy('ID_Harga', 'desc')
+        ->paginate(5);
 
         return view('livewire.harga', [
             'dataHarga' => $data,

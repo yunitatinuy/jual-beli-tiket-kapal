@@ -12,14 +12,18 @@ class Tiket extends Model
     protected $primaryKey = 'ID_Tiket'; // sesuaikan dengan nama primary key Anda
     protected $fillable = [
         'ID_Rute',
+        'ID_Harga',
         'Jumlah_Tiket',
-        'Harga_Reguler',
-        'Harga_VIP',
     ];
     public $timestamps = false;
     
     public function rute()
     {
-        return $this->belongsTo(Rute::class, 'ID_Rute');
+        return $this->belongsTo(Rute::class, 'ID_Rute', 'ID_Rute');
+    }
+
+    public function harga()
+    {
+        return $this->belongsTo(Harga::class, 'ID_Harga', 'ID_Harga');
     }
 }

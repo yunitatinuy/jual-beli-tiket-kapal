@@ -16,13 +16,13 @@ class Rute extends Model
         'Pelabuhan_Tujuan',
         'Tanggal',
         'Jam',
-        
+
     ];
     public $timestamps = false;
 
     public function kapal()
     {
-        return $this->belongsTo(Kapal::class,'ID_Kapal', 'ID_Kapal');  
+        return $this->belongsTo(Kapal::class, 'ID_Kapal', 'ID_Kapal');
     }
 
     public function pelabuhanAsal()
@@ -37,7 +37,11 @@ class Rute extends Model
 
     public function tiket()
     {
-    	return $this->hasOne(Tiket::class, 'ID_Rute');
+        return $this->hasOne(Tiket::class, 'ID_Rute');
     }
-    
+
+    public function harga()
+    {
+        return $this->hasMany(Harga::class, 'ID_Rute');
+    }
 }

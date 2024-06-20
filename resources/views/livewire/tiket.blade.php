@@ -54,7 +54,22 @@
                     </div>
                 </div>
 
-                <div class="flex px-6 pb-6 pt-3">
+                <div class="flex p-6">
+                    <div class="relative z-0 w-full group">
+                        <label for="ID_Harga" class="block mb-2 text-sm font-medium text-gray-900">Tipe Penumpang</label>
+                        <select name="ID_Harga" id="ID_Harga" wire:model="ID_Harga" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value=""> - Pilih Tipe Penumpang - </option>
+                            @foreach($dataHarga as $harga)
+                            <option value="{{ $harga->ID_Harga }}">{{ $harga->Tipe_Penumpang }} - {{ $harga->Kelas }} - Rp{{ number_format($harga->Harga, 0, ',', '.') }}</option>
+                            @endforeach
+                        </select>
+                        @error('ID_Rute')
+                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex px-6 pb-6 pt-3 mb-3">
                     <div class="relative z-0 w-full group">
                         <input type="text" name="Jumlah_Tiket" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Tiket" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Jumlah Tiket</label>
@@ -63,24 +78,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="flex p-6 mb-3">
-                    <div class="relative z-0 w-full group">
-                        <input type="text" name="Harga_Reguler" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Harga_Reguler" required />
-                        <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Harga Reguler</label>
-                        @error('Harga_Reguler')
-                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="flex p-6 mb-3">
-                    <div class="relative z-0 w-full group">
-                        <input type="text" name="Harga_VIP" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Harga_VIP" required />
-                        <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Harga VIP</label>
-                        @error('Harga_VIP')
-                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                        @enderror
-                    </div>
-                </div>
+                
 
         </div><br>
         <div class="flex flex-wrap gap-3">
@@ -133,33 +131,35 @@
                             <th scope="col" class="px-6 py-4">#</th>
                             <th scope="col" class="px-6 py-4">Kode Tiket</th>
                             <th scope="col" class="px-6 py-4">Rute Perjalanan</th>
+                            <th scope="col" class="px-6 py-4">Tipe Penumpang</th>
+                            <th scope="col" class="px-6 py-4">Kelas</th>
                             <th scope="col" class="px-6 py-4">Jumlah Tiket</th>
-                            <th scope="col" class="px-6 py-4">Harga Reguler</th>
-                            <th scope="col" class="px-6 py-4">Harga VIP</th>
+                            <th scope="col" class="px-6 py-4">Harga</th>
                             <th scope="col" class="px-6 py-4">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($dataTiket as $key => $value)
+                        @forelse ($dataTiket as $tiket)
                         <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{$dataTiket->firstitem() + $key}}</td>
+                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
 
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->ID_Tiket}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$this->getRute($value->ID_Rute)}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$value->Jumlah_Tiket}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{number_format ($value->Harga_Reguler, 3) }}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{number_format ($value->Harga_VIP, 3) }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->ID_Tiket}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->rute->pelabuhanAsal->Nama_Pelabuhan }} - {{ $tiket->rute->pelabuhanTujuan->Nama_Pelabuhan }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->harga->Tipe_Penumpang}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->harga->Kelas}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->Jumlah_Tiket}}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{number_format ($tiket->harga->Harga, 3) }}</td>
                             <td class="whitespace-nowrap px-6 py-4">
 
                                 <!-- Edit -->
-                                <button wire:click="edit({{$value->ID_Tiket}})" class="flex-none p-2.5 bg-sky-500 rounded-xl hover:rounded-3xl hover:bg-sky-600 transition-all duration-300 text-white" type="button">
+                                <button wire:click="edit({{$tiket->ID_Tiket}})" class="flex-none p-2.5 bg-sky-500 rounded-xl hover:rounded-3xl hover:bg-sky-600 transition-all duration-300 text-white" type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </button>
 
                                 <!-- Delete -->
-                                <button onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{$value->ID_Tiket}})" class="flex-none p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
+                                <button onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{$tiket->ID_Tiket}})" class="flex-none p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                     </svg>

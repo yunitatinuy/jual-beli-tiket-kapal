@@ -36,7 +36,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/kapal', Kapal::class);
     Route::get('/pelabuhan', Pelabuhan::class);
     Route::get('/tiket', Tiket::class);
-    Route::get('/harga', harga::class);
+    Route::get('/harga', Harga::class);
     Route::get('/rute', Rute::class);
     Route::get('/pengguna', Pengguna::class);
     Route::get('/pesanan', Pesanan::class);
