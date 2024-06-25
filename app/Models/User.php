@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
+// use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasRoles, HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +18,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $table = 'users'; // sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'ID_User'; // sesuaikan dengan nama primary key Anda
+    protected $primaryKey = 'id'; // sesuaikan dengan nama primary key Anda
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**

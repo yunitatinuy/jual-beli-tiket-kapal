@@ -6,7 +6,7 @@
             <span class=" w-3 mr-3">
                 <img src="/img/user.png" alt="user">
             </span>
-            <span class="font-inter text-sm">Administrator</span>
+            <span class="font-inter text-sm">{{$user->name}}</span>
         </a>
         <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block" aria-labelledby="dropdownMenuButton2" data-twe-dropdown-menu-ref>
             <li>

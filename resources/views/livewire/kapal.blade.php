@@ -153,7 +153,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="font-inter text-base pt-2">Belum Ada Data.</td>
+                            <td colspan="10" class="font-inter text-base pt-2">Belum Ada Data.</td>
                         </tr>
                         @endforelse
                     </tbody>

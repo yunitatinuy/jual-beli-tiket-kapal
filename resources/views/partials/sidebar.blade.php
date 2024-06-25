@@ -16,7 +16,7 @@
                     <div class="p-3 pt-5 mx-auto flex justify-center items-center">
                         <img src="/img/photos/dhaput.jpg" class="w-24 h-24 bg-cover rounded-full">
                     </div>
-                    <span class="font-inter font-medium text-lg text-black flex justify-center items-center text-center">Administrator</span>
+                    <span class="font-inter font-medium text-lg text-black flex justify-center items-center text-center">{{ Auth::user()->name }}</span>
                 </div>
 
                 <ul class="space-y-2 font-medium">

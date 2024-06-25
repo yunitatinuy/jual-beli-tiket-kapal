@@ -35,16 +35,15 @@
             <div class="w-full bg-[#e2ac8b] rounded-xl shadow-inner light:border md:mt-0 sm:max-w-md xl:p-0">
                 <div class="p-6 space-y-4 md:space-y-6">
                     <img src="/img/logo3.png" alt="" class="items-center justify-center w-40 mx-auto">
-                    <form class="space-y-4 md:space-y-6" action="/login" method="post">
+                    <form class="space-y-4 md:space-y-6" action="" method="post"> 
                         @csrf
                         <div>
                             <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 light:text-white">Email :</label>
-                            <input type="email" name="email" id="email"
-                                class="bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-4 focus:border-slate-50 focus:bg-slate-300 block w-full p-2.5 @error('email') is-invalid @enderror"
-                                required="">
+                            <input type="email" name="email" id="email" value="{{ old('email') }}"
+                                class="bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-4 focus:border-slate-50 focus:bg-slate-300 block w-full p-2.5 @error('email') is-invalid @enderror">
                             @error('email')
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback font-semibold">
                                     {{ $message }}
                                 </div>
                             @enderror
@@ -53,15 +52,19 @@
                             <label for="password"
                                 class="block mb-2 text-sm font-medium text-gray-900 light:text-white">Password :</label>
                             <input type="password" name="password" id="password"
-                                class="bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-4 focus:border-slate-50 focus:bg-slate-300 block w-full p-2.5 "
-                                required="">
+                                class="bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-4 focus:border-slate-50 focus:bg-slate-300 block w-full p-2.5 @error('password') is-invalid @enderror">
+                                @error('password')
+                                <div class="invalid-feedback font-semibold">
+                                    {{ $message }}
+                                </div>
+                            @enderror  
                         </div>
                         <div class="flex items-center justify-between">
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
                                     <input id="remember" aria-describedby="remember" type="checkbox"
                                         class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                                        required="">
+                                        >
                                 </div>
                                 <div class="ml-3 text-sm">
                                     <label for="remember" class="text-black light:text-gray-300">Remember me</label>

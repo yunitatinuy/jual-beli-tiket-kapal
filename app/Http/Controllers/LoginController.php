@@ -5,35 +5,63 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class LoginController extends Controller
 {
-    public function login()
+    public function index()
     {
-        return view('pengguna.login', [
-            'title' => 'login',
-            'active' => 'login'
-        ]);
+        return view('pengguna.login');
     }
 
-    public function authenticate(Request $request)
+    function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email:dns',
-            'password' => 'required'
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ], [
+            'email.required' => 'Email wajib diisi',
+            'password.required' => 'Password wajib diisi',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $infologin = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
-            $user = Auth::user();
-
-            if ($user->hasRole('admin')) {
+        if (Auth::attempt($infologin)) {
+            if (Auth::user()->role == 'admin') {
                 return redirect('/admin/dashboard');
+            } elseif (Auth::user()->role == 'user') {
+                return redirect('/dashboard_pengguna');
             }
-
-            return redirect('/dashboard_pengguna');
+        } else {
+            return redirect('/login')->with('loginError', 'Username dan password yang dimasukkan tidak sesuai')->withInput();
         }
 
-        return back()->with('loginError', 'Login failed!');
+        function logout()
+        {
+            Auth::logout();
+            return redirect('');
+        }
     }
+    // public function postlogin(Request $request)
+    // {
+    //     // dd($request->all());
+    //     // Autentikasi pengguna
+    //     if (Auth::attempt($request->only('email', 'password'))) {
+    //         // Dapatkan pengguna yang diautentikasi
+    //         $user = Auth::user();
+
+    //         // Periksa peran pengguna dan arahkan ke halaman yang sesuai
+    //         if ($user->role === 'admin') {
+    //             return redirect('/dashboard');
+    //         } elseif ($user->role === 'user') {
+    //             return redirect('/dashboard_pengguna');
+    //         }
+    //     }
+
+    //     // Jika autentikasi gagal, kembalikan ke halaman login
+    //     return redirect('/login')->with('error', 'Invalid credentials');
+    // }
+
 }
