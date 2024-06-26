@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\RegisterController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // Controllerr
 use App\Http\Controllers\DashboardController;
@@ -38,18 +39,28 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware(['auth'])->name('verification.notice');
 
-// Menangani verifikasi email
+// verifikasi email
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect('/');
+    $user = Auth::user();
+
+    switch ($user->role) {
+        case 'admin':
+            return redirect('/admin/dashboard');
+        case 'user':
+            return redirect('/dashboard_pengguna');
+        default:
+            return redirect('/');
+    }
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
 
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    Session::flash('status', 'verification-link-sent');
+    return back();
+})->middleware(['auth', 'throttle:10,1'])->name('verification.send');
 
 // Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
@@ -82,7 +93,7 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     });
 });
 
-// cek role admin
+// Admin Auth
 Route::prefix('admin')->middleware(['auth', 'verified', 'cekrole:admin'])->group(function () {
     Route::get('/dashboard', AdminDashboard::class);
     Route::get('/kapal', Kapal::class);
