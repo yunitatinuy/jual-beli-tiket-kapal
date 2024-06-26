@@ -3,7 +3,7 @@
 @section('container')
     <!-- carousel -->
 
-    <div id="myCarousel" class="w-full bg-cover carousel slide" data-bs-ride="carousel">
+    <div id="myCarousel" class="w-full *: bg-cover carousel slide" data-bs-ride="carousel">
         <div class="absolute bottom-0 left-0 right-0 flex justify-center p-4 carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0"
                 class="w-4 h-4 bg-transparent rounded-full active" aria-current="true" aria-label="Slide 1"></button>
@@ -14,7 +14,7 @@
         </div>
         <div class="carousel-inner h-[500px]">
             <div class="carousel-item active">
-                <img src="img/1.webp" alt="" class="w-full">
+                <img src="img/1.webp" alt="" class="w-full object-cover object-center">
                 <div class="container">
                     <div class="carousel-caption text-start">
                         <h1>HAI</h1>

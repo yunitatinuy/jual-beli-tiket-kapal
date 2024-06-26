@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\TransaksiController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -43,6 +44,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Logout
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 // pengguna---------
 Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
