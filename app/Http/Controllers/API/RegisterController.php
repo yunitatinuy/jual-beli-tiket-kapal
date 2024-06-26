@@ -12,7 +12,7 @@ class RegisterController extends Controller
 {
     public function registrasi()
     {
-        return view('/pengguna/registrasi', [
+        return view('/auth/registrasi', [
             'title' => 'Register',
             'active' => 'register'
         ]);
@@ -23,8 +23,22 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => [
+                'required',
+                'string',
+                'min:5', // minimal 8 karakter
+            ],
             'c_password' => 'required|same:password',
+        ], [
+            'name.required' => 'Nama harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email harus berupa alamat email yang valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Kata sandi harus diisi.',
+            'password.min' => 'Kata sandi harus minimal 8 karakter.',
+            'password.regex' => 'Kata sandi harus mengandung huruf kecil, huruf besar, angka, dan karakter spesial.',
+            'c_password.required' => 'Konfirmasi kata sandi harus diisi.',
+            'c_password.same' => 'Konfirmasi kata sandi harus sama dengan kata sandi.',
         ]);
 
         if ($validator->fails()) {
