@@ -16,9 +16,6 @@
                 <img src="img/1.webp" alt="" class="object-cover object-center w-full">
                 <div class="container">
                     <div class="carousel-caption text-start">
-                        <h1>HAI</h1>
-                        <p class="opacity-75">HELLO</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">Registrasi Cepat</a></p>
                     </div>
                 </div>
             </div>
@@ -26,9 +23,6 @@
                 <img src="img/2.webp" alt="" class="w-full">
                 <div class="container">
                     <div class="carousel-caption">
-                        <h1>HAI</h1>
-                        <p>HELLO</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">HELOO</a></p>
                     </div>
                 </div>
             </div>
@@ -36,9 +30,6 @@
                 <img src="img/3.jpg" alt="" class="w-full">
                 <div class="container">
                     <div class="carousel-caption text-end">
-                        <h1>HAI</h1>
-                        <p>HELLO</p>
-                        <p><a class="btn btn-lg btn-primary" href="#">HELOO</a></p>
                     </div>
                 </div>
             </div>
@@ -211,14 +202,6 @@
                 </form>
             </div>
         </div>
-    </div>
-    <!-- tampilan2 end -->
-    <div class="flex justify-end">
-        <a href="/login"
-            class="inline-flex items-center px-3 py-2 font-sans text-sm font-medium text-center transition duration-150 rounded-lg shadow-lg text-dark bg-slate-50 hover:scale-110 hover:ease-out focus:ring-4">
-            Cari Ferry
-            <img src="/img/cari.png" alt="" class="w-4 ms-2">
-        </a>
     </div>
     </div>
 
