@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Harga extends Model
 {
     use HasFactory;
-    protected $table = 'harga'; // sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'ID_Harga'; // sesuaikan dengan nama primary key Anda
+    protected $table = 'harga';
+    protected $primaryKey = 'ID_Harga'; 
     protected $fillable = [
         'Tipe_Penumpang',
         'Kelas',

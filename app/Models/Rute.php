@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Rute extends Model
 {
     use HasFactory;
-    protected $table = 'rute'; // sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'ID_Rute'; // sesuaikan dengan nama primary key Anda
+    protected $table = 'rute';
+    protected $primaryKey = 'ID_Rute'; 
     protected $fillable = [
         'ID_Kapal',
         'Pelabuhan_Asal',
@@ -37,7 +37,7 @@ class Rute extends Model
 
     public function tiket()
     {
-        return $this->hasOne(Tiket::class, 'ID_Rute');
+        return $this->hasMany(Tiket::class, 'ID_Rute', 'ID_Rute');
     }
 
     public function harga()

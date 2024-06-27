@@ -51,6 +51,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect('/login')->with('success', 'User registered successfully. Please log in.');
+        return redirect('/login')->with('success', 'Username dan password yang dimasukkan tidak sesuai');
     }
 }

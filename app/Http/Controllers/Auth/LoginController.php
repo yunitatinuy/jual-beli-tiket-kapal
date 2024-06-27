@@ -45,24 +45,4 @@ class LoginController extends Controller
             return redirect('');
         }
     }
-    // public function postlogin(Request $request)
-    // {
-    //     // dd($request->all());
-    //     // Autentikasi pengguna
-    //     if (Auth::attempt($request->only('email', 'password'))) {
-    //         // Dapatkan pengguna yang diautentikasi
-    //         $user = Auth::user();
-
-    //         // Periksa peran pengguna dan arahkan ke halaman yang sesuai
-    //         if ($user->role === 'admin') {
-    //             return redirect('/dashboard');
-    //         } elseif ($user->role === 'user') {
-    //             return redirect('/dashboard_pengguna');
-    //         }
-    //     }
-
-    //     // Jika autentikasi gagal, kembalikan ke halaman login
-    //     return redirect('/login')->with('error', 'Invalid credentials');
-    // }
-
 }

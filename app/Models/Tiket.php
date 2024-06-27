@@ -16,7 +16,7 @@ class Tiket extends Model
         'Jumlah_Tiket',
     ];
     public $timestamps = false;
-    
+
     public function rute()
     {
         return $this->belongsTo(Rute::class, 'ID_Rute', 'ID_Rute');
