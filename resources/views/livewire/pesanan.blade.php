@@ -85,33 +85,16 @@
 
                 <div class="flex px-6 py-3">
                     <div class="relative z-0 w-full group">
-                        <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pesanan</label>
+                        <label for="Tanggal_Pesanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pesanan</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input type="date" wire:model="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
+                            <input type="date" wire:model="Tanggal_Pesanan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
                         </div>
-                        @error('tanggal')
-                        <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="flex px-6 py-3 mb-3">
-                    <div class="relative z-0 w-full group">
-                        <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Keberangkatan:</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <input type="time" wire:model="jam" id="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " min="09:00" max="18:00" value="00:00" required />
-                        </div>
-                        @error('jam')
+                        @error('Tanggal_Pesanan')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror
                     </div>
@@ -173,7 +156,7 @@
                     <thead class="bg-[#ff9853be] text-sm font-medium text-gray-900">
                         <tr>
                             <th scope="col" class="px-6 py-4">#</th>
-                            <th scope="col" class="px-6 py-4">Kode Rute</th>
+                            <th scope="col" class="px-6 py-4">Rute Perjalanan</th>
                             <th scope="col" class="px-6 py-4">Kode User</th>
                             <th scope="col" class="px-6 py-4">Kode Tiket</th>
                             <th scope="col" class="px-6 py-4">Tanggal Pesanan</th>
@@ -186,15 +169,15 @@
                         @forelse ($dataPesanan as $key => $value)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $dataPesanan->firstItem() + $key }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $this->getRute($pesanan->ID_Rute)}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $this->getRute($value->ID_Rute)}}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $value->ID_User }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $value->ID_Tiket }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $value->Tanggal_Pesanan }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $value->Waktu }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $value->Total_Pesanan }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <button wire:click="edit({{ $dataPesanan->id }})" class="inline-block px-3 py-1.5 bg-sky-500 text-white rounded-md font-medium hover:bg-sky-600 focus:bg-primary-accent-300 focus:outline-none focus:ring-0">Edit</button>
-                                <button onclick="confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $dataPesanan->id }})" class="inline-block px-3 py-1.5 bg-red-500 text-white rounded-md font-medium hover:bg-red-600 focus:bg-primary-accent-300 focus:outline-none focus:ring-0">Hapus</button>
+                                <button wire:click="edit({{ $value->ID_Pesanan }})" class="inline-block px-3 py-1.5 bg-sky-500 text-white rounded-md font-medium hover:bg-sky-600 focus:bg-primary-accent-300 focus:outline-none focus:ring-0">Edit</button>
+                                <button onclick="confirm('Apakah Anda yakin ingin menghapus data ini?') || event.stopImmediatePropagation()" wire:click="delete({{ $value->ID_Pesanan }})" class="inline-block px-3 py-1.5 bg-red-500 text-white rounded-md font-medium hover:bg-red-600 focus:bg-primary-accent-300 focus:outline-none focus:ring-0">Hapus</button>
                             </td>
                         </tr>
                         @empty
@@ -215,3 +198,22 @@
 {{-- <div class="mt-2 mb-14">
 {{ $pesanan->links(data: ['scrollTo' => false]) }}
 </div> --}}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to set the current time to the input field
+        function setCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentTime = `${hours}:${minutes}`;
+            document.getElementById('Waktu').value = currentTime;
+        }
+
+        // Set the current time immediately
+        setCurrentTime();
+
+        // Update the current time every minute
+        setInterval(setCurrentTime, 60000);
+    });
+</script>

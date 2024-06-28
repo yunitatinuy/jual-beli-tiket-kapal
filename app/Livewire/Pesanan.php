@@ -9,6 +9,8 @@ use App\Models\User as ModelsUser;
 use App\Models\Harga as ModelsHarga;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Carbon\Carbon;
+
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Pesanan extends Component
@@ -59,12 +61,16 @@ class Pesanan extends Component
             'Total_Pesanan.required' => 'Total Pesanan harus diisi.',
         ];
 
-        $this->validate($rules, $pesan);
-        ModelsPesanan::create($validated);
-        $this->reset('ID_Rute', 'ID_User', 'ID_Tiket', 'Tanggal_Pesanan', 'Waktu', 'Total_Pesanan');
-        $this->alert('success', 'Data Berhasil Ditambahkan!');
-        $this->resetPage();
+        ModelsPesanan::create([
+            'ID_Rute' => $this->ID_Rute,
+            'ID_User' => $this->ID_User,
+            'ID_Tiket' => $this->ID_Tiket,
+            'Tanggal_Pesanan' => $this->Tanggal_Pesanan,
+            'Waktu' => Carbon::now('Asia/Jakarta'), // Mengisi kolom Waktu dengan waktu saat ini
+            'Total_Pesanan' => $this->Total_Pesanan,
+        ]);
 
+        $this->reset('ID_Rute', 'ID_User', 'ID_Tiket', 'Tanggal_Pesanan', 'Waktu', 'Total_Pesanan');
         $this->alert('success', 'Data Berhasil Ditambahkan!');
         $this->resetPage();
         $this->clear();
@@ -118,9 +124,16 @@ class Pesanan extends Component
         $validated = $this->validate($rules, $pesan);
 
         $pesanan = ModelsPesanan::find($this->pesananID);
-        $pesanan->update($validated);
-        $this->alert('success', 'Data Berhasil Diupdate!');
+        $pesanan->update([
+            'ID_Rute' => $this->ID_Rute,
+            'ID_User' => $this->ID_User,
+            'ID_Tiket' => $this->ID_Tiket,
+            'Tanggal_Pesanan' => $this->Tanggal_Pesanan,
+            'Waktu' => Carbon::now(), // Mengisi kolom Waktu dengan waktu saat ini
+            'Total_Pesanan' => $this->Total_Pesanan,
+        ]);
 
+        $this->alert('success', 'Data Berhasil Diupdate!');
         $this->clear();
     }
 

@@ -31,52 +31,20 @@
 
 <div class="bg-[#fec7a5] p-5 rounded-t-xl">
     <div class="text-xl font-marko uppercase flex justify-center mb-10"><span>Rute Populer</span></div>
-    <!-- 3 div rute populer -->
-    <div class="flex flex-row justify-center">
-
-        <!-- div baris 1 rute populer -->
-        <div class="content-center mx-10">
+    <div class="grid grid-cols-3 gap-2 justify-center">
+        @foreach($rutes as $rute)
+        <div class="content-center mx-24">
             <div class="flex flex-row">
                 <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
-            </div>
-            <div class="flex flex-row">
-                <img class="w-6" src="/img/icons/dot.png">
-                <p class="font-jsMath">Batam Center ke Harbourfront</p>
+                <p class="font-jsMath">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }} ke {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}</p>
             </div>
         </div>
+        @endforeach
+        <!-- div baris 1 rute populer -->
 
         <!-- div baris 2 rute populer -->
 
-        <div class="content-center mx-5">
+        <!-- <div class="content-center mx-5">
             <div class="flex flex-row">
                 <img class="w-6" src="/img/icons/dot.png">
                 <p class="font-jsMath">Batam Center ke Harbourfront</p>
@@ -113,11 +81,11 @@
                 <img class="w-6" src="/img/icons/dot.png">
                 <p class="font-jsMath">Batam Center ke Harbourfront</p>
             </div>
-        </div>
+        </div> -->
 
         <!-- div baris 3 rute populer -->
 
-        <div class="content-center mx-5">
+        <!-- <div class="content-center mx-5">
             <div class="flex flex-row">
                 <img class="w-6" src="/img/icons/dot.png">
                 <p class="font-jsMath">Batam Center ke Harbourfront</p>
@@ -154,7 +122,7 @@
                 <img class="w-6" src="/img/icons/dot.png">
                 <p class="font-jsMath">Batam Center ke Harbourfront</p>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>

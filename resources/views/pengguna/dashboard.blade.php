@@ -113,13 +113,13 @@
             <form action="{{ route('search') }}" method="GET">
                 <div class="grid grid-cols-1 gap-4 mx-6 my-3 md:grid-cols-3">
                     <div class="flex flex-col">
-                        <label for="routeFrom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dari:</label>
-                        <input type="text" name="routeFrom" placeholder="Dari"
+                        <label for="routeFrom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pelabuhan Asal:</label>
+                        <input type="text" name="routeFrom" placeholder="Pelabuhan Asal"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
-                        <label for="routeTo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ke:</label>
-                        <input type="text" name="routeTo" placeholder="Ke"
+                        <label for="routeTo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pelabuhan Tujuan:</label>
+                        <input type="text" name="routeTo" placeholder="Pelabuhan Tujuan"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
@@ -133,8 +133,8 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
-                        <label for="anak" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anak:</label>
-                        <input type="number" name="anak" id="anak" placeholder="Anak"
+                        <label for="anak" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anak - anak:</label>
+                        <input type="number" name="anak" id="anak" placeholder="Anak - anak"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                 </div>

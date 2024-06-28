@@ -20,15 +20,15 @@ use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PesanTiketController;
 use App\Http\Controllers\SekaliPergiController;
 use App\Http\Controllers\UserProfilController;
 
 // Landing Page
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [LandingController::class, 'index']);
 
 // Registrasi dan Login
 Route::get('/register', [RegisterController::class, 'registrasi']);
@@ -84,7 +84,6 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
     Route::get('/informasi', [InformasiController::class, 'informasi']);
-    Route::get('/pembayaran', [PembayaranController::class, 'pembayaran']);
     Route::get('/transaksi', [TransaksiController::class, 'transaksi']);
 
     Route::get('/sekalipergi', [SekaliPergiController::class, 'index']);
@@ -93,9 +92,7 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/profil', function () {
         return view('/pengguna/profil');
     });
-    // Route::get('/profil', function () {
-    //     return view('/pengguna/profil');
-    // });
+
     Route::get('/profil', [UserProfilController::class, 'edit'])->name('pengguna.profil');
     Route::post('/profil', [UserProfilController::class, 'update'])->name('profile.update');
 
@@ -103,9 +100,11 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
         return view('/pengguna/pergipulang');
     });
 
-    Route::get('/pesantiket', function () {
-        return view('/pengguna/pesantiket');
-    });
+    Route::get('/pesantiket', [PesanTiketController::class, 'create'])->name('pesantiket.create');
+    Route::post('/pesantiket', [PesanTiketController::class, 'store'])->name('pesantiket.store');
+
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pengguna.pembayaran');
+    Route::post('/pembayaran/process', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
 
     Route::get('/pesantiket2', function () {
         return view('/pengguna/pesantiket2orang');
