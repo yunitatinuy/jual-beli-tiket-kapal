@@ -29,7 +29,9 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($infologin)) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($infologin, $remember)) {
             if (Auth::user()->role == 'admin') {
                 return redirect('/admin/dashboard');
             } elseif (Auth::user()->role == 'user') {

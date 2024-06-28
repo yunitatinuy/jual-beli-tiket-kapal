@@ -8,10 +8,7 @@
             </span>
             <span class="font-inter text-sm">{{$user->name}}</span>
         </a>
-        <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block" aria-labelledby="dropdownMenuButton2" data-twe-dropdown-menu-ref>
-            <li>
-                <button class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline" data-twe-dropdown-item-ref>Pengaturan</a>
-            </li>
+        <ul class="absolute z-[1000] w-full m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show]:block" aria-labelledby="dropdownMenuButton2" data-twe-dropdown-menu-ref>
             <li>
                 <button wire:click="logout" class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline" data-twe-dropdown-item-ref>Logout</a>
             </li>

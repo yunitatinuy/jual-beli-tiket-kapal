@@ -1,4 +1,4 @@
-<nav class="bg-[#fcc09b] shadow-xl ">
+<nav class="bg-[#fcc09b] shadow-2xl ">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
         <a href="/dashboard_pengguna" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="img/logo3.png" alt="logo" class="float-left flex flex-col object-cover w-16">

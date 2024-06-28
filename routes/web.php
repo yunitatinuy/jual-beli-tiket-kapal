@@ -92,6 +92,11 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/profil', function () {
         return view('/pengguna/profil');
     });
+    // Route::get('/profil', function () {
+    //     return view('/pengguna/profil');
+    // });
+    Route::get('/profil', [UserProfilController::class, 'edit'])->name('pengguna.profil');
+    Route::post('/profil', [UserProfilController::class, 'update'])->name('profile.update');
 
     Route::get('/pergipulang', function () {
         return view('/pengguna/pergipulang');
