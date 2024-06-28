@@ -23,6 +23,7 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\SekaliPergiController;
+use App\Http\Controllers\UserProfilController;
 
 // Landing Page
 Route::get('/', function () {
