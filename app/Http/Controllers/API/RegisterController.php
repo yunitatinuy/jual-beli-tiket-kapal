@@ -26,7 +26,7 @@ class RegisterController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:5', // minimal 8 karakter
+                'min:8',
             ],
             'c_password' => 'required|same:password',
         ], [

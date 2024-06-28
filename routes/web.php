@@ -26,6 +26,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PesanTiketController;
 use App\Http\Controllers\SekaliPergiController;
 use App\Http\Controllers\UserProfilController;
+use App\Http\Controllers\InvoiceController;
 
 // Landing Page
 Route::get('/', [LandingController::class, 'index']);
@@ -109,4 +110,12 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/pesantiket2', function () {
         return view('/pengguna/pesantiket2orang');
     });
+});
+
+
+// Invoice
+// Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
+// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+Route::get('/invoice', function () {
+    return view('/invoices/show');
 });

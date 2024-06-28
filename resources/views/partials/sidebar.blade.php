@@ -11,7 +11,7 @@
         <aside id="default-sidebar" class="top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
 
             {{-- Photos --}}
-            <div class="h-full px-3 w-full py-4 overflow-y-auto bg-gradient-to-b from-[#fff4c6] to-white">
+            <div class="h-full px-3 w-64 py-4 overflow-y-auto bg-gradient-to-b from-[#fff4c6] to-white">
                 <div class=" h-auto w-full mb-3 pb-3 rounded-xl bg-[#FFBF78]">
                     <div class="p-3 pt-5 mx-auto flex justify-center items-center">
                         <img src="/img/photos/dhaput.jpg" class="w-24 h-24 bg-cover rounded-full">
