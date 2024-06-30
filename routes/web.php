@@ -92,18 +92,27 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
 
     Route::get('/profil', [UserProfilController::class, 'edit'])->name('pengguna.profil');
     Route::post('/profil', [UserProfilController::class, 'update'])->name('profile.update');
-
     Route::get('/pesantiket', [PesanTiketController::class, 'create'])->name('pesantiket.create');
     Route::post('/pesantiket', [PesanTiketController::class, 'store'])->name('pesantiket.store');
     Route::get('/pesantiket', [PesanTiketController::class, 'index'])->name('pesantiket');
-
-    Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('pembayaran');
-    Route::post('/pembayaran', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
+    Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 });
 
-// Invoice
-Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
-Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-Route::get('/invoice', function () {
-    return view('/invoices/show');
-});
+//     // Invoice
+//     Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
+//     Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+//     Route::get('/invoice', function () {
+//         return view('/invoices/show');
+//     })->name('invoice');
+//     Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('pembayaran');
+//     Route::post('/pembayaran', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
+// });
+
+// // Invoice routes
+// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+// // Invoice
+// Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
+// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+// Route::get('/invoice', function () {
+//     return view('/invoices/show');
+// });

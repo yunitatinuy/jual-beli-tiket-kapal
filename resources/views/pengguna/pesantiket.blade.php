@@ -118,30 +118,32 @@
                         <input type="hidden" name="harga_ekonomi_anak" value="{{ $harga_ekonomi_anak }}">
                         <input type="hidden" name="harga_vip_dewasa" value="{{ $harga_vip_dewasa }}">
                         <input type="hidden" name="harga_vip_anak" value="{{ $harga_vip_anak }}">
-                        <div class="grid grid-cols-2 gap-2 my-4">
-                            <div class="w-full md:w-1/2 px-3 py-2 rounded-lg bg-[#e5cabb]">
-                                <div class="flex-warp px-2 py-2 mt-2 rounded-lg bg-gradient-to-tr from-[#ffebe1] to-[#efd5c8]">
-                                    <p class="mb-2 font-semibold">Pilih Metode Pembayaran</p>
-                                    @foreach (\App\Models\Pesanan::METODE_BAYAR as $metode)
-                                        <label class="flex p-2 cursor-pointer radio">
-                                            <input class="my-auto transform scale-120" type="radio" name="metode_bayar"
-                                                value="{{ $metode }}" required />
-                                            <div class="px-2 title">{{ $metode }}</div>
-                                        </label>
-                                    @endforeach
+                            <div class="grid grid-cols-2 gap-2 my-4">
+                                <div class="w-full md:w-1/2 px-3 py-2 rounded-lg bg-[#e5cabb]">
+                                    <div
+                                        class="flex-warp px-2 py-2 mt-2 rounded-lg bg-gradient-to-tr from-[#ffebe1] to-[#efd5c8]">
+                                        <p class="mb-2 font-semibold">Pilih Metode Pembayaran</p>
+                                        @foreach (\App\Models\Pesanan::METODE_BAYAR as $metode)
+                                            <label class="flex p-2 cursor-pointer radio">
+                                                <input class="my-auto transform scale-120" type="radio"
+                                                    name="metode_bayar" value="{{ $metode }}" required />
+                                                <div class="px-2 title">{{ $metode }}</div>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="button" id="add-passenger"
+                                        class="py-2 px-8 max-h-12 font-sans text-base font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">Tambah
+                                        Data Penumpang</button>
                                 </div>
                             </div>
-                            <div class="flex justify-end">
-                                <button type="button" id="add-passenger"
-                                    class="py-2 px-8 max-h-12 font-sans text-base font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">Tambah
-                                    Data Penumpang</button>
+                            <div class="flex justify-center">
+                                <button type="submit"
+                                    class="py-2 px-96 w-11/12 text-lg h-auto font-sans font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">P
+                                    E S A N</button>
                             </div>
-                        </div>
-                        <div class="flex justify-center">
-                            <button type="submit"
-                                class="py-2 px-96 w-11/12 text-lg h-auto font-sans font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">P E S A N</button>
-                        </div>
-                    </form>
+                        </form>
                 </div>
             </div>
         </div>

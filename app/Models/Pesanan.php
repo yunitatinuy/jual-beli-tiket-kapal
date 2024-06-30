@@ -28,6 +28,10 @@ class Pesanan extends Model
         'LinkAja - 083181531047',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'ID_User', 'id');
+    }
     public function tiket()
     {
         return $this->belongsTo(Tiket::class, 'ID_Tiket');

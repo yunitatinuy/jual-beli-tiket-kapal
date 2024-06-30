@@ -15,10 +15,16 @@ class InvoiceController extends Controller
 
         return redirect()->route('invoices.show', $pesanan->ID_Pesanan);
     }
-
     public function show($id)
     {
-        $pesanan = Pesanan::with('user', 'rute', 'tiket')->findOrFail($id);
+        $pesanan = Pesanan::findOrFail($id); // Ambil pesanan berdasarkan ID_Pesanan
+
         return view('invoices.show', compact('pesanan'));
     }
+
+    // public function show($id)
+    // {
+    //     $pesanan = Pesanan::with('user', 'rute', 'rute.kapal')->findOrFail($id);
+    //     return view('invoices.show', compact('pesanan'));
+    // }
 }
