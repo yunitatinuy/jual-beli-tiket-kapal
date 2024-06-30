@@ -3,29 +3,45 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pesanan;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PembayaranController extends Controller
 {
     // Method untuk menampilkan halaman pembayaran
-    public function index()
+    public function pembayaran(Request $request)
     {
-        // Contoh: ambil data pesanan dari database
-        $nomor_pemesanan = 'PSN12345'; // Gantikan dengan data sesuai aplikasi Anda
-        $total_pembayaran = 100000; // Gantikan dengan data sesuai aplikasi Anda
+        $totalHarga = session('totalHarga', 0);
+        $ID_Tiket = session('ID_Tiket');
 
-        return view('pengguna.pembayaran', [
-            'nomor_pemesanan' => $nomor_pemesanan,
-            'total_pembayaran' => $total_pembayaran,
-        ]);
+        return view('pengguna.pembayaran', compact('totalHarga'));
     }
 
     // Method untuk memproses pembayaran
     public function processPayment(Request $request)
     {
-        // Proses validasi dan penyimpanan data pembayaran
-        // Contoh: validasi input, penyimpanan ke database, dll
+        // Validate input
+        $validatedData = $request->validate([
+            'metode_bayar' => 'required',
+        ]);
 
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->back()->with('success', 'Pembayaran berhasil diproses!');
+        // Retrieve necessary session data or other data
+        $totalHarga = session('totalHarga', 0);
+        $ID_Tiket = session('ID_Tiket');
+
+        // Create new Pesanan instance
+        $pesanan = new Pesanan();
+        $pesanan->ID_User = Auth::id();
+        $pesanan->ID_Tiket = $ID_Tiket;
+        $pesanan->Tanggal_Pesanan = Carbon::now()->format('Y-m-d');
+        $pesanan->Waktu = Carbon::now()->format('H:i:s');
+        $pesanan->Total_Harga = $totalHarga; // Assign total price here
+        $pesanan->Metode_Bayar = $validatedData['metode_bayar'];
+        $pesanan->save();
+
+        // Redirect or show success message
+        return redirect('/invoice')->with('success', 'Pembayaran berhasil diproses!');
     }
 }

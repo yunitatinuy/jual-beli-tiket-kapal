@@ -9,7 +9,7 @@ class Rute extends Model
 {
     use HasFactory;
     protected $table = 'rute';
-    protected $primaryKey = 'ID_Rute'; 
+    protected $primaryKey = 'ID_Rute';
     protected $fillable = [
         'ID_Kapal',
         'Pelabuhan_Asal',

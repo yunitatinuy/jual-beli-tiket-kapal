@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\JenisKelamin;
 
 class Penumpang extends Model
 {
@@ -16,7 +17,20 @@ class Penumpang extends Model
         'Nama_Lengkap',
         'Telepon',
         'Alamat',
+        'Jenis_Kelamin',
+    ];
+
+    protected $casts = [
+        'Jenis_Kelamin' => JenisKelamin::class,
     ];
 
     public $timestamps = false;
+
+    /**
+     * Define the relationship with User model.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id', 'id');
+    }
 }

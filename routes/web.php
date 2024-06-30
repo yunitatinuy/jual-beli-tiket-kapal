@@ -1,31 +1,31 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Livewire\Rute;
+use App\Livewire\Harga;
+use App\Livewire\Kapal;
 
 // Livewire Controller
-use App\Livewire\AdminDashboard;
-use App\Livewire\Kapal;
-use App\Livewire\Pelabuhan;
-use App\Livewire\Rute;
 use App\Livewire\Tiket;
-use App\Livewire\Harga;
 use App\Livewire\Pesanan;
 use App\Livewire\Pengguna;
+use App\Livewire\Pelabuhan;
+use Illuminate\Http\Request;
+use App\Livewire\AdminDashboard;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 // Controller
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PesanTiketController;
-use App\Http\Controllers\SekaliPergiController;
 use App\Http\Controllers\UserProfilController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\SekaliPergiController;
+use App\Http\Controllers\API\RegisterController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\InvoiceController;
 
 // Landing Page
@@ -90,32 +90,20 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/sekalipergi', [SekaliPergiController::class, 'index']);
     Route::get('/search', [SekaliPergiController::class, 'search'])->name('search');
 
-    Route::get('/profil', function () {
-        return view('/pengguna/profil');
-    });
-
     Route::get('/profil', [UserProfilController::class, 'edit'])->name('pengguna.profil');
     Route::post('/profil', [UserProfilController::class, 'update'])->name('profile.update');
 
-    Route::get('/pergipulang', function () {
-        return view('/pengguna/pergipulang');
-    });
-
     Route::get('/pesantiket', [PesanTiketController::class, 'create'])->name('pesantiket.create');
     Route::post('/pesantiket', [PesanTiketController::class, 'store'])->name('pesantiket.store');
+    Route::get('/pesantiket', [PesanTiketController::class, 'index'])->name('pesantiket');
 
-    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pengguna.pembayaran');
-    Route::post('/pembayaran/process', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
-
-    Route::get('/pesantiket2', function () {
-        return view('/pengguna/pesantiket2orang');
-    });
+    Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('pembayaran');
+    Route::post('/pembayaran', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
 });
 
-
 // Invoice
-// Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
-// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
+Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 Route::get('/invoice', function () {
     return view('/invoices/show');
 });

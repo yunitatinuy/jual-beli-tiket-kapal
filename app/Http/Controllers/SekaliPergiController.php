@@ -27,8 +27,8 @@ class SekaliPergiController extends Controller
         $routeFrom = $request->input('routeFrom');
         $routeTo = $request->input('routeTo');
         $tanggal = $request->input('tanggal_keberangkatan');
-        $dewasa = $request->input('dewasa', 0); // Default to 0 if not provided
-        $anak = $request->input('anak', 0); // Default to 0 if not provided
+        $dewasa = $request->input('dewasa', 0);
+        $anak = $request->input('anak', 0);
 
         if (!$tanggal) {
             $searchResults['message'] = "Tanggal keberangkatan harus diisi.";
@@ -82,5 +82,20 @@ class SekaliPergiController extends Controller
             'dewasa' => $dewasa,
             'anak' => $anak,
         ]);
+    }
+
+    public function cari(Request $request)
+    {
+        // Validasi input dari form
+        $validated = $request->validate([
+            'Tanggal' => 'required|date',
+            'ID_Rute' => 'required|numeric',
+        ]);
+
+        // Simpan ID_Rute ke session
+        $request->session()->put('ID_Rute', $validated['ID_Rute']);
+
+        // Redirect ke halaman pembayaran
+        return redirect()->route('pembayaran.index');
     }
 }

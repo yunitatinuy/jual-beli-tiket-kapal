@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Tiket extends Model
 {
     use HasFactory;
-    protected $table = 'tiket'; // sesuaikan dengan nama tabel Anda
-    protected $primaryKey = 'ID_Tiket'; // sesuaikan dengan nama primary key Anda
+    protected $table = 'tiket';
+    protected $primaryKey = 'ID_Tiket';
     protected $fillable = [
         'ID_Rute',
         'ID_Harga',
