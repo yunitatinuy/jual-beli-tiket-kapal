@@ -17,7 +17,7 @@
 
                 <div class="text-end">
                     <h2 class="text-2xl font-semibold text-gray-800 md:text-3xl">Invoice</h2>
-                    <span class="block mt-1 text-gray-500">Tiket</span>
+                    <span class="block mt-1 text-gray-500">{{ $pesanan->ID_Pesanan }}</span>
                 </div>
                 <!-- Col -->
             </div>
@@ -26,12 +26,16 @@
             <!-- Grid -->
             <div class="grid gap-3 mt-8 sm:grid-cols-2">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Nama:</h3>
-                    <h3 class="text-lg font-semibold text-gray-800">Muhammad Dafa Putra</h3>
                     <address class="mt-2 not-italic text-gray-500">
-                        Perumahan Muka Kuning Indah 1<br>
-                        0888513534480<br>
-                        mizu@gmail.com<br>
+                        Nama Pemesan : {{ $pesanan->user->name }}<br>
+                        Email : {{ $pesanan->user->email }}
+                    </address>
+                    <h3 class="text-lg font-semibold text-gray-800">Biodata Penumpang :</h3>
+                    <address class="mt-2 not-italic text-gray-500">
+                        Nama Lengkap : {{ $penumpang->Nama_Lengkap }}<br>
+                        Alamat : {{ $penumpang->Alamat }}<br>
+                        No.HP : {{ $penumpang->Telepon }}<br>
+                        Jenis Kelamin : {{ $penumpang->Jenis_Kelamin }}<br>
                     </address>
                 </div>
                 <!-- Col -->
@@ -41,11 +45,11 @@
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-2">
                         <dl class="grid sm:grid-cols-5 gap-x-3">
                             <dt class="col-span-3 font-semibold text-gray-800">Tanggal Pemesanan :</dt>
-                            <dd class="col-span-2 text-gray-500">30/6/2024</dd>
+                            <dd class="col-span-2 text-gray-500">{{ $pesanan->Tanggal_Pesanan }}</dd>
                         </dl>
                         <dl class="grid sm:grid-cols-5 gap-x-3">
                             <dt class="col-span-3 font-semibold text-gray-800">Waktu Pemesanan :</dt>
-                            <dd class="col-span-2 text-gray-500">08:15:00</dd>
+                            <dd class="col-span-2 text-gray-500">{{ $pesanan->Waktu }}</dd>
                         </dl>
                     </div>
                     <!-- End Grid -->
@@ -131,8 +135,12 @@
                         <!-- Grid -->
                         <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-2">
                             <dl class="grid sm:grid-cols-5 gap-x-3">
-                                <dt class="col-span-3 font-semibold text-gray-800">Total Harga:</dt>
-                                <dd class="col-span-2 text-gray-500">Rp245.000</dd>
+                                <dt class="col-span-3 font-semibold text-gray-800">Total Harga :</dt>
+                                <dd class="col-span-2 text-gray-500">Rp{{ number_format($pesanan->Total_Harga, 0, ',', '.') }}.000</dd>
+                            </dl>
+                            <dl class="grid sm:grid-cols-5 gap-x-3">
+                                <dt class="col-span-3 font-semibold text-gray-800">Metode Bayar :</dt>
+                                <dd class="col-span-2 text-gray-500">{{ $pesanan->Metode_Bayar }}</dd>
                             </dl>
                         </div>
                         <!-- End Grid -->

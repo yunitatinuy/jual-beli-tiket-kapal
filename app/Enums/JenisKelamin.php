@@ -6,6 +6,6 @@ use BenSampo\Enum\Enum;
 
 final class JenisKelamin extends Enum
 {
-    const LAKI_LAKI = 'Laki-laki';
-    const PEREMPUAN = 'Perempuan';
+    const LakiLaki = 'laki-laki';
+    const Perempuan = 'perempuan';
 }

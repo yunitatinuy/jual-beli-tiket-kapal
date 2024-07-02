@@ -35,7 +35,6 @@ class SekaliPergiController extends Controller
         } else {
             $parsedDate = Carbon::parse($tanggal)->format('Y-m-d');
 
-            // Search routes
             $query = Rute::with(['pelabuhanAsal', 'pelabuhanTujuan', 'kapal', 'tiket.harga'])
                 ->whereDate('Tanggal', $parsedDate);
 
@@ -53,14 +52,9 @@ class SekaliPergiController extends Controller
 
             $routes = $query->get();
 
-            // Logging for debugging
-            Log::info('Routes found:', ['routes' => $routes->toArray()]);
-
-            // Check if routes are found
             if ($routes->isEmpty()) {
                 $searchResults['message'] = "Tiket perjalanan dari {$routeFrom} ke {$routeTo} pada tanggal {$tanggal} tidak dapat ditemukan. Silakan pilih tanggal lain untuk tiket ferry dari {$routeFrom} ke {$routeTo}.";
             } else {
-                // Calculate prices based on the number of passengers
                 foreach ($routes as $route) {
                     foreach ($route->tiket as $tiket) {
                         if ($tiket->harga->Tipe_Penumpang == 'dewasa') {
@@ -83,6 +77,7 @@ class SekaliPergiController extends Controller
             'anak' => $anak,
         ]);
     }
+
 
     public function cari(Request $request)
     {

@@ -32,6 +32,10 @@ class Pesanan extends Model
     {
         return $this->belongsTo(User::class, 'ID_User', 'id');
     }
+    public function penumpang()
+    {
+        return $this->belongsTo(Penumpang::class, 'ID_Penumpang');
+    }
     public function tiket()
     {
         return $this->belongsTo(Tiket::class, 'ID_Tiket');

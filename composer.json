@@ -13,7 +13,10 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.5",
+<<<<<<< Updated upstream
         "midtrans/midtrans-php": "^2.5",
+=======
+>>>>>>> Stashed changes
         "phpmailer/phpmailer": "^6.9",
         "spatie/laravel-permission": "^6.9"
     },
