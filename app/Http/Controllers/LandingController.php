@@ -9,10 +9,14 @@ class LandingController extends Controller
 {
     public function index()
     {
-        // Ambil data rute dari database
-        $rutes = Rute::with('pelabuhanAsal', 'pelabuhanTujuan')->get();
+        $rutes = Rute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
+            ->get();
 
-        // Kirim data ke view
-        return view('/landing', ['rutes' => $rutes]);
+        // Grouping by route (Pelabuhan_Asal and Pelabuhan_Tujuan) and getting unique routes
+        $uniqueRutes = $rutes->unique(function ($item) {
+            return $item->Pelabuhan_Asal . ' - ' . $item->Pelabuhan_Tujuan;
+        });
+
+        return view('/landing', compact('uniqueRutes'));
     }
 }

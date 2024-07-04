@@ -169,6 +169,7 @@ return [
         App\Providers\EventServiceProvider::class,
         Laravel\Sanctum\SanctumServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -184,6 +185,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'App\Console\Kernel' => App\Console\Kernel::class,
+        'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
     ])->toArray(),
 
 ];

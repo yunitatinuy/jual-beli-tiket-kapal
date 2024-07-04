@@ -84,7 +84,7 @@ Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 // Pengguna
 Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
-    Route::get('/informasi', [InformasiController::class, 'informasi']);
+    Route::get('/informasi', [InformasiController::class, 'index']);
     Route::get('/transaksi', [TransaksiController::class, 'transaksi']);
 
     Route::get('/sekalipergi', [SekaliPergiController::class, 'index']);
@@ -96,23 +96,6 @@ Route::middleware(['auth', 'verified', 'cekrole:user'])->group(function () {
     Route::post('/pesantiket', [PesanTiketController::class, 'store'])->name('pesantiket.store');
     Route::get('/pesantiket', [PesanTiketController::class, 'index'])->name('pesantiket');
     Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+    Route::get('/invoice/pdf/{id}', [InvoiceController::class, 'generatePDF'])->name('invoice.pdf');
 });
 
-//     // Invoice
-//     Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
-//     Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-//     Route::get('/invoice', function () {
-//         return view('/invoices/show');
-//     })->name('invoice');
-//     Route::get('/pembayaran', [PembayaranController::class, 'pembayaran'])->name('pembayaran');
-//     Route::post('/pembayaran', [PembayaranController::class, 'processPayment'])->name('pembayaran.process');
-// });
-
-// // Invoice routes
-// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-// // Invoice
-// Route::post('/invoices/create/{pesananId}', [InvoiceController::class, 'createInvoice'])->name('invoices.create');
-// Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-// Route::get('/invoice', function () {
-//     return view('/invoices/show');
-// });

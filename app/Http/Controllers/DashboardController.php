@@ -13,20 +13,26 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        // Ambil data kapal, rute dan pelabuhan
         $kapals = Kapal::all();
         $rutes = Rute::with(['pelabuhanAsal', 'pelabuhanTujuan'])->get();
         $pelabuhans = Pelabuhan::all();
         $harga = Harga::all();
         $tiket = Tiket::with(['harga', 'rute'])->get();
 
-        // Kirim data ke view
-        return view('pengguna/dashboard', [
+        $uniqueRutes = $rutes->unique(function ($item) {
+            return $item->pelabuhanAsal->Nama_Pelabuhan . ' - ' . $item->pelabuhanTujuan->Nama_Pelabuhan;
+        });
+
+        // Return view with data
+        return view('pengguna.dashboard', [
             'kapals' => $kapals,
             'rutes' => $rutes,
             'pelabuhans' => $pelabuhans,
             'hargas' => $harga,
             'tikets' => $tiket,
+            'uniqueRutes' => $uniqueRutes,
         ]);
     }
 }
+
+?>

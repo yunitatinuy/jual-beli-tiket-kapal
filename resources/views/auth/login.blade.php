@@ -49,16 +49,6 @@
                         </div>
                         @enderror
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300">
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="remember" name="remember" id="remember" class="text-black light:text-gray-300">Remember me</label>
-                            </div>
-                        </div>
-                    </div>
                     <button type="submit" class="w-full text-slate-950 bg-[#f49855] focus:ring-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-[#ED9455] hover:text-slate-100">Login</button>
                     <p class="text-sm font-light text-black light:text-gray-400 ">Belum punya akun? <a href="/register" class="font-medium text-slate-50 hover:underline hover:text-slate-50">Registrasi disini</a>
                     </p>

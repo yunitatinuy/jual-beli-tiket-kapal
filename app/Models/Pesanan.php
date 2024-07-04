@@ -14,6 +14,7 @@ class Pesanan extends Model
     protected $primaryKey = 'ID_Pesanan';
     protected $fillable = [
         'ID_User',
+        'ID_Penumpang',
         'Tanggal_Pesanan',
         'Waktu',
         'Total_Harga',
@@ -32,6 +33,12 @@ class Pesanan extends Model
     {
         return $this->belongsTo(User::class, 'ID_User', 'id');
     }
+
+    public function penumpang()
+    {
+        return $this->belongsTo(Penumpang::class, 'ID_Penumpang', 'ID_Penumpang');
+    }
+
     public function tiket()
     {
         return $this->belongsTo(Tiket::class, 'ID_Tiket');

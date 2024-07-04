@@ -250,6 +250,16 @@
                             </div>
                         </div>
                     @endforeach
+                    @else
+                    <div class="flex items-center justify-center h-screen">
+                        <div class="max-w-xl p-8 bg-[#DEC3B4] rounded-lg shadow-lg backdrop-filter backdrop-blur-md">
+                            <p class="mb-4 text-lg font-semibold">{{ $searchResults['message'] }}</p>
+                            <a href="/dashboard_pengguna"
+                                class="inline-block px-6 py-3 text-white transition duration-150 ease-in-out bg-[#f9a273] hover:bg-[#eb9f77] rounded-lg focus:ring-4 focus:ring-blue-300 focus:outline-none">
+                                Kembali ke Dashboard
+                            </a>
+                        </div>
+                    </div>
                 @endif
             @endif
         </center>
