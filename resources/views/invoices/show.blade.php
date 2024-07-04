@@ -44,12 +44,21 @@
                         <!-- Grid -->
                         <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-2">
                             <dl class="grid sm:grid-cols-5 gap-x-3">
-                                <dt class="col-span-3 font-semibold text-gray-800">Tanggal Pemesanan :</dt>
-                                <dd class="col-span-2 text-gray-500">{{ $pesanan->Tanggal_Pesanan }}</dd>
+                                <<<<<<< HEAD <dt class="col-span-3 font-semibold text-gray-800">Tanggal Pemesanan :</dt>
+                                    <dd class="col-span-2 text-gray-500">{{ $pesanan->Tanggal_Pesanan }}</dd>
                             </dl>
                             <dl class="grid sm:grid-cols-5 gap-x-3">
                                 <dt class="col-span-3 font-semibold text-gray-800">Waktu Pemesanan :</dt>
                                 <dd class="col-span-2 text-gray-500">{{ $pesanan->Waktu }}</dd>
+                                =======
+                                <dt class="col-span-3 font-semibold text-gray-800">Total Harga :</dt>
+                                <dd class="col-span-2 text-gray-500">
+                                    Rp{{ number_format($pesanan->Total_Harga, 0, ',', '.') }}.000</dd>
+                            </dl>
+                            <dl class="grid sm:grid-cols-5 gap-x-3">
+                                <dt class="col-span-3 font-semibold text-gray-800">Metode Bayar :</dt>
+                                <dd class="col-span-2 text-gray-500">{{ $pesanan->Metode_Bayar }}</dd>
+                                >>>>>>> f11849d6463f320f0ebb5cf6073db12076627f4a
                             </dl>
                         </div>
                         <!-- End Grid -->
@@ -178,8 +187,8 @@
                     </a>
                     <a class="inline-flex items-center px-3 py-2 text-sm font-semibold text-white bg-blue-600 border border-transparent rounded-lg gap-x-2 hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                         href="">
-                        <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 6 2 18 2 18 9" />
                             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
