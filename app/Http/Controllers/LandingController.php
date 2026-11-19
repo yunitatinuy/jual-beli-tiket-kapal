@@ -2,21 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Rute;
+use App\Services\JadwalService;
 
 class LandingController extends Controller
 {
-    public function index()
+    public function index(JadwalService $jadwal)
     {
-        $rutes = Rute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
-            ->get();
-
-        // Grouping by route (Pelabuhan_Asal and Pelabuhan_Tujuan) and getting unique routes
-        $uniqueRutes = $rutes->unique(function ($item) {
-            return $item->Pelabuhan_Asal . ' - ' . $item->Pelabuhan_Tujuan;
-        });
-
-        return view('/landing', compact('uniqueRutes'));
+        return view('landing', ['uniqueRutes' => $jadwal->rutePopuler()]);
     }
 }

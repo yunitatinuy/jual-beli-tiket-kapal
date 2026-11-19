@@ -5,46 +5,56 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
+    // Maksimal percobaan login gagal per email + IP sebelum dikunci sementara
+    private const MAX_ATTEMPTS = 5;
+    private const DECAY_SECONDS = 60;
+
     public function index()
     {
         return view('auth.login');
     }
 
-    function login(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|email:rfc,filter',
             'password' => 'required',
         ], [
             'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
             'password.required' => 'Password wajib diisi',
         ]);
 
-        $infologin = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
+        $throttleKey = Str::transliterate(Str::lower($request->input('email')) . '|' . $request->ip());
 
-        $remember = $request->has('remember');
+        if (RateLimiter::tooManyAttempts($throttleKey, self::MAX_ATTEMPTS)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
 
-        if (Auth::attempt($infologin, $remember)) {
-            if (Auth::user()->role == 'admin') {
-                return redirect('/admin/dashboard');
-            } elseif (Auth::user()->role == 'user') {
-                return redirect('/dashboard_pengguna');
-            }
-        } else {
-            return redirect('/login')->with('loginError', 'Username dan password yang dimasukkan tidak sesuai')->withInput();
+            return redirect('/login')
+                ->with('loginError', "Terlalu banyak percobaan login. Coba lagi dalam {$seconds} detik.")
+                ->withInput($request->only('email'));
         }
 
-        function logout()
-        {
-            Auth::logout();
-            return redirect('');
+        $credentials = $request->only('email', 'password');
+
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::hit($throttleKey, self::DECAY_SECONDS);
+
+            return redirect('/login')
+                ->with('loginError', 'Email atau password yang dimasukkan tidak sesuai')
+                ->withInput($request->only('email'));
         }
+
+        RateLimiter::clear($throttleKey);
+        $request->session()->regenerate();
+
+        return redirect()->intended(
+            Auth::user()->isAdmin() ? '/admin/dashboard' : '/dashboard_pengguna'
+        );
     }
 }

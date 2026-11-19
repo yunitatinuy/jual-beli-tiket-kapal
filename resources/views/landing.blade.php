@@ -9,7 +9,7 @@
 
             <div class="flex flex-row justify-center">
                 <div class="pr-3">
-                    <img src="img/logo3.png" alt="logo" width="160">
+                    <img src="/img/logo3.png" alt="logo" width="160">
                 </div>
 
                 <div class="font-jsMath text-2xl pr-3">

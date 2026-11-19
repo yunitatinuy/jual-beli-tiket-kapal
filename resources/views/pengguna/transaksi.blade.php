@@ -9,24 +9,33 @@
                         <thead>
                             <tr class="bg-gray-200">
                                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Nama Pengguna</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pesanan</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Waktu</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Kode Booking</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Rute</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Keberangkatan</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Penumpang</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Harga</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Metode Bayar</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pesanans as $index => $pesanan)
+                            @forelse($pesanans as $pesanan)
+                                @php $rute = $pesanan->rute; @endphp
                                 <tr class="transition-all hover:bg-gray-100">
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $index + 1 }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanan->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanan->Tanggal_Pesanan }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ substr($pesanan->Waktu, 0, 5) }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">Rp{{ number_format($pesanan->Total_Harga, 0, ',', '.') }}.000</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanan->Metode_Bayar }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanans->firstItem() + $loop->index }}</td>
+                                    <td class="px-6 py-4 font-mono whitespace-nowrap">{{ $pesanan->Kode_Booking ?? $pesanan->ID_Pesanan }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rute?->pelabuhanAsal?->Nama_Pelabuhan ?? '-' }} &rarr; {{ $rute?->pelabuhanTujuan?->Nama_Pelabuhan ?? '-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $rute ? \Carbon\Carbon::parse($rute->Tanggal)->format('d-m-Y') . ' ' . \Carbon\Carbon::parse($rute->Jam)->format('H:i') : '-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanan->penumpangs_count }} ({{ $pesanan->Kelas ?? '-' }})</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ rupiah($pesanan->Total_Harga) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ $pesanan->status_label }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><a class="text-blue-600 hover:underline" href="{{ route('invoices.show', $pesanan->ID_Pesanan) }}">Lihat Invoice</a></td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="px-6 py-4">Belum ada pesanan.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
 

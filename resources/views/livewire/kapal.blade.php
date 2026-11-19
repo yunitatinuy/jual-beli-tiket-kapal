@@ -37,7 +37,7 @@
         <div class="container block max-w-2xl overflow-hidden bg-white border border-gray-200 rounded-lg shadow mt-5">
             <form wire:submit="store">
                 <div class="bg-[#ff9853be] p-6">
-                    <span class="font-inter font-semibold text-xl ">Formulir Rute Perjalanan</span>
+                    <span class="font-inter font-semibold text-xl ">Formulir Kapal</span>
                 </div>
 
                 <div class="flex p-6">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="flex p-6 mb-3">
                     <div class="relative z-0 w-full group">
-                        <input type="text" name="Jumlah_Kursi" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Kursi" required />
+                        <input type="number" min="1" step="1" inputmode="numeric" name="Jumlah_Kursi" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Kursi" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Jumlah Kursi</label>
                         @error('Jumlah_Kursi')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>

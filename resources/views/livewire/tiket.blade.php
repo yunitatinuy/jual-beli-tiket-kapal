@@ -41,11 +41,11 @@
                 </div>
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <label for="rute" class="block mb-2 text-sm font-medium text-gray-900">Rute Pejalanan</label>
-                        <select name="ID_Rute" id="ID_Rute" wire:model="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <label for="ID_Rute" class="block mb-2 text-sm font-medium text-gray-900">Rute Perjalanan (jadwal mendatang)</label>
+                        <select name="ID_Rute" id="ID_Rute" wire:model.live="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value=""> - Pilih Rute - </option>
                             @foreach($dataRute as $rute)
-                            <option value="{{ $rute->ID_Rute }}">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }}, {{$rute->pelabuhanAsal->Nama_Kota }} - {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan->Nama_Kota }}</option>
+                            <option value="{{ $rute->ID_Rute }}">{{ $rute->label }}</option>
                             @endforeach
                         </select>
                         @error('ID_Rute')
@@ -56,14 +56,14 @@
 
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <label for="ID_Harga" class="block mb-2 text-sm font-medium text-gray-900">Tipe Penumpang</label>
-                        <select name="ID_Harga" id="ID_Harga" wire:model="ID_Harga" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value=""> - Pilih Tipe Penumpang - </option>
+                        <label for="ID_Harga" class="block mb-2 text-sm font-medium text-gray-900">Tipe Penumpang & Kelas</label>
+                        <select name="ID_Harga" id="ID_Harga" wire:model="ID_Harga" wire:key="harga-{{ $ID_Rute }}" @disabled(! $ID_Rute) class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 disabled:opacity-60">
+                            <option value="">{{ $ID_Rute ? ($dataHarga->isEmpty() ? '- Semua harga rute ini sudah punya tiket / belum ada harga -' : '- Pilih Tipe Penumpang & Kelas -') : '- Pilih rute terlebih dahulu -' }}</option>
                             @foreach($dataHarga as $harga)
-                            <option value="{{ $harga->ID_Harga }}">{{ $harga->Tipe_Penumpang }} - {{ $harga->Kelas }} - Rp{{ number_format($harga->Harga, 0, ',', '.') }}</option>
+                            <option value="{{ $harga->ID_Harga }}">{{ ucfirst($harga->Tipe_Penumpang) }} - {{ $harga->Kelas }} - {{ rupiah($harga->Harga) }}</option>
                             @endforeach
                         </select>
-                        @error('ID_Rute')
+                        @error('ID_Harga')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror
                     </div>
@@ -71,7 +71,7 @@
 
                 <div class="flex px-6 pb-6 pt-3 mb-3">
                     <div class="relative z-0 w-full group">
-                        <input type="text" name="Jumlah_Tiket" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Tiket" required />
+                        <input type="number" min="0" step="1" inputmode="numeric" name="Jumlah_Tiket" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " wire:model="Jumlah_Tiket" required />
                         <label for="" class="peer-focus:font-medium absolute font-inter text-sm text-gray-600 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4    rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Jumlah Tiket</label>
                         @error('Jumlah_Tiket')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
@@ -141,14 +141,14 @@
                     <tbody>
                         @forelse ($dataTiket as $tiket)
                         <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
+                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $dataTiket->firstItem() + $loop->index }}</td>
 
                             <td class="whitespace-nowrap px-6 py-4">{{$tiket->ID_Tiket}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->rute->pelabuhanAsal->Nama_Pelabuhan }} - {{ $tiket->rute->pelabuhanTujuan->Nama_Pelabuhan }}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->harga->Tipe_Penumpang}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$tiket->harga->Kelas}}</td>
+                            <td class="whitespace-nowrap px-6 py-4 text-left">{{ $tiket->rute?->label ?? 'Rute tidak ditemukan' }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{ ucfirst($tiket->harga?->Tipe_Penumpang ?? '-') }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{ $tiket->harga?->Kelas ?? '-' }}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{$tiket->Jumlah_Tiket}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{number_format ($tiket->harga->Harga, 3) }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{ rupiah($tiket->harga?->Harga ?? 0) }}</td>
                             <td class="whitespace-nowrap px-6 py-4">
 
                                 <!-- Edit -->

@@ -44,4 +44,28 @@ class Rute extends Model
     {
         return $this->hasMany(Harga::class, 'ID_Rute');
     }
+
+    public function pesanans()
+    {
+        return $this->hasMany(Pesanan::class, 'ID_Rute', 'ID_Rute');
+    }
+
+    /** Jadwal hari ini dan seterusnya. */
+    public function scopeMendatang($query)
+    {
+        return $query->where('Tanggal', '>=', now()->toDateString());
+    }
+
+    /** Label untuk dropdown admin, mis. "#34 Ketapang → Gilimanuk, 20-11-2026 07:00". */
+    public function getLabelAttribute(): string
+    {
+        return sprintf(
+            '#%d %s → %s, %s %s',
+            $this->ID_Rute,
+            $this->pelabuhanAsal?->Nama_Pelabuhan ?? '?',
+            $this->pelabuhanTujuan?->Nama_Pelabuhan ?? '?',
+            \Carbon\Carbon::parse($this->Tanggal)->format('d-m-Y'),
+            substr((string) $this->Jam, 0, 5)
+        );
+    }
 }

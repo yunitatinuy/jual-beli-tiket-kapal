@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Kapal as ModelsKapal;
-use Livewire\WithPagination;
-use Livewire\Component;
+use App\Models\Rute as ModelsRute;
+use Illuminate\Validation\Rule;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class Kapal extends Component
 {
@@ -20,74 +22,92 @@ class Kapal extends Component
     public $updateData = false;
     public $kapalID;
 
-    public function store()
+    protected function rules(): array
     {
-        $rules = [
-            'Nama_Kapal' => 'required',
-            'Kelas' => 'required',
-            'Jumlah_Kursi' => 'required|integer',
+        return [
+            'Nama_Kapal' => [
+                'required', 'string', 'max:100',
+                Rule::unique('kapal', 'Nama_Kapal')->ignore($this->kapalID, 'ID_Kapal'),
+            ],
+            'Kelas' => ['required', 'string', 'max:50'],
+            'Jumlah_Kursi' => ['required', 'integer', 'min:1', 'max:10000'],
         ];
-
-        $pesan = [
-            'Nama_Kapal.required' => 'Nama Kapal harus diisi.',
-            'Kelas.required' => 'Kelas harus diisi.',
-            'Jumlah_Kursi.required' => 'Jumlah Kursi harus diisi.',
-            'Jumlah_Kursi.integer' => 'Jumlah Kursi diisi angka.',
-        ];
-
-        $validated = $this->validate($rules, $pesan);
-        ModelsKapal::create($validated);
-        $this->reset('Nama_Kapal', 'Kelas', 'Jumlah_Kursi');
-        $this->alert('success', 'Data Berhasil Ditambahkan!');
-        $this->resetPage();
     }
 
-    public function delete($ID_Kapal)
+    protected function messages(): array
     {
-        $kapal = ModelsKapal::find($ID_Kapal);
-        if ($kapal) {
-            $kapal->delete();
-            $this->alert('success', 'Data Berhasil Dihapus!');
-        } else {
-            $this->alert('error', 'Data Tidak Ditemukan!');
-        }
+        return [
+            'Nama_Kapal.required' => 'Nama Kapal harus diisi.',
+            'Nama_Kapal.max' => 'Nama Kapal maksimal 100 karakter.',
+            'Nama_Kapal.unique' => 'Kapal dengan nama ini sudah ada.',
+            'Kelas.required' => 'Kelas harus diisi.',
+            'Kelas.max' => 'Kelas maksimal 50 karakter.',
+            'Jumlah_Kursi.required' => 'Jumlah Kursi harus diisi.',
+            'Jumlah_Kursi.integer' => 'Jumlah Kursi diisi angka bulat.',
+            'Jumlah_Kursi.min' => 'Jumlah Kursi minimal 1.',
+            'Jumlah_Kursi.max' => 'Jumlah Kursi maksimal 10.000.',
+        ];
+    }
+
+    public function store()
+    {
+        ModelsKapal::create($this->validate());
+
+        $this->alert('success', 'Data Berhasil Ditambahkan!');
+        $this->clear();
     }
 
     public function edit($ID_Kapal)
     {
         $data = ModelsKapal::find($ID_Kapal);
+        if (! $data) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
+        }
+
+        $this->kapalID = $data->ID_Kapal;
         $this->Nama_Kapal = $data->Nama_Kapal;
         $this->Kelas = $data->Kelas;
         $this->Jumlah_Kursi = $data->Jumlah_Kursi;
-
         $this->updateData = true;
-        $this->kapalID = $ID_Kapal;
     }
 
     public function update()
     {
-        $rules = [
-            'Nama_Kapal' => 'required',
-            'Kelas' => 'required',
-            'Jumlah_Kursi' => 'required|integer',
-        ];
-
-        $pesan = [
-            'Nama_Kapal.required' => 'Nama Kapal harus diisi.',
-            'Kelas.required' => 'Kelas harus diisi.',
-            'Jumlah_Kursi.required' => 'Jumlah Kursi harus diisi.',
-            'Jumlah_Kursi.integer' => 'Jumlah Kursi diisi angka.',
-        ];
-
-        $validated = $this->validate($rules, $pesan);
+        $validated = $this->validate();
 
         $data = ModelsKapal::find($this->kapalID);
+        if (! $data) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+            $this->clear();
+
+            return;
+        }
+
         $data->update($validated);
         $this->alert('success', 'Data Berhasil Diupdate!');
-
         $this->clear();
     }
 
+    public function delete($ID_Kapal)
+    {
+        $kapal = ModelsKapal::find($ID_Kapal);
+        if (! $kapal) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
+        }
+
+        if (ModelsRute::where('ID_Kapal', $kapal->ID_Kapal)->exists()) {
+            $this->alert('error', 'Kapal masih dipakai di data rute dan tidak bisa dihapus.');
+
+            return;
+        }
+
+        $kapal->delete();
+        $this->alert('success', 'Data Berhasil Dihapus!');
+    }
 
     public function cancel()
     {
@@ -96,20 +116,18 @@ class Kapal extends Component
 
     public function clear()
     {
-        $this->Nama_Kapal = '';
-        $this->Kelas = '';
-        $this->Jumlah_Kursi = '';
-
-        $this->updateData = false;
-        $this->kapalID = '';
+        $this->reset('Nama_Kapal', 'Kelas', 'Jumlah_Kursi', 'kapalID', 'updateData');
         $this->resetValidation();
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
         $this->resetPage();
     }
 
     public function render()
     {
-        // $data = ModelsKapal::orderBy('idkapal', 'asc')->paginate(5);
-        // return view('livewire.kapal', ['dataKapal' => $data]);
         $search = '%' . $this->search . '%';
         $data = ModelsKapal::where('Nama_Kapal', 'like', $search)
             ->orWhere('Kelas', 'like', $search)
@@ -118,6 +136,6 @@ class Kapal extends Component
             ->paginate(5);
 
         return view('livewire.kapal', ['dataKapal' => $data])
-        ->layout('components.adminKapal');
+            ->layout('components.adminKapal');
     }
 }

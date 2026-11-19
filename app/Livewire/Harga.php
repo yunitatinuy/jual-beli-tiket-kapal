@@ -2,117 +2,143 @@
 
 namespace App\Livewire;
 
-use App\Models\Rute as ModelsRute;
 use App\Models\Harga as ModelsHarga;
+use App\Models\Rute as ModelsRute;
+use App\Services\BookingService;
+use Illuminate\Validation\Rule;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Harga extends Component
 {
-
     use WithPagination;
     use LivewireAlert;
 
-    public $ID_Harga;
+    public $ID_Rute;
     public $Tipe_Penumpang;
     public $Kelas;
     public $Harga;
 
     public $search;
     public $updateData = false;
-    public $dataRute;
-
     public $hargaId;
 
-    public function mount()
+    protected function rules(): array
     {
-        $this->dataRute = ModelsRute::all();
+        return [
+            'ID_Rute' => ['required', 'integer', 'exists:rute,ID_Rute'],
+            'Tipe_Penumpang' => ['required', Rule::in(BookingService::TIPE)],
+            'Kelas' => [
+                'required',
+                Rule::in(BookingService::KELAS),
+                // Satu rute hanya boleh punya satu harga untuk tiap kombinasi tipe + kelas
+                Rule::unique('harga', 'Kelas')
+                    ->where('ID_Rute', $this->ID_Rute)
+                    ->where('Tipe_Penumpang', $this->Tipe_Penumpang)
+                    ->ignore($this->hargaId, 'ID_Harga'),
+            ],
+            'Harga' => ['required', 'integer', 'min:1000', 'max:100000000'],
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'ID_Rute.required' => 'Rute harus dipilih.',
+            'ID_Rute.exists' => 'Rute tidak ditemukan.',
+            'Tipe_Penumpang.required' => 'Tipe Penumpang harus dipilih.',
+            'Tipe_Penumpang.in' => 'Tipe Penumpang harus dewasa atau anak.',
+            'Kelas.required' => 'Kelas harus dipilih.',
+            'Kelas.in' => 'Kelas harus VIP atau Ekonomi.',
+            'Kelas.unique' => 'Rute ini sudah punya harga untuk tipe penumpang dan kelas tersebut.',
+            'Harga.required' => 'Harga harus diisi.',
+            'Harga.integer' => 'Harga harus berupa angka bulat (tanpa titik/koma).',
+            'Harga.min' => 'Harga minimal Rp1.000.',
+            'Harga.max' => 'Harga terlalu besar.',
+        ];
+    }
+
+    private function data(): array
+    {
+        return [
+            'ID_Rute' => (int) $this->ID_Rute,
+            'Tipe_Penumpang' => $this->Tipe_Penumpang,
+            'Kelas' => $this->Kelas,
+            'Harga' => (int) $this->Harga,
+        ];
     }
 
     public function store()
     {
-        $rules = [
-            'Tipe_Penumpang' => 'required|in:dewasa,anak',
-            'Kelas' => 'required',
-            'Harga' => 'required',
-        ];
+        $this->validate();
 
-        $pesan = [
-            'Tipe_Penumpang.required' => 'Tipe Penumpang harus dipilih',
-            'Tipe_Penumpang.in' => 'Tipe Penumpang harus dewasa atau anak',
-            'Kelas.required' => 'Kelas harus diisi',
-            'Harga.required' => 'Harga harus diisi',
-            'Harga.numeric' => 'Harga harus berupa angka',
-        ];
-
-        $this->validate($rules, $pesan);
-
-        ModelsHarga::create([
-            'Tipe_Penumpang' => $this->Tipe_Penumpang,
-            'Kelas' => $this->Kelas,
-            'Harga' => $this->Harga,
-        ]);
+        ModelsHarga::create($this->data());
 
         $this->alert('success', 'Data Berhasil Ditambahkan!');
-        $this->resetPage();
+        $this->clear();
+    }
+
+    public function edit($ID_Harga)
+    {
+        $harga = ModelsHarga::find($ID_Harga);
+        if (! $harga) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
+        }
+
+        $this->hargaId = $harga->ID_Harga;
+        $this->ID_Rute = $harga->ID_Rute;
+        $this->Tipe_Penumpang = strtolower((string) $harga->Tipe_Penumpang);
+        $this->Kelas = $harga->Kelas;
+        $this->Harga = $harga->Harga;
+        $this->updateData = true;
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $harga = ModelsHarga::find($this->hargaId);
+        if (! $harga) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+            $this->clear();
+
+            return;
+        }
+
+        // Rute harga tidak boleh dipindah jika sudah dipakai tiket (tiket menunjuk ke rute lama)
+        if ((int) $harga->ID_Rute !== (int) $this->ID_Rute && $harga->tikets()->exists()) {
+            $this->addError('ID_Rute', 'Harga ini sudah dipakai tiket, rutenya tidak bisa diganti. Buat harga baru untuk rute lain.');
+
+            return;
+        }
+
+        // Harga yang sudah dibayar pembeli tersimpan di data penumpang, jadi aman diubah
+        $harga->update($this->data());
+
+        $this->alert('success', 'Data Berhasil Diupdate!');
         $this->clear();
     }
 
     public function delete($ID_Harga)
     {
         $harga = ModelsHarga::find($ID_Harga);
-        if ($harga) {
-            $harga->delete();
-            $this->alert('success', 'Data Berhasil Dihapus!');
-        } else {
+        if (! $harga) {
             $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
         }
-    }
 
-    public function edit($ID_Harga)
-    {
-        $harga = ModelsHarga::find($ID_Harga);
-        $this->hargaId = $harga->ID_Harga;
-        $this->Tipe_Penumpang = $harga->Tipe_Penumpang;
-        $this->Kelas = $harga->Kelas;
-        $this->Harga = $harga->Harga;
+        if ($harga->tikets()->exists()) {
+            $this->alert('error', 'Harga masih dipakai tiket. Hapus tiketnya terlebih dahulu.');
 
-        $this->updateData = true;
-    }
-
-    public function update()
-    {
-        $rules = [
-            'Tipe_Penumpang' => 'required|in:dewasa,anak',
-            'Kelas' => 'required',
-            'Harga' => 'required',
-        ];
-
-        $pesan = [
-            'Tipe_Penumpang.required' => 'Tipe Penumpang harus dipilih',
-            'Tipe_Penumpang.in' => 'Tipe Penumpang harus dewasa atau anak',
-            'Kelas.required' => 'Kelas harus diisi',
-            'Harga.required' => 'Harga harus diisi',
-            'Harga.integer' => 'Harga harus berupa angka',
-        ];
-
-        $this->validate($rules, $pesan);
-
-        $harga = ModelsHarga::find($this->hargaId);
-        if ($harga) {
-            $harga->update([
-                'Tipe_Penumpang' => $this->Tipe_Penumpang,
-                'Kelas' => $this->Kelas,
-                'Harga' => $this->Harga,
-            ]);
-
-            $this->alert('success', 'Data Berhasil Diupdate!');
-            $this->updateData = false;
-        } else {
-            $this->alert('error', 'Data Tidak Ditemukan!');
+            return;
         }
-        $this->clear();
+
+        $harga->delete();
+        $this->alert('success', 'Data Berhasil Dihapus!');
     }
 
     public function cancel()
@@ -122,34 +148,40 @@ class Harga extends Component
 
     public function clear()
     {
-        $this->Tipe_Penumpang = null;
-        $this->Kelas = null;
-        $this->Harga = null;
-        $this->hargaId = null;
-        $this->updateData = false;
+        $this->reset('ID_Rute', 'Tipe_Penumpang', 'Kelas', 'Harga', 'hargaId', 'updateData');
         $this->resetValidation();
         $this->resetPage();
     }
 
-    public function getRute($ID_Rute)
+    public function updatingSearch()
     {
-        $rute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])->find($ID_Rute);
-        return $rute ? "{$rute->pelabuhanAsal->Nama_Pelabuhan}, {$rute->pelabuhanAsal->Nama_Kota} - {$rute->pelabuhanTujuan->Nama_Pelabuhan}, {$rute->pelabuhanTujuan->Nama_Kota}" : 'Rute Tidak Ditemukan';
+        $this->resetPage();
     }
 
     public function render()
     {
         $search = '%' . $this->search . '%';
-        $data = ModelsHarga::where('Tipe_Penumpang', 'like', $search)
-        ->orWhere('Kelas', 'like', $search)
-        ->orWhere('Harga', 'like', $search)
-        ->orderBy('ID_Harga', 'desc')
-        ->paginate(5);
+        $data = ModelsHarga::with(['rute.pelabuhanAsal', 'rute.pelabuhanTujuan'])
+            ->where(function ($q) use ($search) {
+                $q->where('Tipe_Penumpang', 'like', $search)
+                    ->orWhere('Kelas', 'like', $search)
+                    ->orWhere('Harga', 'like', $search)
+                    ->orWhereHas('rute.pelabuhanAsal', fn ($p) => $p->where('Nama_Pelabuhan', 'like', $search))
+                    ->orWhereHas('rute.pelabuhanTujuan', fn ($p) => $p->where('Nama_Pelabuhan', 'like', $search));
+            })
+            ->orderBy('ID_Harga', 'desc')
+            ->paginate(5);
+
+        // Pilihan rute: jadwal mendatang, ditambah rute yang sedang diedit (meski sudah lewat)
+        $dataRute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
+            ->where(fn ($q) => $q->mendatang()->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
+            ->orderBy('Tanggal')->orderBy('Jam')
+            ->get();
 
         return view('livewire.harga', [
             'dataHarga' => $data,
-            'dataRute' => $this->dataRute
-        ])
-            ->layout('components.adminHarga');
+            'dataRute' => $dataRute,
+            'kelasOptions' => BookingService::KELAS,
+        ])->layout('components.adminHarga');
     }
 }

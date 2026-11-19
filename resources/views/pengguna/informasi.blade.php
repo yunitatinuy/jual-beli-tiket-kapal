@@ -8,7 +8,8 @@
                 <a href="">INFORMASI</a>
             </div>
         </div>
-        @foreach($groupedRutes as $route => $rutes)
+        <p class="mb-4 text-sm text-center text-gray-600">Jadwal keberangkatan 30 hari ke depan.</p>
+        @forelse($groupedRutes as $route => $rutes)
         <div class="container flex justify-content-center pt-3 pb-3 mb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4] rounded-lg">
             <div class="container mx-6 pt-2 pl-10 items-center">
                 <div class="flex flex-col space-y-2">
@@ -17,20 +18,22 @@
                     <div class="flex flex-nowrap space-x-12 items-center border-t pt-2">
                         <img src="/img/icons/ship.png" class="w-14">
                         <div>
-                            <strong>Tanggal:</strong> {{ $rute->Tanggal }}
+                            <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($rute->Tanggal)->format('d-m-Y') }}
                         </div>
                         <div>
                             <strong>Jam:</strong> {{ \Carbon\Carbon::parse($rute->Jam)->format('H.i') }}
                         </div>
                         <div>
-                            <strong>Nama Kapal:</strong> {{ $rute->kapal->Nama_Kapal }}
+                            <strong>Nama Kapal:</strong> {{ $rute->kapal?->Nama_Kapal ?? '-' }}
                         </div>
                     </div>
                     @endforeach
                 </div>
             </div>
         </div>
-        @endforeach
+        @empty
+        <p class="py-10 text-center text-gray-600">Belum ada jadwal keberangkatan dalam 30 hari ke depan.</p>
+        @endforelse
     </div>
 </main>
 @endsection

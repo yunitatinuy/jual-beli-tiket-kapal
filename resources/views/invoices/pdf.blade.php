@@ -77,40 +77,55 @@
             </div>
             <div>
                 <h2>Invoice</h2>
-                <span>{{ $pesanan->ID_Pesanan }}</span>
+                <span>{{ $pesanan->Kode_Booking ?? $pesanan->ID_Pesanan }}</span>
             </div>
         </div>
         <div class="content">
+            @php
+                $rute = $pesanan->rute;
+            @endphp
             <address>
                 Nama Pemesan: {{ $pesanan->user->name }}<br>
                 Email: {{ $pesanan->user->email }}
             </address>
-            <h3>Biodata Penumpang:</h3>
-            <address>
-                Nama Lengkap: {{ $penumpang->Nama_Lengkap }}<br>
-                Alamat: {{ $penumpang->Alamat }}<br>
-                No.HP: {{ $penumpang->Telepon }}<br>
-                Jenis Kelamin: {{ $penumpang->Jenis_Kelamin }}<br>
-            </address>
             <dl>
+                <dt>Kode Booking:</dt>
+                <dd>{{ $pesanan->Kode_Booking ?? $pesanan->ID_Pesanan }}</dd>
+                <dt>Status:</dt>
+                <dd>{{ $pesanan->status_label }}</dd>
                 <dt>Tanggal Pemesanan:</dt>
-                <dd>{{ $pesanan->Tanggal_Pesanan }}</dd>
-                <dt>Waktu Pemesanan:</dt>
-                <dd>{{ $pesanan->Waktu }}</dd>
+                <dd>{{ \Carbon\Carbon::parse($pesanan->Tanggal_Pesanan)->format('d-m-Y') }} {{ substr($pesanan->Waktu, 0, 5) }}</dd>
             </dl>
             <div class="table">
                 <div class="row">
-                    <div>Tanggal</div>
+                    <div>Rute</div>
                     <div>Nama Kapal</div>
-                    <div>Jadwal Keberangkatan</div>
-                    <div>Waktu</div>
+                    <div>Keberangkatan</div>
+                    <div>Kelas</div>
                 </div>
                 <div class="row">
-                    <div>18/07/2024</div>
-                    <div>Anang Kapal</div>
-                    <div>18/07/2024</div>
-                    <div>23.30</div>
+                    <div>{{ $rute?->pelabuhanAsal?->Nama_Pelabuhan ?? '-' }} - {{ $rute?->pelabuhanTujuan?->Nama_Pelabuhan ?? '-' }}</div>
+                    <div>{{ $rute?->kapal?->Nama_Kapal ?? '-' }}</div>
+                    <div>{{ $rute ? \Carbon\Carbon::parse($rute->Tanggal)->format('d-m-Y') . ' ' . \Carbon\Carbon::parse($rute->Jam)->format('H:i') : '-' }}</div>
+                    <div>{{ $pesanan->Kelas ?? '-' }}</div>
                 </div>
+            </div>
+            <h3>Penumpang:</h3>
+            <div class="table">
+                <div class="row">
+                    <div>Nama Lengkap</div>
+                    <div>Tipe</div>
+                    <div>Jenis Kelamin</div>
+                    <div>No. HP</div>
+                </div>
+                @foreach ($pesanan->penumpangs as $p)
+                    <div class="row">
+                        <div>{{ $p->Nama_Lengkap }}</div>
+                        <div>{{ ucfirst($p->Tipe_Penumpang) }}</div>
+                        <div>{{ ucfirst($p->Jenis_Kelamin) }}</div>
+                        <div>{{ $p->Telepon }}</div>
+                    </div>
+                @endforeach
             </div>
             <div class="table">
                 <div class="row">
@@ -119,22 +134,18 @@
                     <div>Harga Tiket</div>
                     <div>Total</div>
                 </div>
-                <div class="row">
-                    <div>Dewasa</div>
-                    <div>1</div>
-                    <div>Rp145.000</div>
-                    <div>Rp145.000</div>
-                </div>
-                <div class="row">
-                    <div>Anak</div>
-                    <div>1</div>
-                    <div>Rp100.000</div>
-                    <div>Rp100.000</div>
-                </div>
+                @foreach ($rincian as $r)
+                    <div class="row">
+                        <div>{{ $r['tipe'] }}</div>
+                        <div>{{ $r['jumlah'] }}</div>
+                        <div>{{ rupiah($r['harga']) }}</div>
+                        <div>{{ rupiah($r['subtotal']) }}</div>
+                    </div>
+                @endforeach
             </div>
             <dl>
                 <dt>Total Harga:</dt>
-                <dd>Rp{{ number_format($pesanan->Total_Harga, 0, ',', '.') }}.000</dd>
+                <dd>{{ rupiah($pesanan->Total_Harga) }}</dd>
                 <dt>Metode Bayar:</dt>
                 <dd>{{ $pesanan->Metode_Bayar }}</dd>
             </dl>
@@ -143,7 +154,7 @@
                 <p>Jika Anda memiliki pertanyaan mengenai Invoice ini, gunakan informasi kontak berikut:</p>
                 <p>anangferry@gmail.com</p>
                 <p>0896-6969-696</p>
-                <p>© 2024 Anang Ferry.</p>
+                <p>© {{ date('Y') }} Anang Ferry.</p>
             </div>
         </div>
     </div>

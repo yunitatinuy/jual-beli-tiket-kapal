@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        // Lama waktu (menit) pembeli harus membayar sebelum pesanan dibatalkan otomatis
+        'batas_bayar_menit' => (int) env('MIDTRANS_BATAS_BAYAR_MENIT', 60),
+    ],
+
 ];

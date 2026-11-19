@@ -26,7 +26,7 @@
 
 </head>
 
-<body>
+<body class="bg-white text-gray-900">
     <div class="mx-auto max-w-full">
         @include('partials.admnav')
         @livewire('logout')
@@ -35,7 +35,7 @@
 
         @yield('container')
 
-        @livewire('pengguna')
+        {{ $slot }}
 
     </div>
     @livewireScripts

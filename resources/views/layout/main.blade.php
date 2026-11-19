@@ -47,7 +47,7 @@
     </style>
 </head>
 
-<body>
+<body class="bg-white text-gray-900">
     @include('partials.navbar')
 
     @yield('container')

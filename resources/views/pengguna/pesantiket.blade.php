@@ -1,165 +1,140 @@
 @extends('layout.main')
 
 @section('container')
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    @php
+        use Carbon\Carbon;
+        $rute = $quote['rute'];
+        $items = $quote['items'];
+        $dewasa = $items['dewasa']['jumlah'] ?? 0;
+        $anak = $items['anak']['jumlah'] ?? 0;
+        $inputClass = 'block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6';
+    @endphp
+
     <div class="flex flex-wrap justify-between my-20">
         <div class="container booking">
             <div class="container justify-content-center py-8 px-5 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
                 style="width: 95%; background-color:#c2c1c1; border-radius:30px;">
-                <div class="container flex items-center pt-2 mx-6 space-x-12 flex-nowrap">
+
+                @if (session('error'))
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">{{ session('error') }}</div>
+                @endif
+                @if ($errors->any())
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                {{-- Ringkasan perjalanan & harga (hanya tampilan, dihitung server) --}}
+                <div class="container flex flex-wrap items-center gap-8 pt-2 mx-6">
                     <img src="/img/icons/ships.png" class="w-12">
-                    <div class="">
-                        {{ $kapal }} <br>
-                        {{ $asal }} ke {{ $tujuan }}
+                    <div>
+                        <strong>{{ $rute->kapal->Nama_Kapal ?? '-' }}</strong> &middot; Kelas {{ $quote['kelas'] }}<br>
+                        {{ $rute->pelabuhanAsal->Nama_Pelabuhan ?? '-' }} ke {{ $rute->pelabuhanTujuan->Nama_Pelabuhan ?? '-' }}
                     </div>
-                    <div class="">
+                    <div>
                         Waktu <br>
-                        {{ $jam }}
+                        {{ Carbon::parse($rute->Jam)->format('H:i') }}
                     </div>
-                    <div class="">
+                    <div>
                         Tanggal <br>
-                        {{ $tanggal }}
+                        {{ Carbon::parse($rute->Tanggal)->format('d-m-Y') }}
                     </div>
-                    @if (isset($harga_vip_dewasa))
-                        <div class="">
-                            Harga VIP Dewasa : <br>
-                            Rp{{ number_format($harga_vip_dewasa, 0, ',', '.') }}.000
-                        </div>
-                    @endif
-                    @if (isset($harga_vip_anak))
-                        <div class="">
-                            Harga VIP Anak : <br>
-                            Rp{{ number_format($harga_vip_anak, 0, ',', '.') }}.000
-                        </div>
-                    @endif
-                    @if (isset($harga_ekonomi_dewasa))
-                        <div class="">
-                            Harga Ekonomi Dewasa : <br>
-                            Rp{{ number_format($harga_ekonomi_dewasa, 0, ',', '.') }}.000
-                        </div>
-                    @endif
-                    @if (isset($harga_ekonomi_anak))
-                        <div class="">
-                            Harga Ekonomi Anak : <br>
-                            Rp{{ number_format($harga_ekonomi_anak, 0, ',', '.') }}.000
-                        </div>
-                    @endif
-                    <div class="">
-                        Total Harga <br>
-                        Rp{{ number_format(($harga_vip_dewasa ?? 0) + ($harga_vip_anak ?? 0) + ($harga_ekonomi_dewasa ?? 0) + ($harga_ekonomi_anak ?? 0), 0, ',', '.') }}.000
+                    @foreach (['dewasa' => 'Dewasa', 'anak' => 'Anak'] as $tipe => $label)
+                        @isset($items[$tipe])
+                            <div>
+                                {{ $label }} ({{ $items[$tipe]['jumlah'] }} x {{ rupiah($items[$tipe]['harga']) }}) <br>
+                                {{ rupiah($items[$tipe]['subtotal']) }}
+                            </div>
+                        @endisset
+                    @endforeach
+                    <div>
+                        <strong>Total Harga</strong> <br>
+                        <strong>{{ rupiah($quote['total']) }}</strong>
                     </div>
                 </div>
                 <br>
                 <div class="border border-b-black"></div>
                 <br>
+
                 <div class="container">
                     <h1 class="flex justify-center text-xl font-bold">DETAIL TIKET PENUMPANG</h1>
                     <form action="{{ route('pesantiket.store') }}" method="POST">
                         @csrf
-                        <div class="main-user-info">
-                            <div class="user-input-box" id="passenger-details">
-                                <div class="grid grid-cols-1 mt-6 gap-x-6 gap-y-2 sm:grid-cols-6">
-                                    <div class="sm:col-span-3">
-                                        <div class="mt-2">
-                                            <input type="text" class="form-control" name="Nama_Lengkap[]"
-                                                value="{{ old('Nama_Lengkap.0') }}" autocomplete="given-name"
-                                                placeholder="Nama Lengkap"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            @error('Nama_Lengkap.0')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
+                        <input type="hidden" name="rute" value="{{ $rute->ID_Rute }}">
+                        <input type="hidden" name="kelas" value="{{ $quote['kelas'] }}">
+                        <input type="hidden" name="dewasa" value="{{ $dewasa }}">
+                        <input type="hidden" name="anak" value="{{ $anak }}">
 
+                        @for ($i = 0; $i < $dewasa + $anak; $i++)
+                            <div class="p-4 mt-6 rounded-lg bg-white/40">
+                                <p class="font-semibold">
+                                    Penumpang {{ $i + 1 }}
+                                    <span class="text-sm font-normal">({{ $i < $dewasa ? 'Dewasa' : 'Anak' }})</span>
+                                </p>
+                                <div class="grid grid-cols-1 mt-2 gap-x-6 gap-y-2 sm:grid-cols-6">
                                     <div class="sm:col-span-3">
-                                        <div class="mt-2">
-                                            <input type="number" class="form-control" name="Telepon[]"
-                                                value="{{ old('Telepon.0') }}" autocomplete="given-name"
-                                                placeholder="Telepon"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            @error('Telepon.0')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <input type="text" name="penumpang[{{ $i }}][Nama_Lengkap]"
+                                            value="{{ old("penumpang.$i.Nama_Lengkap") }}" placeholder="Nama Lengkap"
+                                            required maxlength="255" class="{{ $inputClass }}">
+                                        @error("penumpang.$i.Nama_Lengkap")
+                                            <div class="text-sm text-red-700">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="sm:col-span-3">
-                                        <div class="mt-2">
-                                            <textarea class="form-control" name="Alamat[]" autocomplete="family-name" placeholder="Alamat"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ old('Alamat.0') }}</textarea>
-                                            @error('Alamat.0')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <input type="tel" name="penumpang[{{ $i }}][Telepon]"
+                                            value="{{ old("penumpang.$i.Telepon") }}" placeholder="Telepon (08xxxxxxxxxx)"
+                                            required inputmode="numeric" class="{{ $inputClass }}">
+                                        @error("penumpang.$i.Telepon")
+                                            <div class="text-sm text-red-700">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="sm:col-span-3">
-                                        <div class="mt-2">
-                                            <select class="form-control" name="Jenis_Kelamin[]" autocomplete="family-name"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                                                @foreach ($jenisKelaminOptions as $value)
-                                                    <option value="{{ $value }}"
-                                                        {{ old('Jenis_Kelamin.0') == $value ? 'selected' : '' }}>
-                                                        {{ $value }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('Jenis_Kelamin.0')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                        <textarea name="penumpang[{{ $i }}][Alamat]" placeholder="Alamat" required maxlength="255"
+                                            class="{{ $inputClass }}">{{ old("penumpang.$i.Alamat") }}</textarea>
+                                        @error("penumpang.$i.Alamat")
+                                            <div class="text-sm text-red-700">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="sm:col-span-3">
+                                        <select name="penumpang[{{ $i }}][Jenis_Kelamin]" required class="{{ $inputClass }}">
+                                            <option value="" disabled {{ old("penumpang.$i.Jenis_Kelamin") ? '' : 'selected' }}>Pilih Jenis Kelamin</option>
+                                            @foreach ($jenisKelaminOptions as $value)
+                                                <option value="{{ $value }}" {{ old("penumpang.$i.Jenis_Kelamin") == $value ? 'selected' : '' }}>
+                                                    {{ ucfirst($value) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error("penumpang.$i.Jenis_Kelamin")
+                                            <div class="text-sm text-red-700">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
+                        @endfor
+
+                        <div class="p-4 my-4 rounded-lg bg-[#e5cabb]">
+                            <p class="font-semibold">Pembayaran</p>
+                            <p class="text-sm">
+                                Setelah menekan tombol pesan, Anda dapat membayar lewat Midtrans
+                                (Virtual Account bank, QRIS, GoPay, ShopeePay, dan lainnya).
+                                Kursi ditahan selama <strong>{{ $batasBayarMenit }} menit</strong>; jika belum dibayar,
+                                pesanan otomatis dibatalkan.
+                            </p>
                         </div>
-                        <input type="hidden" name="harga_ekonomi_dewasa" value="{{ $harga_ekonomi_dewasa }}">
-                        <input type="hidden" name="harga_ekonomi_anak" value="{{ $harga_ekonomi_anak }}">
-                        <input type="hidden" name="harga_vip_dewasa" value="{{ $harga_vip_dewasa }}">
-                        <input type="hidden" name="harga_vip_anak" value="{{ $harga_vip_anak }}">
-                            <div class="grid grid-cols-2 gap-2 my-4">
-                                <div class="w-full md:w-1/2 px-3 py-2 rounded-lg bg-[#e5cabb]">
-                                    <div
-                                        class="flex-warp px-2 py-2 mt-2 rounded-lg bg-gradient-to-tr from-[#ffebe1] to-[#efd5c8]">
-                                        <p class="mb-2 font-semibold">Pilih Metode Pembayaran</p>
-                                        @foreach (\App\Models\Pesanan::METODE_BAYAR as $metode)
-                                            <label class="flex p-2 cursor-pointer radio">
-                                                <input class="my-auto transform scale-120" type="radio"
-                                                    name="metode_bayar" value="{{ $metode }}" required />
-                                                <div class="px-2 title">{{ $metode }}</div>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="flex justify-end">
-                                    <button type="button" id="add-passenger"
-                                        class="py-2 px-8 max-h-12 font-sans text-base font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">Tambah
-                                        Data Penumpang</button>
-                                </div>
-                            </div>
-                            <div class="flex justify-center">
-                                <button type="submit"
-                                    class="py-2 px-96 w-11/12 text-lg h-auto font-sans font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">P
-                                    E S A N</button>
-                            </div>
-                        </form>
+
+                        <div class="flex justify-center">
+                            <button type="submit"
+                                class="py-2 w-11/12 text-lg h-auto font-sans font-medium text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-105 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                P E S A N &nbsp; ({{ rupiah($quote['total']) }})
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('add-passenger').addEventListener('click', function() {
-            const passengerDetails = document.querySelector('.user-input-box');
-            const newPassengerDetails = passengerDetails.cloneNode(true);
-            const formFields = newPassengerDetails.querySelectorAll('input, textarea, select');
-            formFields.forEach((field, index) => {
-                field.value = '';
-                field.name = field.name.replace(/\[\d+\]/,
-                    `[${document.querySelectorAll('.user-input-box').length}]`);
-            });
-            document.getElementById('passenger-details').appendChild(newPassengerDetails);
-        });
-    </script>
 @endsection

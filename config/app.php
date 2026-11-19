@@ -57,6 +57,12 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Paksa semua URL yang dibuat Laravel memakai https (aktifkan di produksi)
+    'force_https' => (bool) env('FORCE_HTTPS', false),
+
+    // Proxy tepercaya: kosong, "*", atau daftar IP dipisah koma (lihat TrustProxies)
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+
     'asset_url' => env('ASSET_URL'),
 
     /*

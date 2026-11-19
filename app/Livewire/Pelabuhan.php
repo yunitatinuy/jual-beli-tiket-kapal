@@ -3,13 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Pelabuhan as ModelsPelabuhan;
+use App\Models\Rute as ModelsRute;
+use Illuminate\Validation\Rule;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Pelabuhan extends Component
 {
-
     use WithPagination;
     use LivewireAlert;
 
@@ -20,65 +21,88 @@ class Pelabuhan extends Component
     public $updateData = false;
     public $pelabuhanID;
 
-    public function store()
+    protected function rules(): array
     {
-        $rules = [
-            'Nama_Pelabuhan' => 'required',
-            'Nama_Kota' => 'required',
+        return [
+            'Nama_Pelabuhan' => [
+                'required', 'string', 'max:100',
+                Rule::unique('pelabuhan', 'Nama_Pelabuhan')->ignore($this->pelabuhanID, 'ID_Pelabuhan'),
+            ],
+            'Nama_Kota' => ['required', 'string', 'max:100'],
         ];
-
-        $pesan = [
-            'Nama_Pelabuhan.required' => 'Nama Pelabuhan harus diisi',
-            'Nama_Kota.required' => 'Nama Kota harus diisi',
-        ];
-
-        $validated = $this->validate($rules, $pesan);
-        ModelsPelabuhan::create($validated);
-        $this->reset('Nama_Pelabuhan', 'Nama_Kota');
-        $this->alert('success', 'Data berhasil ditambahkan');
-        $this->resetPage();
     }
 
-    public function delete($ID_Pelabuhan)
+    protected function messages(): array
     {
-        $pelabuhan = ModelsPelabuhan::find($ID_Pelabuhan);
-        if ($pelabuhan) {
-            $pelabuhan->delete();
-            $this->alert('success', 'Data Berhasil Dihapus!');
-        } else {
-            $this->alert('error', 'Data Tidak Ditemukan!');
-        }
+        return [
+            'Nama_Pelabuhan.required' => 'Nama Pelabuhan harus diisi.',
+            'Nama_Pelabuhan.max' => 'Nama Pelabuhan maksimal 100 karakter.',
+            'Nama_Pelabuhan.unique' => 'Pelabuhan dengan nama ini sudah ada.',
+            'Nama_Kota.required' => 'Nama Kota harus diisi.',
+            'Nama_Kota.max' => 'Nama Kota maksimal 100 karakter.',
+        ];
+    }
+
+    public function store()
+    {
+        ModelsPelabuhan::create($this->validate());
+
+        $this->alert('success', 'Data berhasil ditambahkan');
+        $this->clear();
     }
 
     public function edit($ID_Pelabuhan)
     {
         $data = ModelsPelabuhan::find($ID_Pelabuhan);
+        if (! $data) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
+        }
+
+        $this->pelabuhanID = $data->ID_Pelabuhan;
         $this->Nama_Pelabuhan = $data->Nama_Pelabuhan;
         $this->Nama_Kota = $data->Nama_Kota;
-
         $this->updateData = true;
-        $this->pelabuhanID = $ID_Pelabuhan;
     }
 
     public function update()
     {
-        $rules = [
-            'Nama_Pelabuhan' => 'required',
-            'Nama_Kota' => 'required',
-        ];
-
-        $pesan = [
-            'Nama_Pelabuhan.required' => 'Nama Pelabuhan harus diisi',
-            'Nama_Kota.required' => 'Nama Kota harus diisi',
-        ];
-
-        $validated = $this->validate($rules, $pesan);
+        $validated = $this->validate();
 
         $data = ModelsPelabuhan::find($this->pelabuhanID);
+        if (! $data) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+            $this->clear();
+
+            return;
+        }
+
         $data->update($validated);
         $this->alert('success', 'Data berhasil Diupdate');
-
         $this->clear();
+    }
+
+    public function delete($ID_Pelabuhan)
+    {
+        $pelabuhan = ModelsPelabuhan::find($ID_Pelabuhan);
+        if (! $pelabuhan) {
+            $this->alert('error', 'Data Tidak Ditemukan!');
+
+            return;
+        }
+
+        $dipakai = ModelsRute::where('Pelabuhan_Asal', $pelabuhan->ID_Pelabuhan)
+            ->orWhere('Pelabuhan_Tujuan', $pelabuhan->ID_Pelabuhan)
+            ->exists();
+        if ($dipakai) {
+            $this->alert('error', 'Pelabuhan masih dipakai di data rute dan tidak bisa dihapus.');
+
+            return;
+        }
+
+        $pelabuhan->delete();
+        $this->alert('success', 'Data Berhasil Dihapus!');
     }
 
     public function cancel()
@@ -88,19 +112,20 @@ class Pelabuhan extends Component
 
     public function clear()
     {
-        $this->Nama_Pelabuhan = '';
-        $this->Nama_Kota = '';
-
-        $this->updateData = false;
-        $this->pelabuhanID = '';
+        $this->reset('Nama_Pelabuhan', 'Nama_Kota', 'pelabuhanID', 'updateData');
         $this->resetValidation();
-        $this->resetpage();
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
         $search = '%' . $this->search . '%';
-        $data = Modelspelabuhan::where('Nama_Pelabuhan', 'like', $search)
+        $data = ModelsPelabuhan::where('Nama_Pelabuhan', 'like', $search)
             ->orWhere('Nama_Kota', 'like', $search)
             ->orderBy('ID_Pelabuhan', 'desc')
             ->paginate(5);

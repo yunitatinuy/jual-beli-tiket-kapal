@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-// use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,7 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role',
     ];
 
     /**
@@ -42,12 +40,46 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected function casts(): array
+    // Laravel 10 memakai properti $casts (method casts() baru ada di Laravel 11)
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    /**
+     * Aturan password yang sama untuk register, ganti password di profil, dan reset password:
+     * minimal 8 karakter, mengandung huruf dan angka, serta dikonfirmasi (password_confirmation).
+     */
+    public static function passwordRules(): array
+    {
+        return ['required', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->letters()->numbers()];
+    }
+
+    public static function passwordMessages(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password.required' => 'Password wajib diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak sama.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.letters' => 'Password harus mengandung huruf.',
+            'password.numbers' => 'Password harus mengandung angka.',
         ];
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\ResetPasswordEmail($token));
+    }
+
+    /** Kirim email verifikasi lewat queue (lihat App\Notifications\VerifikasiEmail). */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new \App\Notifications\VerifikasiEmail);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function penumpang()

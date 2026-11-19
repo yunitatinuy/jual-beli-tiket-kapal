@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,12 +22,12 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email:rfc,filter|max:255|unique:users,email',
             'password' => [
                 'required',
                 'string',
-                'min:8',
+                \Illuminate\Validation\Rules\Password::min(8)->letters()->numbers(),
             ],
             'c_password' => 'required|same:password',
         ], [
@@ -36,7 +37,8 @@ class RegisterController extends Controller
             'email.unique' => 'Email ini sudah terdaftar.',
             'password.required' => 'Kata sandi harus diisi.',
             'password.min' => 'Kata sandi harus minimal 8 karakter.',
-            'password.regex' => 'Kata sandi harus mengandung huruf kecil, huruf besar, angka, dan karakter spesial.',
+            'password.letters' => 'Kata sandi harus mengandung huruf.',
+            'password.numbers' => 'Kata sandi harus mengandung angka.',
             'c_password.required' => 'Konfirmasi kata sandi harus diisi.',
             'c_password.same' => 'Konfirmasi kata sandi harus sama dengan kata sandi.',
         ]);
@@ -45,12 +47,22 @@ class RegisterController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
+        // Hanya ambil field yang diizinkan; role selalu 'pengguna' (tidak bisa diisi dari form)
+        $user = new User([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+        $user->role = 'pengguna';
+        $user->save();
+
+        // Memicu pengiriman email verifikasi
+        event(new Registered($user));
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return redirect('/login')->with('success', 'Username dan password yang dimasukkan tidak sesuai');
+        return redirect()->route('verification.notice')
+            ->with('status', 'registered');
     }
 }

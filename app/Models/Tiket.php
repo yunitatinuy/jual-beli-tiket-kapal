@@ -26,4 +26,9 @@ class Tiket extends Model
     {
         return $this->belongsTo(Harga::class, 'ID_Harga', 'ID_Harga');
     }
+
+    public function penumpangs()
+    {
+        return $this->hasMany(Penumpang::class, 'ID_Tiket', 'ID_Tiket');
+    }
 }

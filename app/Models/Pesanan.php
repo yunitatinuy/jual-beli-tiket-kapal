@@ -9,24 +9,41 @@ class Pesanan extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
     protected $table = 'pesanan';
     protected $primaryKey = 'ID_Pesanan';
+
+    // Semua kolom diisi oleh server (BookingService), bukan langsung dari form
     protected $fillable = [
+        'Kode_Booking',
         'ID_User',
-        'ID_Penumpang',
+        'ID_Rute',
+        'Kelas',
+        'Jumlah_Dewasa',
+        'Jumlah_Anak',
         'Tanggal_Pesanan',
         'Waktu',
         'Total_Harga',
         'Metode_Bayar',
+        'Status',
+        'Batas_Bayar',
     ];
 
-    public $timestamps = false;
+    protected $casts = [
+        'Batas_Bayar' => 'datetime',
+        'Dibayar_Pada' => 'datetime',
+        'Total_Harga' => 'integer',
+        'Jumlah_Dewasa' => 'integer',
+        'Jumlah_Anak' => 'integer',
+    ];
 
-    const METODE_BAYAR = [
-        'BNI - 1528222928',
-        'Dana - 083181531047',
-        'LinkAja - 083181531047',
+    public const STATUS_MENUNGGU_PEMBAYARAN = 'menunggu_pembayaran';
+    public const STATUS_LUNAS = 'lunas';
+    public const STATUS_DIBATALKAN = 'dibatalkan';
+
+    public const STATUS_LABEL = [
+        self::STATUS_MENUNGGU_PEMBAYARAN => 'Menunggu Pembayaran',
+        self::STATUS_LUNAS => 'Lunas',
+        self::STATUS_DIBATALKAN => 'Dibatalkan',
     ];
 
     public function user()
@@ -34,18 +51,29 @@ class Pesanan extends Model
         return $this->belongsTo(User::class, 'ID_User', 'id');
     }
 
-    public function penumpang()
-    {
-        return $this->belongsTo(Penumpang::class, 'ID_Penumpang', 'ID_Penumpang');
-    }
-
-    public function tiket()
-    {
-        return $this->belongsTo(Tiket::class, 'ID_Tiket');
-    }
-
     public function rute()
     {
-        return $this->belongsTo(Rute::class, 'ID_Rute');
+        return $this->belongsTo(Rute::class, 'ID_Rute', 'ID_Rute');
+    }
+
+    /** Semua penumpang dalam pesanan ini */
+    public function penumpangs()
+    {
+        return $this->hasMany(Penumpang::class, 'ID_Pesanan', 'ID_Pesanan');
+    }
+
+    public function menungguPembayaran(): bool
+    {
+        return $this->Status === self::STATUS_MENUNGGU_PEMBAYARAN;
+    }
+
+    public function sudahKedaluwarsa(): bool
+    {
+        return $this->menungguPembayaran() && $this->Batas_Bayar && $this->Batas_Bayar->isPast();
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUS_LABEL[$this->Status] ?? ucfirst((string) $this->Status);
     }
 }

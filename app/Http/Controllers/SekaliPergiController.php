@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Models\Kapal;
-use App\Models\Rute;
 use App\Models\Pelabuhan;
-use App\Models\Harga;
-use App\Models\Tiket;
+use App\Models\Rute;
+use App\Services\BookingService;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class SekaliPergiController extends Controller
 {
+    public function __construct(private BookingService $booking)
+    {
+    }
+
     public function index()
     {
         return view('pengguna.sekalipergi', [
@@ -23,49 +25,56 @@ class SekaliPergiController extends Controller
 
     public function search(Request $request)
     {
+        $data = $request->validate([
+            'routeFrom' => 'nullable|string|max:100',
+            'routeTo' => 'nullable|string|max:100',
+            'tanggal_keberangkatan' => 'required|date',
+            'dewasa' => 'nullable|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
+            'anak' => 'nullable|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
+        ], [
+            'tanggal_keberangkatan.required' => 'Tanggal keberangkatan harus diisi.',
+        ]);
+
+        $routeFrom = $data['routeFrom'] ?? '';
+        $routeTo = $data['routeTo'] ?? '';
+        $tanggal = Carbon::parse($data['tanggal_keberangkatan']);
+        $dewasa = (int) ($data['dewasa'] ?? 0);
+        $anak = (int) ($data['anak'] ?? 0);
+
         $searchResults = [];
-        $routeFrom = $request->input('routeFrom');
-        $routeTo = $request->input('routeTo');
-        $tanggal = $request->input('tanggal_keberangkatan');
-        $dewasa = $request->input('dewasa', 0);
-        $anak = $request->input('anak', 0);
 
-        if (!$tanggal) {
-            $searchResults['message'] = "Tanggal keberangkatan harus diisi.";
+        if ($dewasa + $anak < 1) {
+            $searchResults['message'] = 'Isi jumlah penumpang minimal 1 orang.';
+        } elseif ($dewasa + $anak > BookingService::MAX_PENUMPANG) {
+            $searchResults['message'] = 'Maksimal ' . BookingService::MAX_PENUMPANG . ' penumpang per pesanan.';
         } else {
-            $parsedDate = Carbon::parse($tanggal)->format('Y-m-d');
-
             $query = Rute::with(['pelabuhanAsal', 'pelabuhanTujuan', 'kapal', 'tiket.harga'])
-                ->whereDate('Tanggal', $parsedDate);
+                ->whereDate('Tanggal', $tanggal->toDateString())
+                ->orderBy('Jam');
 
-            if ($routeFrom) {
-                $query->whereHas('pelabuhanAsal', function ($q) use ($routeFrom) {
-                    $q->where('Nama_Pelabuhan', 'like', '%' . $routeFrom . '%');
-                });
+            if ($routeFrom !== '') {
+                $query->whereHas('pelabuhanAsal', fn ($q) => $q->where('Nama_Pelabuhan', 'like', '%' . $routeFrom . '%'));
+            }
+            if ($routeTo !== '') {
+                $query->whereHas('pelabuhanTujuan', fn ($q) => $q->where('Nama_Pelabuhan', 'like', '%' . $routeTo . '%'));
             }
 
-            if ($routeTo) {
-                $query->whereHas('pelabuhanTujuan', function ($q) use ($routeTo) {
-                    $q->where('Nama_Pelabuhan', 'like', '%' . $routeTo . '%');
-                });
-            }
+            // Hanya jadwal yang belum berangkat dan punya tiket yang bisa dijual
+            $jadwal = $query->get()
+                ->reject(fn (Rute $rute) => $this->booking->sudahBerangkat($rute))
+                ->map(fn (Rute $rute) => [
+                    'rute' => $rute,
+                    'offers' => $this->booking->offersFor($rute),
+                ])
+                ->filter(fn ($item) => ! empty($item['offers']))
+                ->values();
 
-            $routes = $query->get();
-
-            if ($routes->isEmpty()) {
-                $searchResults['message'] = "Tiket perjalanan dari {$routeFrom} ke {$routeTo} pada tanggal {$tanggal} tidak dapat ditemukan. Silakan pilih tanggal lain untuk tiket ferry dari {$routeFrom} ke {$routeTo}.";
+            if ($jadwal->isEmpty()) {
+                $searchResults['message'] = "Tiket perjalanan dari {$routeFrom} ke {$routeTo} pada tanggal "
+                    . $tanggal->format('d-m-Y')
+                    . ' tidak dapat ditemukan. Silakan pilih tanggal lain.';
             } else {
-                foreach ($routes as $route) {
-                    foreach ($route->tiket as $tiket) {
-                        if ($tiket->harga->Tipe_Penumpang == 'dewasa') {
-                            $tiket->harga->Harga *= $dewasa;
-                        } elseif ($tiket->harga->Tipe_Penumpang == 'anak') {
-                            $tiket->harga->Harga *= $anak;
-                        }
-                    }
-                }
-
-                $searchResults['routes'] = $routes;
+                $searchResults['jadwal'] = $jadwal;
             }
         }
 
@@ -76,21 +85,5 @@ class SekaliPergiController extends Controller
             'dewasa' => $dewasa,
             'anak' => $anak,
         ]);
-    }
-
-
-    public function cari(Request $request)
-    {
-        // Validasi input dari form
-        $validated = $request->validate([
-            'Tanggal' => 'required|date',
-            'ID_Rute' => 'required|numeric',
-        ]);
-
-        // Simpan ID_Rute ke session
-        $request->session()->put('ID_Rute', $validated['ID_Rute']);
-
-        // Redirect ke halaman pembayaran
-        return redirect()->route('pembayaran.index');
     }
 }

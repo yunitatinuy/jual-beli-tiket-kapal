@@ -1,272 +1,100 @@
-<div>
-    <!-- CONTENT -->
+@php
+    use App\Models\Pesanan;
+    $badge = fn ($status) => match ($status) {
+        Pesanan::STATUS_LUNAS => 'bg-green-100 text-green-800',
+        Pesanan::STATUS_DIBATALKAN => 'bg-red-100 text-red-800',
+        default => 'bg-yellow-100 text-yellow-800',
+    };
+@endphp
+<div class="flex flex-col flex-grow mt-10 mb-10 ms-10 me-10 font-inter">
+    <span class="flex items-center p-2 text-gray-900 rounded-lg">
+        <img src="/img/icons/dashboard.png" class="flex-shrink-0 w-8 h-8" alt="">
+        <span class="flex-1 text-3xl font-bold ms-4 whitespace-nowrap">Dashboard</span>
+        <span class="text-sm text-gray-500">{{ now()->format('d-m-Y') }}</span>
+    </span>
 
-    <div class="ms-10 mt-10 me-10 flex flex-col flex-grow">
-        <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-            <img src="/img/icons/dashboard.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true"
-                fill="currentColor">
-            <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Dashboard</span>
-        </span>
-
-        <div class="container">
-            <div class="flex flex-wrap">
-
-                <!-- Pengguna Baru -->
-                <div class="p-4 max-w-sm">
-                    <div class="flex rounded-lg h-full w-80 bg-sky-400 p-6 flex-col">
-                        <div class="flex items-center">
-                            <img src="/img/icons/peng-baru.png" class="flex-shrink-0 w-6 h-5 text-gray-500">
-                            <span class="font-inter font-semibold mx-3 text-xl">Total Pengguna</span>
-                        </div>
-                        <div class="flex flex-col justify-between flex-grow">
-                            <p class="leading-relaxed text-white text-8xl">
-                                <!-- data dari data base nantinya -->
-                                {{ $usercount }}
-                            </p>
-                            <a href="/admin/pengguna"
-                                class="font-inter text-black hover:text-white inline-flex items-center">Selengkapnya
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Tiket -->
-                <div class="p-4 max-w-sm">
-                    <div class="flex rounded-lg h-full w-80 bg-sky-400 p-6 flex-col">
-                        <div class="flex items-center">
-                            <img src="/img/icons/ticket.png" class="flex-shrink-0 w-8 h-8 text-gray-500">
-                            <span class="font-inter font-semibold mx-3 text-xl">Total Tiket</span>
-                        </div>
-                        <div class="flex flex-col justify-between flex-grow">
-                            <p class="leading-relaxed text-white text-8xl">
-                                <!-- data dari data base nantinya -->
-                                {{ $tiketcount }}
-                            </p>
-                            <a href="/admin/tiket"
-                                class="font-inter text-black hover:text-white inline-flex items-center">Selengkapnya
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Rute -->
-                <div class="p-4 max-w-sm">
-                    <div class="flex rounded-lg h-full w-80 bg-sky-400 p-6 flex-col">
-                        <div class="flex items-center">
-                            <img src="/img/icons/route.png" class="flex-shrink-0 w-6 h-6 text-gray-500">
-                            <span class="font-inter font-semibold mx-3 text-xl">Total Rute Perjalanan</span>
-                        </div>
-                        <div class="flex flex-col justify-between flex-grow">
-                            <p class="leading-relaxed text-white text-8xl">
-                                <!-- data dari data base nantinya --> {{ $rutecount }}
-                            </p>
-                            <a href="#"
-                                class="font-inter text-black hover:text-white inline-flex items-center">Selengkapnya
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {{-- Kartu ringkasan --}}
+    <div class="grid gap-4 mt-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="p-5 text-white rounded-xl bg-emerald-500">
+            <p class="text-sm font-medium opacity-90">Pendapatan bulan ini</p>
+            <p class="mt-2 text-2xl font-bold">{{ rupiah($ringkasan['pendapatanBulanIni']) }}</p>
+            <p class="mt-1 text-xs opacity-90">Total sepanjang waktu: {{ rupiah($ringkasan['pendapatanTotal']) }}</p>
         </div>
+        <div class="p-5 text-white rounded-xl bg-sky-500">
+            <p class="text-sm font-medium opacity-90">Pesanan hari ini</p>
+            <p class="mt-2 text-4xl font-bold">{{ $ringkasan['pesananHariIni'] }}</p>
+            <p class="mt-1 text-xs opacity-90">{{ $ringkasan['lunasHariIni'] }} pembayaran masuk hari ini</p>
+        </div>
+        <a href="/admin/pesanan?status={{ Pesanan::STATUS_MENUNGGU_PEMBAYARAN }}" class="p-5 text-white rounded-xl bg-amber-500 hover:bg-amber-600">
+            <p class="text-sm font-medium opacity-90">Menunggu pembayaran</p>
+            <p class="mt-2 text-4xl font-bold">{{ $ringkasan['menungguBayar'] }}</p>
+            <p class="mt-1 text-xs opacity-90">Lihat daftar &rarr;</p>
+        </a>
+        <a href="/admin/pengguna" class="p-5 text-white rounded-xl bg-indigo-500 hover:bg-indigo-600">
+            <p class="text-sm font-medium opacity-90">Pengguna terdaftar</p>
+            <p class="mt-2 text-4xl font-bold">{{ $ringkasan['totalPengguna'] }}</p>
+            <p class="mt-1 text-xs opacity-90">Lihat pengguna &rarr;</p>
+        </a>
     </div>
 
-    <!-- Data Kapal -->
-    <div class=" ms-10 mt-5 flex flex-col font-inter mb-10">
-        <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-            <img src="/img/icons/ships.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true"
-                fill="currentColor">
-            <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Kapal</span>
-        </span>
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                    <table class="min-w-full text-center text-sm text-surface">
-                        <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
-                            <tr>
-                                <th scope="col" class="px-6 py-4">#</th>
-                                <th scope="col" class="px-6 py-4">Kode Kapal</th>
-                                <th scope="col" class="px-6 py-4">Nama Kapal</th>
-                                <th scope="col" class="px-6 py-4">Kelas</th>
-                                <th scope="col" class="px-6 py-4">Jumlah Kursi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($dataKapal as $kapal)
-                                <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                                    <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $kapal->ID_Kapal }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $kapal->Nama_Kapal }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $kapal->Kelas }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $kapal->Jumlah_Kursi }}</td>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="10" class="font-inter text-base pt-2">Belum Ada Data.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    {{-- Keberangkatan hari ini --}}
+    <h2 class="mt-10 mb-3 text-xl font-bold">Keberangkatan hari ini</h2>
+    <div class="overflow-x-auto bg-white border rounded-xl">
+        <table class="min-w-full text-sm text-left">
+            <thead class="bg-[#ff9853be]">
+                <tr>
+                    <th class="px-4 py-3">Jam</th>
+                    <th class="px-4 py-3">Rute</th>
+                    <th class="px-4 py-3">Kapal</th>
+                    <th class="px-4 py-3 text-center">Penumpang lunas</th>
+                    <th class="px-4 py-3 text-center">Sisa kursi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y">
+                @forelse ($keberangkatan as $rute)
+                    <tr>
+                        <td class="px-4 py-3 font-semibold">{{ substr($rute->Jam, 0, 5) }}</td>
+                        <td class="px-4 py-3">{{ $rute->pelabuhanAsal?->Nama_Pelabuhan ?? '-' }} &rarr; {{ $rute->pelabuhanTujuan?->Nama_Pelabuhan ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ $rute->kapal?->Nama_Kapal ?? '-' }}</td>
+                        <td class="px-4 py-3 text-center">{{ (int) $rute->penumpang_lunas }}</td>
+                        <td class="px-4 py-3 text-center">{{ (int) $rute->sisa_kursi }}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Tidak ada keberangkatan hari ini.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 
-    <!-- Data Pelabuhan -->
-    <div class="ms-10 mt-5 flex flex-col font-inter mb-10">
-        <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-            <img src="/img/icons/harbor.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true"
-                fill="currentColor">
-            <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Pelabuhan</span>
-        </span>
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                    <table class="min-w-full text-center text-sm text-surface">
-                        <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
-                            <tr>
-                                <th scope="col" class="px-6 py-4">#</th>
-                                <th scope="col" class="px-6 py-4">Kode Pelabuhan</th>
-                                <th scope="col" class="px-6 py-4">Nama Pelabuhan</th>
-                                <th scope="col" class="px-6 py-4">Nama Kota</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($dataPelabuhan as $pelabuhan)
-                                <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                                    <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
-
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $pelabuhan->ID_Pelabuhan }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $pelabuhan->Nama_Pelabuhan }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $pelabuhan->Nama_Kota }}</td>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="font-inter text-base pt-2">Belum Ada Data.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    {{-- Pesanan terbaru --}}
+    <div class="flex items-center justify-between mt-10 mb-3">
+        <h2 class="text-xl font-bold">Pesanan terbaru</h2>
+        <a href="/admin/pesanan" class="text-sm font-medium text-sky-700 hover:underline">Semua pesanan &rarr;</a>
     </div>
-
-    <!-- Data Rute -->
-    <div class="ms-10 mt-5 flex flex-col font-inter mb-10">
-        <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-            <img src="/img/icons/route.png" class="flex-shrink-0 w-8 h-8 text-gray-500" aria-hidden="true"
-                fill="currentColor">
-            <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Rute Perjalanan</span>
-        </span>
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                    <table class="min-w-full text-center text-sm text-surface">
-                        <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
-                            <tr>
-                                <th scope="col" class="px-6 py-4">#</th>
-                                <th scope="col" class="px-6 py-4">Kode Rute</th>
-                                <th scope="col" class="px-6 py-4">Nama Kapal</th>
-                                <th scope="col" class="px-6 py-4">Pelabuhan Asal</th>
-                                <th scope="col" class="px-6 py-4">Pelabuhan Tujuan</th>
-                                <th scope="col" class="px-6 py-4">Tanggal Berangkat</th>
-                                <th scope="col" class="px-6 py-4">Waktu Berangkat</th>
-                            </tr>
-                        </thead>
-                        @php
-                            use Carbon\Carbon;
-                        @endphp
-                        <tbody>
-                            @forelse ($dataRute as $rute)
-                                <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                                    <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $rute->ID_Rute }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $rute->kapal->Nama_Kapal }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ $rute->pelabuhanAsal->Nama_Pelabuhan }},
-                                        {{ $rute->pelabuhanAsal->Nama_Kota }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }},
-                                        {{ $rute->pelabuhanTujuan->Nama_Kota }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ Carbon::parse($rute->Tanggal)->format('d-m-Y') }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ Carbon::parse($rute->Jam)->format('H:i') }}</td>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9" class="font-inter text-base pt-2">Belum Ada Data.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Data Tiket -->
-    <div class="ms-10 mt-5 flex flex-col font-inter mb-10">
-        <span class="flex items-center p-2 text-gray-900 rounded-lg group">
-            <img src="/img/icons/ticket.png" class="flex-shrink-0 w-9 h-9 text-gray-500" aria-hidden="true"
-                fill="currentColor">
-            <span class="flex-1 ms-4 whitespace-nowrap text-3xl font-bold">Data Tiket</span>
-        </span>
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                    <table class="min-w-full text-center text-sm text-surface">
-                        <thead class="bg-[#ff9853be] border-b border-neutral-200 font-medium">
-                            <tr>
-                                <th scope="col" class="px-6 py-4">#</th>
-                                <th scope="col" class="px-6 py-4">Kode Tiket</th>
-                                <th scope="col" class="px-6 py-4">Rute Perjalanan</th>
-                                <th scope="col" class="px-6 py-4">Tipe Penumpang</th>
-                                <th scope="col" class="px-6 py-4">Kelas</th>
-                                <th scope="col" class="px-6 py-4">Jumlah Tiket</th>
-                                <th scope="col" class="px-6 py-4">Harga</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($dataTiket as $tiket)
-                                <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                                    <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
-
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $tiket->ID_Tiket }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ $tiket->rute->pelabuhanAsal->Nama_Pelabuhan }} -
-                                        {{ $tiket->rute->pelabuhanTujuan->Nama_Pelabuhan }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $tiket->harga->Tipe_Penumpang }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $tiket->harga->Kelas }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">{{ $tiket->Jumlah_Tiket }}</td>
-                                    <td class="whitespace-nowrap px-6 py-4">
-                                        {{ number_format($tiket->harga->Harga, 3) }}</td>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="10" class="font-inter text-base pt-2">Belum Ada Data.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <div class="overflow-x-auto bg-white border rounded-xl">
+        <table class="min-w-full text-sm text-left">
+            <thead class="bg-[#ff9853be]">
+                <tr>
+                    <th class="px-4 py-3">Kode Booking</th>
+                    <th class="px-4 py-3">Pemesan</th>
+                    <th class="px-4 py-3">Rute</th>
+                    <th class="px-4 py-3">Total</th>
+                    <th class="px-4 py-3">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y">
+                @forelse ($pesananTerbaru as $p)
+                    <tr>
+                        <td class="px-4 py-3 font-mono">{{ $p->Kode_Booking ?? $p->ID_Pesanan }}</td>
+                        <td class="px-4 py-3">{{ $p->user?->name ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ $p->rute?->pelabuhanAsal?->Nama_Pelabuhan ?? '-' }} &rarr; {{ $p->rute?->pelabuhanTujuan?->Nama_Pelabuhan ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ rupiah($p->Total_Harga) }}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-1 text-xs font-semibold rounded {{ $badge($p->Status) }}">{{ $p->status_label }}</span></td>
+                    </tr>
+                @empty
+                    <tr><td colspan="5" class="px-4 py-4 text-center text-gray-500">Belum ada pesanan.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>

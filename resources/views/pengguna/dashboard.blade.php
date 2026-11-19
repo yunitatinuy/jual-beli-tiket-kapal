@@ -123,37 +123,42 @@
 
         <!-- Form untuk tampilan sekali pergi -->
         <div id="tampilan1" class="tampilan">
+            <datalist id="daftar-pelabuhan">
+                @foreach ($namaPelabuhan as $nama)
+                    <option value="{{ $nama }}">
+                @endforeach
+            </datalist>
             <form action="{{ route('search') }}" method="GET">
                 <div class="grid grid-cols-1 gap-4 mx-6 my-3 md:grid-cols-3">
                     <div class="flex flex-col">
                         <label for="routeFrom"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pelabuhan Asal :</label>
-                        <input type="text" name="routeFrom" placeholder="Pelabuhan Asal" required
+                        <input type="text" name="routeFrom" list="daftar-pelabuhan" autocomplete="off" placeholder="Pelabuhan Asal" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
                         <label for="routeTo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pelabuhan
                             Tujuan :</label>
-                        <input type="text" name="routeTo" placeholder="Pelabuhan Tujuan" required
+                        <input type="text" name="routeTo" list="daftar-pelabuhan" autocomplete="off" placeholder="Pelabuhan Tujuan" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
                         <label for="tanggal_keberangkatan"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal:</label>
-                        <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan" required
+                        <input type="date" id="tanggal_keberangkatan" name="tanggal_keberangkatan" min="{{ now()->toDateString() }}" value="{{ now()->addDay()->toDateString() }}" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
                         <label for="dewasa"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dewasa:</label>
-                        <input type="number" name="dewasa" id="dewasa" placeholder="Jumlah dewasa" min="0"
-                            value="0"
+                        <input type="number" name="dewasa" id="dewasa" placeholder="Jumlah dewasa" min="0" max="10"
+                            value="1"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div class="flex flex-col">
                         <label for="anak"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anak:</label>
-                        <input type="number" name="anak" id="anak" placeholder="Jumlah anak" min="0"
+                        <input type="number" name="anak" id="anak" placeholder="Jumlah anak" min="0" max="10"
                             value="0"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
@@ -170,14 +175,16 @@
     <div class="p-8 rounded-t-xl mt-8 shadow-xl">
         <div class="text-2xl font-marko uppercase flex justify-center mb-8 text-gray-800"><span>Rute Populer</span></div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
-            @foreach ($uniqueRutes as $rute)
+            @forelse ($uniqueRutes as $rute)
                 <div class="shadow-lg p-4 rounded-lg hover:scale-105 transition duration-300 ease-in-out">
                     <div class="flex items-center space-x-4">
                         <img class="w-10" src="/img/icons/dot.png" alt="Dot Icon">
                         <p class="text-lg text-gray-800">{{ $rute->pelabuhanAsal->Nama_Pelabuhan }} ke {{ $rute->pelabuhanTujuan->Nama_Pelabuhan }}</p>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-center text-gray-600 col-span-full">Belum ada jadwal mendatang.</p>
+            @endforelse
         </div>
     </div>
 

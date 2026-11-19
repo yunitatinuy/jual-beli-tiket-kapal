@@ -94,7 +94,7 @@
                                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input type="date" wire:model="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
+                            <input type="date" wire:model="tanggal" min="{{ now()->toDateString() }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 " placeholder="Pilih Tanggal">
                         </div>
                         @error('tanggal')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
@@ -111,7 +111,7 @@
                                     <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="time" wire:model="jam" id="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " min="09:00" max="18:00" value="00:00" required />
+                            <input type="time" wire:model="jam" id="time" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required />
                         </div>
                         @error('jam')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
@@ -184,12 +184,12 @@
                     <tbody>
                         @forelse ($dataRute as $rute)
                         <tr class="border-b border-secondary-200 bg-secondary-50 text-neutral-800">
-                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $loop->iteration }}</td>
+                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $dataRute->firstItem() + $loop->index }}</td>
 
                             <td class="whitespace-nowrap px-6 py-4">{{$rute->ID_Rute}}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$rute->kapal->Nama_Kapal }}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanAsal->Nama_Pelabuhan}}, {{$rute->pelabuhanAsal->Nama_Kota }}</td>
-                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanTujuan->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan->Nama_Kota }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->kapal?->Nama_Kapal ?? "-" }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanAsal?->Nama_Pelabuhan}}, {{$rute->pelabuhanAsal?->Nama_Kota }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{$rute->pelabuhanTujuan?->Nama_Pelabuhan }}, {{$rute->pelabuhanTujuan?->Nama_Kota }}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{Carbon::parse($rute->Tanggal)->format('d-m-Y')}}</td>
                             <td class="whitespace-nowrap px-6 py-4">{{Carbon::parse($rute->Jam)->format('H:i')}}</td>
                             <td class="whitespace-nowrap px-6 py-4">

@@ -13,29 +13,37 @@ class Penumpang extends Model
     protected $table = 'penumpang';
     protected $primaryKey = 'ID_Penumpang';
     protected $fillable = [
-        'id',
+        'ID_Pesanan',
+        'ID_Tiket',
+        'id', // ID user pemesan
         'Nama_Lengkap',
         'Telepon',
         'Alamat',
         'Jenis_Kelamin',
+        'Tipe_Penumpang',
+        'Harga',
     ];
 
     protected $casts = [
         'Jenis_Kelamin' => JenisKelamin::class,
+        'Harga' => 'integer',
     ];
 
     public $timestamps = false;
 
-    /**
-     * Define the relationship with User model.
-     */
+    /** User yang memesan (kolom `id` berisi ID user) */
     public function user()
     {
-        return $this->belongsTo(User::class, 'id', 'email');
+        return $this->belongsTo(User::class, 'id', 'id');
     }
 
     public function pesanan()
     {
-        return $this->hasMany(Pesanan::class, 'ID_Penumpang', 'ID_Penumpang');
+        return $this->belongsTo(Pesanan::class, 'ID_Pesanan', 'ID_Pesanan');
+    }
+
+    public function tiket()
+    {
+        return $this->belongsTo(Tiket::class, 'ID_Tiket', 'ID_Tiket');
     }
 }

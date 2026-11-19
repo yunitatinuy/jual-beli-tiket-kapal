@@ -4,253 +4,113 @@
     @php
         use Carbon\Carbon;
     @endphp
-    <div class="w-full h-full bg-fixed bg-no-repeat bg-cover bg-bground1">
+    <div class="w-full h-full min-h-screen bg-fixed bg-no-repeat bg-cover bg-bground1">
         <center>
+            @if (session('error') || $errors->any())
+                <div class="w-10/12 p-4 mt-10 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                    {{ session('error') ?? $errors->first() }}
+                </div>
+            @endif
+
             @if (isset($searchResults))
-                @if (isset($searchResults['routes']))
+                @if (isset($searchResults['jadwal']))
                     @php
-                        $groupedRoutes = [];
-                        foreach ($searchResults['routes'] as $route) {
-                            $key =
-                                $route->pelabuhanAsal->Nama_Pelabuhan .
-                                '-' .
-                                $route->pelabuhanTujuan->Nama_Pelabuhan .
-                                '-' .
-                                Carbon::parse($route->Tanggal)->format('Y-m-d');
-
-                            if (!isset($groupedRoutes[$key])) {
-                                $groupedRoutes[$key] = [
-                                    'asal' => $route->pelabuhanAsal->Nama_Pelabuhan,
-                                    'tujuan' => $route->pelabuhanTujuan->Nama_Pelabuhan,
-                                    'tanggal' => Carbon::parse($route->Tanggal)->format('d-m-Y'),
-                                    'kapal' => [],
-                                ];
-                            }
-
-                            if (!isset($groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal])) {
-                                $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal] = [
-                                    'nama_kapal' => $route->kapal->Nama_Kapal,
-                                    'perjalanan' => [],
-                                    'kelas' => [
-                                        'VIP' => [
-                                            'dewasa' => [],
-                                            'anak' => [],
-                                        ],
-                                        'Ekonomi' => [
-                                            'dewasa' => [],
-                                            'anak' => [],
-                                        ],
-                                    ],
-                                ];
-                            }
-
-                            $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal]['perjalanan'][] = [
-                                'jam' => Carbon::parse($route->Jam)->format('H:i'),
-                                'tiket' => $route->tiket,
-                            ];
-
-                            foreach ($route->tiket as $tiket) {
-                                $harga = number_format($tiket->harga->Harga, 0, ',', '.') . '.000';
-
-                                if ($tiket->harga->Kelas == 'VIP') {
-                                    if ($tiket->harga->Tipe_Penumpang == 'dewasa' && $tiket->harga->Harga > 0) {
-                                        $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal]['kelas']['VIP'][
-                                            'dewasa'
-                                        ][] = $harga;
-                                    } elseif ($tiket->harga->Tipe_Penumpang == 'anak' && $tiket->harga->Harga > 0) {
-                                        $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal]['kelas']['VIP'][
-                                            'anak'
-                                        ][] = $harga;
-                                    }
-                                } elseif ($tiket->harga->Kelas == 'Ekonomi') {
-                                    if ($tiket->harga->Tipe_Penumpang == 'dewasa' && $tiket->harga->Harga > 0) {
-                                        $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal]['kelas']['Ekonomi'][
-                                            'dewasa'
-                                        ][] = $harga;
-                                    } elseif ($tiket->harga->Tipe_Penumpang == 'anak' && $tiket->harga->Harga > 0) {
-                                        $groupedRoutes[$key]['kapal'][$route->kapal->Nama_Kapal]['kelas']['Ekonomi'][
-                                            'anak'
-                                        ][] = $harga;
-                                    }
-                                }
-                            }
-                        }
+                        $pertama = $searchResults['jadwal']->first()['rute'];
                     @endphp
-
-                    @foreach ($groupedRoutes as $groupedRoute)
-                        <div class="w-10/12">
-                            <div class="flex flex-wrap justify-between">
-                                <div class="flex justify-start flex-auto mx-5 mt-10">
-                                    <img src="/img/icons/harbor.png" class="h-5 pr-2 w-7 ms-2">
-                                    <span class="px-2 text-sm font-medium text-white rounded-sm bg-neutral-400">
-                                        <ul>
-                                            <li>{{ $groupedRoute['asal'] }}</li>
-                                        </ul>
-                                    </span>
-                                    <span class="px-2 text-sm font-medium"><img src="/img/icons/arrow.png"
-                                            class="w-4"></span>
-                                    <span class="px-2 text-sm font-medium text-white rounded-sm bg-neutral-400">
-                                        <ul>
-                                            <li>{{ $groupedRoute['tujuan'] }}</li>
-                                        </ul>
-                                    </span>
-                                </div>
-                                <div class="flex justify-end flex-auto mx-5 mt-10">
-                                    <img src="/img/icons/calendar.png" class="h-5 pr-2 w-7 ms-2">
-                                    <span class="px-2 text-sm font-medium text-white rounded-sm bg-neutral-400">
-                                        <ul>
-                                            <li>{{ $groupedRoute['tanggal'] }}</li>
-                                        </ul>
-                                    </span>
-                                </div>
-                            </div><br>
-
-                            <div class="shadow-sm h-svh backdrop-blur-sm rounded-xl">
-                                @foreach ($groupedRoute['kapal'] as $kapal)
-                                    @foreach ($kapal['perjalanan'] as $perjalanan)
-                                        <div class="container mt-4 booking">
-                                            <form action="{{ route('pesantiket') }}" method="GET">
-                                                <div class="container justify-content-center pt-3 pb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
-                                                    style="max-width: 1300px; width: 100%; background-color:#c2c1c1; border-radius:30px;">
-                                                    <div class="container flex flex-row justify-around">
-                                                        <img src="/img/icons/ships.png" class="w-12 h-12">
-                                                        <div class="flex flex-row">
-                                                            <ul>
-                                                                <li><strong>Nama Kapal</strong></li>
-                                                                <li>{{ $kapal['nama_kapal'] }}</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="justify-items-end">
-                                                            <ul>
-                                                                <li><strong>Waktu</strong></li>
-                                                                <li>{{ $perjalanan['jam'] }}</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="justify-items-end">
-                                                            <ul>
-                                                                <li><strong>Rute</strong></li>
-                                                                <li>{{ $groupedRoute['asal'] }} ke {{ $groupedRoute['tujuan'] }}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="flex flex-col">
-                                                            <ul>
-                                                                <li><strong>Kelas VIP</strong></li>
-                                                                @if (count($kapal['kelas']['VIP']['dewasa']) > 0)
-                                                                    <li>Dewasa :
-                                                                        @foreach ($kapal['kelas']['VIP']['dewasa'] as $harga_vip_dewasa)
-                                                                            Rp{{ $harga_vip_dewasa }}@if (!$loop->last)
-                                                                                ,
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </li>
-                                                                @endif
-                                                                @if (count($kapal['kelas']['VIP']['anak']) > 0)
-                                                                    <li>Anak :
-                                                                        @foreach ($kapal['kelas']['VIP']['anak'] as $harga_vip_anak)
-                                                                            Rp{{ $harga_vip_anak }}@if (!$loop->last)
-                                                                                ,
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </li>
-                                                                @endif
-                                                            </ul>
-                                                        </div>
-                                                        <div>
-                                                            <input type="hidden" name="asal" value="{{ $groupedRoute['asal'] }}">
-                                                            <input type="hidden" name="tujuan" value="{{ $groupedRoute['tujuan'] }}">
-                                                            <input type="hidden" name="tanggal" value="{{ $groupedRoute['tanggal'] }}">
-                                                            <input type="hidden" name="kapal" value="{{ $kapal['nama_kapal'] }}">
-                                                            <input type="hidden" name="jam" value="{{ $perjalanan['jam'] }}">
-                                                            <input type="hidden" name="harga_vip_dewasa" value="{{ implode(',', $kapal['kelas']['VIP']['dewasa']) }}">
-                                                            <input type="hidden" name="harga_vip_anak" value="{{ implode(',', $kapal['kelas']['VIP']['anak']) }}">
-                                                            <button type="submit"
-                                                                class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                                                Pesan Tiket
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br>
-                                            <div class="border border-b-black"></div><br>
-                                        </div>
-                                    @endforeach
-
-                                    @if (count($kapal['kelas']['Ekonomi']['dewasa']) > 0 || count($kapal['kelas']['Ekonomi']['anak']) > 0)
-                                        <div class="container mt-4 booking">
-                                            <form action="{{ route('pesantiket') }}" method="GET">
-                                                <div class="container justify-content-center pt-3 pb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
-                                                    style="max-width: 1300px; width: 100%; background-color:#c2c1c1; border-radius:30px;">
-                                                    <div class="container flex flex-row justify-around">
-                                                        <img src="/img/icons/ships.png" class="w-12 h-12">
-                                                        <div class="flex flex-row">
-                                                            <ul>
-                                                                <li><strong>Nama Kapal</strong></li>
-                                                                <li>{{ $kapal['nama_kapal'] }}</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="justify-items-end">
-                                                            <ul>
-                                                                <li><strong>Waktu</strong></li>
-                                                                <li>{{ $perjalanan['jam'] }}</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="justify-items-end">
-                                                            <ul>
-                                                                <li><strong>Rute</strong></li>
-                                                                <li>{{ $groupedRoute['asal'] }} ke {{ $groupedRoute['tujuan'] }}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="flex flex-col">
-                                                            <ul>
-                                                                <li><strong>Kelas Ekonomi</strong></li>
-                                                                @if (count($kapal['kelas']['Ekonomi']['dewasa']) > 0)
-                                                                    <li>Dewasa :
-                                                                        @foreach ($kapal['kelas']['Ekonomi']['dewasa'] as $harga_ekonomi_dewasa)
-                                                                            Rp{{ $harga_ekonomi_dewasa }}@if (!$loop->last)
-                                                                                ,
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </li>
-                                                                @endif
-                                                                @if (count($kapal['kelas']['Ekonomi']['anak']) > 0)
-                                                                    <li>Anak :
-                                                                        @foreach ($kapal['kelas']['Ekonomi']['anak'] as $harga_ekonomi_anak)
-                                                                            Rp{{ $harga_ekonomi_anak }}@if (!$loop->last)
-                                                                                ,
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </li>
-                                                                @endif
-                                                            </ul>
-                                                        </div>
-                                                        <div>
-                                                            <input type="hidden" name="asal" value="{{ $groupedRoute['asal'] }}">
-                                                            <input type="hidden" name="tujuan" value="{{ $groupedRoute['tujuan'] }}">
-                                                            <input type="hidden" name="tanggal" value="{{ $groupedRoute['tanggal'] }}">
-                                                            <input type="hidden" name="kapal" value="{{ $kapal['nama_kapal'] }}">
-                                                            <input type="hidden" name="jam" value="{{ $perjalanan['jam'] }}">
-                                                            <input type="hidden" name="harga_ekonomi_dewasa" value="{{ implode(',', $kapal['kelas']['Ekonomi']['dewasa']) }}">
-                                                            <input type="hidden" name="harga_ekonomi_anak" value="{{ implode(',', $kapal['kelas']['Ekonomi']['anak']) }}">
-                                                            <button type="submit"
-                                                                class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                                                Pesan Tiket
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br>
-                                            <div class="border border-b-black"></div><br>
-                                        </div>
-                                    @endif
-                                @endforeach
+                    <div class="w-10/12">
+                        <div class="flex flex-wrap justify-between">
+                            <div class="flex justify-start flex-auto mx-5 mt-10">
+                                <img src="/img/icons/calendar.png" class="h-5 pr-2 w-7 ms-2">
+                                <span class="px-2 text-sm font-medium text-white rounded-sm bg-neutral-400">
+                                    {{ Carbon::parse($pertama->Tanggal)->format('d-m-Y') }}
+                                </span>
                             </div>
+                            <div class="flex justify-end flex-auto mx-5 mt-10">
+                                <span class="px-2 text-sm font-medium text-white rounded-sm bg-neutral-400">
+                                    {{ $dewasa }} Dewasa, {{ $anak }} Anak
+                                </span>
+                            </div>
+                        </div><br>
+
+                        <div class="shadow-sm backdrop-blur-sm rounded-xl pb-6">
+                            @foreach ($searchResults['jadwal'] as $item)
+                                @php $rute = $item['rute']; @endphp
+
+                                @foreach ($item['offers'] as $kelas => $tipeHarga)
+                                    @php
+                                        // Kelas hanya bisa dipesan jika tiket untuk setiap tipe penumpang yang diminta tersedia
+                                        $kurang = [];
+                                        $total = 0;
+                                        foreach (['dewasa' => $dewasa, 'anak' => $anak] as $tipe => $jumlah) {
+                                            if ($jumlah <= 0) continue;
+                                            if (!isset($tipeHarga[$tipe])) {
+                                                $kurang[] = "tidak ada tiket {$tipe}";
+                                            } elseif ($tipeHarga[$tipe]['sisa'] < $jumlah) {
+                                                $kurang[] = "sisa tiket {$tipe} {$tipeHarga[$tipe]['sisa']}";
+                                            } else {
+                                                $total += $tipeHarga[$tipe]['harga'] * $jumlah;
+                                            }
+                                        }
+                                        $bisaDipesan = empty($kurang);
+                                    @endphp
+
+                                    <div class="container mt-4 booking">
+                                        <form action="{{ route('pesantiket') }}" method="GET">
+                                            <div class="container justify-content-center pt-3 pb-3 bg-gradient-to-tr from-[#ffebe1] to-[#DEC3B4]"
+                                                style="max-width: 1300px; width: 100%; background-color:#c2c1c1; border-radius:30px;">
+                                                <div class="container flex flex-row flex-wrap items-center justify-around gap-4">
+                                                    <img src="/img/icons/ships.png" class="w-12 h-12">
+                                                    <ul>
+                                                        <li><strong>Nama Kapal</strong></li>
+                                                        <li>{{ $rute->kapal->Nama_Kapal ?? '-' }}</li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li><strong>Waktu</strong></li>
+                                                        <li>{{ Carbon::parse($rute->Jam)->format('H:i') }}</li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li><strong>Rute</strong></li>
+                                                        <li>{{ $rute->pelabuhanAsal->Nama_Pelabuhan ?? '-' }} ke {{ $rute->pelabuhanTujuan->Nama_Pelabuhan ?? '-' }}</li>
+                                                    </ul>
+                                                    <ul>
+                                                        <li><strong>Kelas {{ $kelas }}</strong></li>
+                                                        @foreach (['dewasa' => 'Dewasa', 'anak' => 'Anak'] as $tipe => $label)
+                                                            @isset($tipeHarga[$tipe])
+                                                                <li>{{ $label }}: {{ rupiah($tipeHarga[$tipe]['harga']) }}
+                                                                    <span class="text-xs text-gray-600">(sisa {{ $tipeHarga[$tipe]['sisa'] }})</span>
+                                                                </li>
+                                                            @endisset
+                                                        @endforeach
+                                                    </ul>
+                                                    <ul>
+                                                        <li><strong>Total</strong></li>
+                                                        <li>{{ $bisaDipesan ? rupiah($total) : '-' }}</li>
+                                                    </ul>
+                                                    <div>
+                                                        <input type="hidden" name="rute" value="{{ $rute->ID_Rute }}">
+                                                        <input type="hidden" name="kelas" value="{{ $kelas }}">
+                                                        <input type="hidden" name="dewasa" value="{{ $dewasa }}">
+                                                        <input type="hidden" name="anak" value="{{ $anak }}">
+                                                        @if ($bisaDipesan)
+                                                            <button type="submit"
+                                                                class="font-sans inline-flex items-center px-3 py-2 text-sm font-medium text-center text-dark bg-[#DEC3B4] rounded-lg hover:bg-[#DEC3B4] hover:scale-110 transition duration-150 hover:ease-out focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                                                Pesan Tiket
+                                                            </button>
+                                                        @else
+                                                            <span class="text-sm text-red-700">Tidak tersedia ({{ implode(', ', $kurang) }})</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br>
+                                        <div class="border border-b-black"></div><br>
+                                    </div>
+                                @endforeach
+                            @endforeach
                         </div>
-                    @endforeach
-                    @else
+                    </div>
+                @else
                     <div class="flex items-center justify-center h-screen">
                         <div class="max-w-xl p-8 bg-[#DEC3B4] rounded-lg shadow-lg backdrop-filter backdrop-blur-md">
                             <p class="mb-4 text-lg font-semibold">{{ $searchResults['message'] }}</p>
@@ -261,6 +121,16 @@
                         </div>
                     </div>
                 @endif
+            @else
+                <div class="flex items-center justify-center h-screen">
+                    <div class="max-w-xl p-8 bg-[#DEC3B4] rounded-lg shadow-lg">
+                        <p class="mb-4 text-lg font-semibold">Silakan cari jadwal kapal dari dashboard.</p>
+                        <a href="/dashboard_pengguna"
+                            class="inline-block px-6 py-3 text-white bg-[#f9a273] hover:bg-[#eb9f77] rounded-lg">
+                            Kembali ke Dashboard
+                        </a>
+                    </div>
+                </div>
             @endif
         </center>
     </div>

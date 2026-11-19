@@ -7,11 +7,12 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * `php artisan db:seed` hanya membuat akun admin (aman untuk produksi).
+     * Data contoh (pelabuhan, kapal, rute, harga, tiket) dibuat terpisah:
+     * `php artisan db:seed --class=DemoDataSeeder` (hanya di luar produksi).
      */
     public function run(): void
     {
-        $this->call(RoleSeeder::class);
-        $this->call(UserSeeder::class);
+        $this->call(AdminSeeder::class);
     }
 }

@@ -2,46 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pesanan;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use App\Services\BookingException;
+use App\Services\BookingService;
+use App\Services\PaymentService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PembayaranController extends Controller
 {
-    // Method untuk menampilkan halaman pembayaran
-    public function pembayaran(Request $request)
-    {
-        $totalHarga = session('totalHarga', 0);
-        $ID_Tiket = session('ID_Tiket');
-
-        return view('pengguna.pembayaran', compact('totalHarga'));
+    public function __construct(
+        private PaymentService $payment,
+        private BookingService $booking,
+    ) {
     }
 
-    // Method untuk memproses pembayaran
-    public function processPayment(Request $request)
+    /** Buat / ambil Snap token untuk tombol "Bayar Sekarang" (dipanggil via AJAX). */
+    public function bayar(Request $request, $id)
     {
-        // Validate input
-        $validatedData = $request->validate([
-            'metode_bayar' => 'required',
-        ]);
+        $pesanan = $this->findOwned($request, $id);
 
-        // Retrieve necessary session data or other data
-        $totalHarga = session('totalHarga', 0);
-        $ID_Tiket = session('ID_Tiket');
+        try {
+            $token = $this->payment->snapToken($pesanan);
+        } catch (BookingException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            Log::error('Gagal membuat transaksi Midtrans', ['pesanan' => $pesanan->ID_Pesanan, 'error' => $e->getMessage()]);
 
-        // Create new Pesanan instance
-        $pesanan = new Pesanan();
-        $pesanan->ID_User = Auth::id();
-        $pesanan->ID_Tiket = $ID_Tiket;
-        $pesanan->Tanggal_Pesanan = Carbon::now()->format('Y-m-d');
-        $pesanan->Waktu = Carbon::now()->format('H:i:s');
-        $pesanan->Total_Harga = $totalHarga; // Assign total price here
-        $pesanan->Metode_Bayar = $validatedData['metode_bayar'];
-        $pesanan->save();
+            return response()->json(['message' => 'Layanan pembayaran sedang tidak tersedia. Coba lagi beberapa saat.'], 503);
+        }
 
-        // Redirect or show success message
-        return redirect('/invoice')->with('success', 'Pembayaran berhasil diproses!');
+        return response()->json(['token' => $token]);
+    }
+
+    /** Sinkronkan status pembayaran dari Midtrans (setelah popup Snap ditutup). */
+    public function cekStatus(Request $request, $id)
+    {
+        $pesanan = $this->payment->syncStatus($this->findOwned($request, $id));
+
+        return redirect()->route('invoices.show', $pesanan->ID_Pesanan)
+            ->with($pesanan->Status === Pesanan::STATUS_LUNAS ? 'success' : 'info',
+                $pesanan->Status === Pesanan::STATUS_LUNAS
+                    ? 'Pembayaran berhasil. Tiket Anda sudah aktif.'
+                    : 'Status pesanan: ' . $pesanan->status_label . '.');
+    }
+
+    /** Pembeli membatalkan pesanan yang belum dibayar. */
+    public function batal(Request $request, $id)
+    {
+        $pesanan = $this->findOwned($request, $id);
+
+        // Pastikan belum dibayar di Midtrans sebelum membatalkan
+        $pesanan = $this->payment->syncStatus($pesanan);
+
+        if (! $this->booking->cancel($pesanan, 'Dibatalkan oleh pembeli')) {
+            return back()->with('error', 'Pesanan ini tidak bisa dibatalkan.');
+        }
+
+        return redirect()->route('invoices.show', $pesanan->ID_Pesanan)
+            ->with('info', 'Pesanan dibatalkan dan kursi sudah dilepas.');
+    }
+
+    /** Webhook dari Midtrans (Payment Notification URL). */
+    public function notification(Request $request)
+    {
+        try {
+            $ok = $this->payment->handleNotification($request->all());
+        } catch (\Throwable $e) {
+            Log::error('Midtrans: gagal memproses notifikasi', ['error' => $e->getMessage()]);
+
+            // 500 membuat Midtrans mengirim ulang notifikasi nanti
+            return response()->json(['message' => 'error'], 500);
+        }
+
+        return $ok
+            ? response()->json(['message' => 'ok'])
+            : response()->json(['message' => 'invalid signature'], 403);
+    }
+
+    private function findOwned(Request $request, $id): Pesanan
+    {
+        return Pesanan::where('ID_Pesanan', $id)
+            ->where('ID_User', $request->user()->id)
+            ->firstOrFail();
     }
 }

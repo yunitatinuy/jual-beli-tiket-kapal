@@ -101,6 +101,15 @@
         <div class="mb-3">
             <label for="password_confirmation" class="form-label">Confirm New Password</label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" placeholder="Confirmasi Password Baru . . .">
+            <p class="mt-1 text-xs text-gray-600">Kosongkan jika tidak ingin mengganti password. Minimal 8 karakter, mengandung huruf dan angka.</p>
+        </div>
+
+        <div class="mb-3">
+            <label for="current_password" class="form-label">Password Saat Ini</label>
+            <input type="password" name="current_password" id="current_password" autocomplete="current-password" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" placeholder="Wajib diisi jika mengganti email atau password">
+            @error('current_password')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <button type="submit" class="btn btn-primary">Update Profile</button>

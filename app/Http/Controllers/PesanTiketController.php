@@ -2,95 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pesanan;
-use App\Models\Penumpang;
 use App\Enums\JenisKelamin;
+use App\Services\BookingException;
+use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class PesanTiketController extends Controller
 {
-    public function __construct()
+    public function __construct(private BookingService $booking)
     {
-        $this->middleware('auth');
     }
 
-    public function create()
+    /**
+     * Form data penumpang. Hanya menerima ID rute, kelas dan jumlah penumpang;
+     * harga dihitung ulang dari database.
+     */
+    public function index(Request $request)
     {
-        $jenisKelaminOptions = JenisKelamin::getValues();
-        return view('pengguna.pesantiket', compact('jenisKelaminOptions'));
+        $data = $request->validate([
+            'rute' => 'required|integer',
+            'kelas' => ['required', Rule::in(BookingService::KELAS)],
+            'dewasa' => 'nullable|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
+            'anak' => 'nullable|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
+        ]);
+
+        try {
+            $quote = $this->booking->quote(
+                (int) $data['rute'],
+                $data['kelas'],
+                (int) ($data['dewasa'] ?? 0),
+                (int) ($data['anak'] ?? 0),
+            );
+        } catch (BookingException $e) {
+            return redirect('/sekalipergi')->with('error', $e->getMessage());
+        }
+
+        return view('pengguna.pesantiket', [
+            'quote' => $quote,
+            'jenisKelaminOptions' => JenisKelamin::getValues(),
+            'batasBayarMenit' => BookingService::batasBayarMenit(),
+        ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'Nama_Lengkap.*' => 'required|string|max:255',
-            'Telepon.*' => 'required|numeric|digits_between:11,13',
-            'Alamat.*' => 'required|string|max:255',
-            'Jenis_Kelamin.*' => ['required', Rule::in(JenisKelamin::getValues())],
-            'metode_bayar' => 'required|string',
+        $base = $request->validate([
+            'rute' => 'required|integer',
+            'kelas' => ['required', Rule::in(BookingService::KELAS)],
+            'dewasa' => 'required|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
+            'anak' => 'required|integer|min:0|max:' . BookingService::MAX_PENUMPANG,
         ]);
 
-        $passengerData = [];
-        for ($i = 0; $i < count($request->Nama_Lengkap); $i++) {
-            $passengerData[] = [
-                'id' => auth()->user()->id,
-                'Nama_Lengkap' => $request->Nama_Lengkap[$i],
-                'Telepon' => $request->Telepon[$i],
-                'Alamat' => $request->Alamat[$i],
-                'Jenis_Kelamin' => $request->Jenis_Kelamin[$i],
-            ];
+        $jumlah = (int) $base['dewasa'] + (int) $base['anak'];
+
+        $request->validate([
+            'penumpang' => "required|array|size:{$jumlah}",
+            'penumpang.*.Nama_Lengkap' => 'required|string|max:255',
+            'penumpang.*.Telepon' => ['required', 'regex:/^(\+62|62|0)8[0-9]{8,12}$/'],
+            'penumpang.*.Alamat' => 'required|string|max:255',
+            'penumpang.*.Jenis_Kelamin' => ['required', Rule::in(JenisKelamin::getValues())],
+        ], [
+            'penumpang.size' => 'Jumlah data penumpang harus :size orang.',
+            'penumpang.*.Nama_Lengkap.required' => 'Nama lengkap wajib diisi.',
+            'penumpang.*.Telepon.required' => 'Nomor telepon wajib diisi.',
+            'penumpang.*.Telepon.regex' => 'Nomor telepon tidak valid (contoh: 081234567890).',
+            'penumpang.*.Alamat.required' => 'Alamat wajib diisi.',
+            'penumpang.*.Jenis_Kelamin.required' => 'Jenis kelamin wajib dipilih.',
+        ]);
+
+        try {
+            $pesanan = $this->booking->book(
+                $request->user(),
+                (int) $base['rute'],
+                $base['kelas'],
+                (int) $base['dewasa'],
+                (int) $base['anak'],
+                array_values($request->input('penumpang')),
+            );
+        } catch (BookingException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         }
 
-        Penumpang::insert($passengerData);
-
-        $totalHarga = ($request->harga_vip_dewasa ?? 0) + ($request->harga_vip_anak ?? 0) + ($request->harga_ekonomi_dewasa ?? 0) + ($request->harga_ekonomi_anak ?? 0);
-
-        // Simpan pesanan ke tabel Pesanan
-        $pesanan = Pesanan::create([
-            'ID_User' => auth()->user()->id,
-            'Tanggal_Pesanan' => now()->toDateString(),
-            'Waktu' => now()->format('H:i:s'),
-            'Total_Harga' => $totalHarga,
-            'Metode_Bayar' => $request->metode_bayar,
-            'Kapal' => $request->kapal,
-            'Asal' => $request->asal,
-            'Tujuan' => $request->tujuan,
-            'Jam' => $request->jam,
-            'Harga_VIP_Dewasa' => $request->harga_vip_dewasa,
-            'Harga_VIP_Anak' => $request->harga_vip_anak,
-            'Harga_Ekonomi_Dewasa' => $request->harga_ekonomi_dewasa,
-            'Harga_Ekonomi_Anak' => $request->harga_ekonomi_anak,
-        ]);
-
-        // Redirect ke halaman invoice dengan membawa ID_Pesanan yang baru saja disimpan
-        return redirect()->route('invoices.show', ['id' => $pesanan->ID_Pesanan])->with('success', 'Data penumpang berhasil disimpan');
-    }
-
-    public function index(Request $request)
-    {
-        $jenisKelaminOptions = JenisKelamin::getValues();
-        $asal = $request->input('asal');
-        $tujuan = $request->input('tujuan');
-        $tanggal = $request->input('tanggal');
-        $kapal = $request->input('kapal');
-        $jam = $request->input('jam');
-        $harga_vip_dewasa = $request->input('harga_vip_dewasa');
-        $harga_vip_anak = $request->input('harga_vip_anak');
-        $harga_ekonomi_dewasa = $request->input('harga_ekonomi_dewasa');
-        $harga_ekonomi_anak = $request->input('harga_ekonomi_anak');
-
-        return view('pengguna.pesantiket', compact(
-            'jenisKelaminOptions',
-            'asal',
-            'tujuan',
-            'tanggal',
-            'kapal',
-            'jam',
-            'harga_vip_dewasa',
-            'harga_vip_anak',
-            'harga_ekonomi_dewasa',
-            'harga_ekonomi_anak'
-        ));
+        return redirect()->route('invoices.show', ['id' => $pesanan->ID_Pesanan])
+            ->with('success', 'Pesanan berhasil dibuat. Silakan selesaikan pembayaran sebelum '
+                . $pesanan->Batas_Bayar->format('H:i') . ' WIB.');
     }
 }

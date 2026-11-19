@@ -13,10 +13,11 @@ class TransaksiController extends Controller
         $user = Auth::user();
 
         // Menggunakan paginate untuk membatasi jumlah data yang ditampilkan per halaman
-        $pesanans = Pesanan::with(['user', 'penumpang'])
+        $pesanans = Pesanan::with(['rute.pelabuhanAsal', 'rute.pelabuhanTujuan', 'rute.kapal'])
+                    ->withCount('penumpangs')
                     ->where('ID_User', $user->id)
-                    ->orderByDesc('Tanggal_Pesanan')
-                    ->paginate(10); // Ubah angka 10 sesuai dengan jumlah data yang ingin ditampilkan per halaman
+                    ->orderByDesc('ID_Pesanan')
+                    ->paginate(10);
 
         return view('pengguna.transaksi', compact('pesanans'));
     }

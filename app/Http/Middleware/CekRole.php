@@ -15,9 +15,17 @@ class CekRole
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (in_array($request->user()->role,$roles)) {
+        $user = $request->user();
+
+        if ($user && in_array($user->role, $roles, true)) {
             return $next($request);
         }
+
+        // Request Livewire/AJAX tidak boleh di-redirect diam-diam
+        if ($request->expectsJson() || $request->hasHeader('X-Livewire')) {
+            abort(403);
+        }
+
         return redirect('/');
     }
 }

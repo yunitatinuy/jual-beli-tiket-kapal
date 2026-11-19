@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body class="bg-white text-gray-900">
     <div class="mx-auto max-w-full">
         @include('partials.admnav')
 
