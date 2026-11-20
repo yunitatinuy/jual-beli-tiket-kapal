@@ -72,12 +72,21 @@ kolom baru ditambahkan. Tetap **backup dulu** (`mysqldump`) sebelum migrate di s
 Jalankan setiap kali deploy ulang:
 
 ```bash
-php artisan config:cache
-php artisan route:cache
+php artisan optimize        # config:cache + route:cache
 php artisan view:cache
+php artisan event:cache
 ```
 
 Setelah `config:cache`, perubahan `.env` baru terbaca setelah perintah itu dijalankan lagi.
+Untuk kembali ke mode pengembangan: `php artisan optimize:clear`.
+
+**Server:**
+- Aktifkan **OPcache** di `php.ini` (`opcache.enable=1`, `opcache.validate_timestamps=0` di produksi,
+  lalu restart PHP-FPM setiap deploy). Ini biasanya mempercepat PHP 2–3 kali.
+- `public/.htaccess` sudah berisi gzip dan cache browser untuk gambar dan `public/build` (Apache).
+  Untuk Nginx, tambahkan `gzip on;` dan `location /build/ { expires 1y; add_header Cache-Control "immutable"; }`.
+- Gambar di `public/img` sudah dikompres (maks lebar 1920 px). Gambar baru sebaiknya juga dikecilkan
+  sebelum diunggah (target < 400 KB per foto).
 
 ## 5. Proses background (wajib)
 

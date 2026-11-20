@@ -23,6 +23,20 @@ class Tiket extends Component
     public $updateData = false;
     public $tiketID;
 
+    /** Tanggal untuk menyaring pilihan rute (dropdown hanya berisi jadwal pada tanggal ini). */
+    public $tanggalRute;
+
+    public function mount()
+    {
+        $this->tanggalRute = now()->toDateString();
+    }
+
+    public function updatedTanggalRute()
+    {
+        $this->ID_Rute = null;
+        $this->ID_Harga = null;
+    }
+
     protected function rules(): array
     {
         return [
@@ -91,6 +105,7 @@ class Tiket extends Component
 
         $this->tiketID = $data->ID_Tiket;
         $this->ID_Rute = $data->ID_Rute;
+        $this->tanggalRute = $data->rute ? \Carbon\Carbon::parse($data->rute->Tanggal)->toDateString() : $this->tanggalRute;
         $this->ID_Harga = $data->ID_Harga;
         $this->Jumlah_Tiket = $data->Jumlah_Tiket;
         $this->updateData = true;
@@ -170,8 +185,10 @@ class Tiket extends Component
             ->orderBy('ID_Tiket', 'desc')
             ->paginate(5);
 
+        // Disaring per tanggal supaya dropdown tidak berisi ribuan jadwal hasil generator
         $dataRute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
-            ->where(fn ($q) => $q->mendatang()->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
+            ->where(fn ($q) => $q->where('Tanggal', $this->tanggalRute ?: now()->toDateString())
+                ->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
             ->orderBy('Tanggal')->orderBy('Jam')
             ->get();
 

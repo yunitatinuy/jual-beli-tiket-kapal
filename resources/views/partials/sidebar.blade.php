@@ -45,6 +45,18 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/admin/jadwal-berulang" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group">
+                            <svg class="flex-shrink-0 w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+                            <span class="flex-1 ms-4 whitespace-nowrap">Jadwal Berulang</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/checkin" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group">
+                            <svg class="flex-shrink-0 w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                            <span class="flex-1 ms-4 whitespace-nowrap">Check-in</span>
+                        </a>
+                    </li>
+                    <li>
                         <button class="flex items-center w-full p-2 text-gray-900 rounded-lg hover:bg-[#ffea95] group" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                             <img src="/img/icons/ticket.png" class="flex-shrink-0 w-6 h-7 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" fill="currentColor">
                             <span class="flex w-full ms-3 whitespace-nowrap" sidebar-toggle-item>Tiket</span>

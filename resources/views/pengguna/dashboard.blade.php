@@ -188,53 +188,10 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Ketika halaman dimuat, tampilkan tampilan default
-            tampilkanTampilan(1);
+            // Tampilkan form "sekali pergi" sebagai tampilan default
+            document.getElementById('tampilan1')?.classList.add('active');
         });
-
-        function tampilkanTampilan(tampilan) {
-            var tampilan1 = document.getElementById('tampilan1');
-            var tampilan2 = document.getElementById('tampilan2');
-
-            if (tampilan === 1) {
-                tampilan1.classList.add('active');
-                tampilan2.classList.remove('active');
-            } else if (tampilan === 2) {
-                tampilan1.classList.remove('active');
-                tampilan2.classList.add('active');
-            }
-        }
-    </script>
-    <script>
-        function calculateTotal() {
-            // Get values from inputs
-            var dewasa = document.getElementById('dewasa').value;
-            var anak = document.getElementById('anak').value;
-
-            // Parse values as numbers, default to 0 if empty
-            dewasa = parseFloat(dewasa) || 0;
-            anak = parseFloat(anak) || 0;
-
-            // Fetch the base prices (you can adjust this based on your backend logic)
-            var hargaDewasa = {
-                json_encode(config('app.harga_dewasa'))
-            };
-            var hargaAnak = {
-                json_encode(config('app.harga_anak'))
-            };
-
-            // Calculate total prices
-            var totalDewasa = dewasa * hargaDewasa;
-            var totalAnak = anak * hargaAnak;
-
-            // Display the calculated prices (optional)
-            console.log('Total Dewasa:', totalDewasa);
-            console.log('Total Anak:', totalAnak);
-        }
     </script>
 @endsection

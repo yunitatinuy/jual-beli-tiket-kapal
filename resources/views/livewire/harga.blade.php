@@ -42,13 +42,17 @@
 
                 <div class="flex px-6 pt-6">
                     <div class="relative z-0 w-full group">
-                        <label for="ID_Rute" class="block mb-2 text-sm font-medium text-gray-900">Rute (jadwal mendatang)</label>
-                        <select id="ID_Rute" wire:model="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value="">Pilih Rute</option>
+                        <label for="tanggalRute" class="block mb-2 text-sm font-medium text-gray-900">Rute</label>
+                        <div class="flex gap-2">
+                            <input id="tanggalRute" type="date" wire:model.live="tanggalRute" title="Tanggal keberangkatan"
+                                class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                            <select id="ID_Rute" wire:model="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">{{ $dataRute->isEmpty() ? 'Tidak ada jadwal di tanggal ini' : 'Pilih Rute' }}</option>
                             @foreach ($dataRute as $rute)
                             <option value="{{ $rute->ID_Rute }}">{{ $rute->label }}</option>
                             @endforeach
-                        </select>
+                            </select>
+                        </div>
                         @error('ID_Rute')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror

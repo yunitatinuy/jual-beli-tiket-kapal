@@ -24,6 +24,19 @@ class Harga extends Component
     public $updateData = false;
     public $hargaId;
 
+    /** Tanggal untuk menyaring pilihan rute (dropdown hanya berisi jadwal pada tanggal ini). */
+    public $tanggalRute;
+
+    public function mount()
+    {
+        $this->tanggalRute = now()->toDateString();
+    }
+
+    public function updatedTanggalRute()
+    {
+        $this->ID_Rute = null;
+    }
+
     protected function rules(): array
     {
         return [
@@ -90,6 +103,7 @@ class Harga extends Component
 
         $this->hargaId = $harga->ID_Harga;
         $this->ID_Rute = $harga->ID_Rute;
+        $this->tanggalRute = $harga->rute ? \Carbon\Carbon::parse($harga->rute->Tanggal)->toDateString() : $this->tanggalRute;
         $this->Tipe_Penumpang = strtolower((string) $harga->Tipe_Penumpang);
         $this->Kelas = $harga->Kelas;
         $this->Harga = $harga->Harga;
@@ -149,6 +163,7 @@ class Harga extends Component
     public function clear()
     {
         $this->reset('ID_Rute', 'Tipe_Penumpang', 'Kelas', 'Harga', 'hargaId', 'updateData');
+        $this->tanggalRute ??= now()->toDateString();
         $this->resetValidation();
         $this->resetPage();
     }
@@ -172,9 +187,11 @@ class Harga extends Component
             ->orderBy('ID_Harga', 'desc')
             ->paginate(5);
 
-        // Pilihan rute: jadwal mendatang, ditambah rute yang sedang diedit (meski sudah lewat)
+        // Pilihan rute: jadwal pada tanggal yang dipilih, ditambah rute yang sedang diedit.
+        // Disaring per tanggal supaya dropdown tidak berisi ribuan jadwal hasil generator.
         $dataRute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
-            ->where(fn ($q) => $q->mendatang()->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
+            ->where(fn ($q) => $q->where('Tanggal', $this->tanggalRute ?: now()->toDateString())
+                ->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
             ->orderBy('Tanggal')->orderBy('Jam')
             ->get();
 

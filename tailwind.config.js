@@ -15,9 +15,9 @@ export default {
         jsMath:['jsMath-cmr10']
       },
       backgroundImage:{
-        'bground': "url('/public/img/bground.jpg')",
-        'bground1':"url('/public/img/feryy.jpg')",
-        'logo': "url('/public/img/logo.jpg')"
+        'bground': "url('../../public/img/bground.jpg')",
+        'bground1':"url('../../public/img/feryy.jpg')",
+        'logo': "url('/img/logo.jpg')"
       },
       animation: {
 				fade: 'fadeIn 1.1s ease-in-out',

@@ -41,13 +41,17 @@
                 </div>
                 <div class="flex p-6">
                     <div class="relative z-0 w-full group">
-                        <label for="ID_Rute" class="block mb-2 text-sm font-medium text-gray-900">Rute Perjalanan (jadwal mendatang)</label>
-                        <select name="ID_Rute" id="ID_Rute" wire:model.live="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option value=""> - Pilih Rute - </option>
-                            @foreach($dataRute as $rute)
-                            <option value="{{ $rute->ID_Rute }}">{{ $rute->label }}</option>
-                            @endforeach
-                        </select>
+                        <label for="tanggalRute" class="block mb-2 text-sm font-medium text-gray-900">Rute Perjalanan</label>
+                        <div class="flex gap-2">
+                            <input id="tanggalRute" type="date" wire:model.live="tanggalRute" title="Tanggal keberangkatan"
+                                class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                            <select name="ID_Rute" id="ID_Rute" wire:model.live="ID_Rute" class="mt-1 bg-gray-50 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">{{ $dataRute->isEmpty() ? '- Tidak ada jadwal di tanggal ini -' : '- Pilih Rute -' }}</option>
+                                @foreach($dataRute as $rute)
+                                <option value="{{ $rute->ID_Rute }}">{{ $rute->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         @error('ID_Rute')
                         <span class="text-red-500 text-xs mt-3 block">{{$message}}</span>
                         @enderror

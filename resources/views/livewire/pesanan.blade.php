@@ -112,7 +112,7 @@
                 <h3 class="mt-5 mb-2 text-sm font-semibold uppercase">Penumpang</h3>
                 <table class="w-full text-sm text-left">
                     <thead class="text-xs text-gray-500 uppercase">
-                        <tr><th class="py-1">No</th><th class="py-1">Nama</th><th class="py-1">Tipe</th><th class="py-1">L/P</th><th class="py-1">No. HP</th><th class="py-1">Harga</th></tr>
+                        <tr><th class="py-1">No</th><th class="py-1">Nama</th><th class="py-1">Tipe</th><th class="py-1">L/P</th><th class="py-1">No. HP</th><th class="py-1">Harga</th><th class="py-1">Check-in</th></tr>
                     </thead>
                     <tbody>
                         @foreach ($detail->penumpangs as $p)
@@ -123,6 +123,7 @@
                                 <td class="py-1">{{ ucfirst($p->Jenis_Kelamin) }}</td>
                                 <td class="py-1">{{ $p->Telepon }}</td>
                                 <td class="py-1">{{ rupiah($p->Harga) }}</td>
+                                <td class="py-1">{!! $p->Checkin_Pada ? '<span class="text-emerald-700">' . e($p->Checkin_Pada->format('d/m H:i')) . '</span>' : '<span class="text-slate-400">-</span>' !!}</td>
                             </tr>
                         @endforeach
                     </tbody>

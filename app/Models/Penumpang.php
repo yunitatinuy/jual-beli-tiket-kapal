@@ -27,6 +27,7 @@ class Penumpang extends Model
     protected $casts = [
         'Jenis_Kelamin' => JenisKelamin::class,
         'Harga' => 'integer',
+        'Checkin_Pada' => 'datetime',
     ];
 
     public $timestamps = false;

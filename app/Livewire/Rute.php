@@ -16,8 +16,6 @@ class Rute extends Component
     use WithPagination;
     use LivewireAlert;
 
-    public $kapalList;
-    public $pelabuhanList;
     public $selectedKapal;
     public $selectedPelabuhanAsal;
     public $selectedPelabuhanTujuan;
@@ -27,12 +25,6 @@ class Rute extends Component
     public $search;
     public $updateData = false;
     public $ruteId;
-
-    public function mount()
-    {
-        $this->kapalList = ModelsKapal::orderBy('Nama_Kapal')->get();
-        $this->pelabuhanList = ModelsPelabuhan::orderBy('Nama_Pelabuhan')->get();
-    }
 
     protected function rules(): array
     {
@@ -209,7 +201,12 @@ class Rute extends Component
             ->orderBy('Jam', 'desc')
             ->paginate(5);
 
-        return view('livewire.rute', ['dataRute' => $data])
-            ->layout('components.adminRute');
+        // Daftar pilihan diambil saat render (tidak disimpan di state Livewire,
+        // supaya payload tiap klik tetap kecil)
+        return view('livewire.rute', [
+            'dataRute' => $data,
+            'kapalList' => ModelsKapal::orderBy('Nama_Kapal')->get(['ID_Kapal', 'Nama_Kapal']),
+            'pelabuhanList' => ModelsPelabuhan::orderBy('Nama_Pelabuhan')->get(['ID_Pelabuhan', 'Nama_Pelabuhan', 'Nama_Kota']),
+        ])->layout('components.adminRute');
     }
 }

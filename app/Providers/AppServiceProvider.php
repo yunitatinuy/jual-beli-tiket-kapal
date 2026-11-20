@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Di produksi semua URL (link verifikasi email, callback Midtrans, aset) harus HTTPS,
         // termasuk saat aplikasi berada di belakang reverse proxy yang meneruskan HTTP.
+        // Nama hari/bulan dalam Bahasa Indonesia untuk translatedFormat() (invoice, email)
+        \Carbon\Carbon::setLocale('id');
+
         if (config('app.force_https')) {
             URL::forceScheme('https');
         }

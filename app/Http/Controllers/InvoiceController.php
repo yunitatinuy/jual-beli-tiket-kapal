@@ -63,7 +63,12 @@ class InvoiceController extends Controller
             ])
             ->values();
 
-        return compact('pesanan', 'rincian');
+        // QR untuk check-in hanya untuk tiket yang sudah lunas
+        $qr = $pesanan->Status === Pesanan::STATUS_LUNAS && $pesanan->Kode_Booking
+            ? app(\App\Services\TiketQr::class)->dataUri($pesanan)
+            : null;
+
+        return compact('pesanan', 'rincian', 'qr');
     }
 
     /**

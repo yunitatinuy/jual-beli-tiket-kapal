@@ -73,6 +73,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'cekrole:admin'])->group
     Route::get('/tiket', Tiket::class);
     Route::get('/harga', Harga::class);
     Route::get('/rute', Rute::class);
+    Route::get('/jadwal-berulang', \App\Livewire\JadwalBerulang::class)->name('admin.jadwal-berulang');
+    Route::get('/checkin', \App\Livewire\Checkin::class)->name('admin.checkin');
     Route::get('/pengguna', Pengguna::class);
     Route::get('/pesanan', Pesanan::class);
 });
