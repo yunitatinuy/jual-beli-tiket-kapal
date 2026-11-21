@@ -35,7 +35,7 @@ class PesanTiketController extends Controller
                 (int) ($data['anak'] ?? 0),
             );
         } catch (BookingException $e) {
-            return redirect('/sekalipergi')->with('error', $e->getMessage());
+            return redirect()->route('informasi')->with('error', $e->getMessage());
         }
 
         return view('pengguna.pesantiket', [

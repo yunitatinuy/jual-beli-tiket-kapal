@@ -1,43 +1,75 @@
-<nav class="bg-[#fcc09b] shadow-2xl ">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
-        <a href="/dashboard_pengguna" class="flex items-center space-x-3 rtl:space-x-reverse hover:text-slate-50">
-            <img src="/img/logo3.png" alt="logo" class="float-left flex flex-col object-cover w-16">
-            <span class="self-center text-3xl font-marko whitespace-nowrap uppercase hover:text-slate-50">Anang Ferry</span>
+<header class="sticky top-0 z-40 border-b border-slate-200 bg-white">
+    <div class="mx-auto flex h-[88px] max-w-[1312px] items-center justify-between px-4 sm:px-6 lg:px-0">
+
+        {{-- Logo --}}
+        <a href="/" class="flex items-center gap-4">
+            <img src="/img/logo3.png" alt="Anang Ferry" class="h-12 w-12 object-contain">
+            <span class="text-xl font-bold uppercase tracking-tight text-[#c8175d]">Anang Ferry</span>
         </a>
 
-        <div class="sidebar">
-            <ul class="flex flex-row font-marko">
-                @auth
-                <li><a href="/informasi" class="flex items-center translate-y-2 px-2 mx-1 hover:text-slate-50">Informasi</a></li>
-                <li><a href="/transaksi" class="flex items-center translate-y-2 px-2 mx-1 hover:text-slate-50">Transaksi</a></li>
-                <li>
-                    <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="flex items-center rounded bg-[#ED9455] px-6 pb-2 pt-2.5 text-xs font-medium leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-[#F97300] hover:shadow-primary-2 focus:bg-[#ED9455]-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-[#ED9455] active:shadow-primary-2 motion-reduce:transition-none" type="button">{{ Auth::user()->name }}
+        {{-- Menu --}}
+        <nav class="hidden items-center gap-2 md:flex">
+            @php
+                $menu = [
+                    ['Beranda', '/', request()->is('/') || request()->is('dashboard_pengguna')],
+                    ['Tiket saya', '/transaksi', request()->is('transaksi*') || request()->is('pesanan*') || request()->is('invoices*')],
+                ];
+            @endphp
+            @foreach ($menu as [$label, $url, $aktif])
+                <a href="{{ $url }}"
+                    class="relative px-6 py-[34px] text-sm font-medium transition
+                    {{ $aktif ? 'text-[#c8175d] after:absolute after:inset-x-6 after:bottom-0 after:h-[3px] after:bg-[#c8175d]' : 'text-slate-500 hover:text-[#c8175d]' }}">
+                    {{ $label }}
+                </a>
+            @endforeach
+
+            {{-- Theme Switcher --}}
+            <div class="mx-1">
+                @include('partials.theme-switcher')
+            </div>
+
+            @auth
+                @if (Auth::user()->isAdmin())
+                    <a href="/admin/dashboard"
+                        class="inline-flex items-center gap-1.5 rounded-lg border border-pink-200 bg-pink-50 px-3 py-1.5 text-xs font-semibold text-[#c8175d] transition hover:bg-[#c8175d] hover:text-white">
+                        <i class="bi bi-speedometer2"></i> Panel Admin
+                    </a>
+                @endif
+
+                <button class="mx-1 p-2 text-slate-500 hover:text-[#c8175d]" aria-label="Notifikasi">
+                    <i class="bi bi-bell text-lg"></i>
+                </button>
+
+                {{-- Dropdown user --}}
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" class="flex items-center gap-3 text-sm font-semibold text-slate-800">
+                        <i class="bi bi-person text-xl text-[#c8175d]"></i>
+                        Halo, {{ \Illuminate\Support\Str::words(Auth::user()->name, 1, '') }}
+                        <i class="bi bi-chevron-down text-xs text-slate-500"></i>
                     </button>
-
-                    <!-- Dropdown menu -->
-                    <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-32">
-                        <ul class="py-2 text-xs text-gray-700" aria-labelledby="dropdownHoverButton">
-                            <li>
-                                <a href="/profil" class="block px-4 py-2 w-full text-center hover:bg-gray-100 hover:text-[#F97300]">Profile</a>
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    <button type="submit" class="block px-4 py-2 w-full text-center hover:bg-gray-100 hover:text-[#F97300]">
-                                        @csrf
-                                        <span>Logout</span>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
+                    <div x-cloak x-show="open" x-transition
+                        class="absolute right-0 mt-3 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg z-50">
+                        @if (Auth::user()->isAdmin())
+                            <a href="/admin/dashboard" class="block px-4 py-2.5 text-sm font-semibold text-[#c8175d] hover:bg-pink-50">
+                                <i class="bi bi-speedometer2 mr-1.5"></i> Panel Admin
+                            </a>
+                            <div class="border-t border-slate-100 my-1"></div>
+                        @endif
+                        <a href="/profil" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-pink-50 hover:text-[#c8175d]">Profil</a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-pink-50 hover:text-[#c8175d]">
+                                Logout
+                            </button>
+                        </form>
                     </div>
-                </li>
-                @endauth
+                </div>
+            @endauth
 
-                @guest
-                <li><a href="/login" class="bg-[#ffad7a] px-3 py-2 mx-1 rounded-lg hover:text-slate-50">Login</a></li>
-                @endguest
-            </ul>
-        </div>
-
+            @guest
+                <a href="/login" class="ml-4 rounded-lg bg-[#c8175d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#a6104b]">Login</a>
+            @endguest
+        </nav>
     </div>
-</nav>
+</header>

@@ -2,283 +2,259 @@
 
 @section('container')
     @php
-        use App\Models\Pesanan;
         use Carbon\Carbon;
+        use Illuminate\Support\Str;
 
         $rute = $pesanan->rute;
-        $asal = $rute?->pelabuhanAsal;
-        $tujuan = $rute?->pelabuhanTujuan;
-        $berangkat = $rute ? Carbon::parse($rute->Tanggal . ' ' . $rute->Jam) : null;
         $kode = $pesanan->Kode_Booking ?? $pesanan->ID_Pesanan;
+        $s = Str::lower($pesanan->status_label ?? '');
+        $batal = Str::contains($s, ['batal', 'expired', 'kadaluarsa', 'gagal']);
+        $menunggu = !$batal && Str::contains($s, ['menunggu', 'pending', 'belum']);
+        $lunas = !$batal && !$menunggu;
 
-        $statusStyle = match ($pesanan->Status) {
-            Pesanan::STATUS_LUNAS => 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-            Pesanan::STATUS_DIBATALKAN => 'bg-rose-50 text-rose-700 ring-rose-600/20',
-            default => 'bg-amber-50 text-amber-700 ring-amber-600/20',
-        };
+        $asal = $rute?->pelabuhanAsal?->Nama_Pelabuhan ?? '-';
+        $tujuan = $rute?->pelabuhanTujuan?->Nama_Pelabuhan ?? '-';
+        $berangkat = $rute ? Carbon::parse($rute->Tanggal)->setTimeFrom(Carbon::parse($rute->Jam))->locale('id') : null;
+        $jamTiba = !empty($rute?->Jam_Tiba) ? Carbon::parse($rute->Jam_Tiba)->format('H.i') . ' WIB' : '-';
+        $tglTiba = !empty($rute?->Tanggal_Tiba) ? Carbon::parse($rute->Tanggal_Tiba)->locale('id')->translatedFormat('D, d M Y') : '';
+        $jumlah = $pesanan->penumpangs->count();
+        $user = Auth::user();
+
+        // Langkah: 3 = pembayaran, 4 = e-tiket terbit
+        $langkah = $lunas ? 4 : 3;
+        $steps = ['Pilih tiket', 'Data penumpang', 'Pembayaran', 'E-tiket terbit'];
     @endphp
 
     <style>
         @media print {
-            nav, footer, .no-print { display: none !important; }
+            header, footer, .no-print { display: none !important; }
             body { background: #fff !important; }
-            .print-flat { box-shadow: none !important; border: 0 !important; }
-            @page { margin: 12mm; }
         }
     </style>
 
-    <div class="min-h-screen px-4 py-8 bg-slate-50 sm:py-12 font-inter">
-        <div class="max-w-4xl mx-auto">
+    {{-- Breadcrumb & judul --}}
+    <nav class="no-print text-xs text-slate-500 dark:text-slate-400">
+        <a href="/" class="hover:text-[#c8175d] dark:hover:text-pink-400">Beranda</a> <span class="mx-1">/</span>
+        <a href="/transaksi" class="hover:text-[#c8175d] dark:hover:text-pink-400">Tiket saya</a> <span class="mx-1">/</span>
+        <span>{{ $lunas ? 'E-tiket terbit' : 'Pembayaran' }}</span>
+    </nav>
 
-            {{-- Notifikasi --}}
-            @foreach ([
-                'success' => 'bg-emerald-50 border-emerald-200 text-emerald-800',
-                'info' => 'bg-sky-50 border-sky-200 text-sky-800',
-                'error' => 'bg-rose-50 border-rose-200 text-rose-800',
-            ] as $key => $gaya)
-                @if (session($key))
-                    <div class="no-print flex items-start gap-3 p-4 mb-4 text-sm rounded-xl border {{ $gaya }}" role="alert">
-                        <span class="font-medium">{{ session($key) }}</span>
-                    </div>
-                @endif
-            @endforeach
-
-            @include('invoices.partials.pembayaran')
-
-            {{-- Kartu invoice --}}
-            <article class="relative overflow-hidden bg-white border shadow-sm print-flat rounded-2xl border-slate-200">
-
-                {{-- Kepala --}}
-                <header class="flex flex-col gap-6 p-6 border-b sm:flex-row sm:items-start sm:justify-between sm:p-8 border-slate-100">
-                    <div class="flex items-center gap-4">
-                        <img src="/img/logo3.png" alt="Anang Ferry" class="w-14 h-14">
-                        <div>
-                            <p class="text-xl text-slate-900 font-marko">Anang Ferry</p>
-                            <p class="text-xs leading-relaxed text-slate-500">anangferry@gmail.com &middot; 0896-6969-696<br>Batam, Kepulauan Riau</p>
-                        </div>
-                    </div>
-                    <div class="sm:text-right">
-                        <p class="text-xs font-semibold tracking-widest uppercase text-slate-400">Invoice / E-Tiket</p>
-                        <p class="mt-1 font-mono text-2xl font-bold tracking-wide text-slate-900">{{ $kode }}</p>
-                        <span class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset {{ $statusStyle }}">
-                            <span class="w-1.5 h-1.5 rounded-full bg-current"></span>{{ $pesanan->status_label }}
-                        </span>
-                    </div>
-                </header>
-
-                {{-- Info pemesan & tanggal --}}
-                <section class="grid gap-6 p-6 text-sm sm:grid-cols-3 sm:p-8">
-                    <div>
-                        <p class="text-xs font-semibold tracking-wide uppercase text-slate-400">Ditagihkan kepada</p>
-                        <p class="mt-1 font-semibold text-slate-900">{{ $pesanan->user->name }}</p>
-                        <p class="break-all text-slate-500">{{ $pesanan->user->email }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold tracking-wide uppercase text-slate-400">Tanggal pemesanan</p>
-                        <p class="mt-1 font-semibold text-slate-900">{{ Carbon::parse($pesanan->Tanggal_Pesanan)->translatedFormat('d M Y') }}</p>
-                        <p class="text-slate-500">Pukul {{ substr((string) $pesanan->Waktu, 0, 5) }} WIB</p>
-                    </div>
-                    <div>
-                        @if ($pesanan->Status === Pesanan::STATUS_LUNAS)
-                            <p class="text-xs font-semibold tracking-wide uppercase text-slate-400">Dibayar</p>
-                            <p class="mt-1 font-semibold text-slate-900">{{ $pesanan->Dibayar_Pada?->translatedFormat('d M Y, H:i') }} WIB</p>
-                            <p class="text-slate-500">{{ $pesanan->Metode_Bayar }}</p>
-                        @elseif ($pesanan->Status === Pesanan::STATUS_MENUNGGU_PEMBAYARAN)
-                            <p class="text-xs font-semibold tracking-wide uppercase text-slate-400">Batas pembayaran</p>
-                            <p class="mt-1 font-semibold text-slate-900">{{ $pesanan->Batas_Bayar?->translatedFormat('d M Y, H:i') ?? '-' }} WIB</p>
-                            <p class="text-slate-500">Melalui Midtrans</p>
-                        @else
-                            <p class="text-xs font-semibold tracking-wide uppercase text-slate-400">Status</p>
-                            <p class="mt-1 font-semibold text-rose-700">Dibatalkan</p>
-                            <p class="text-slate-500">Tiket tidak berlaku</p>
-                        @endif
-                    </div>
-                </section>
-
-                {{-- Perjalanan --}}
-                <section class="px-6 sm:px-8">
-                    <div class="overflow-hidden border rounded-xl border-slate-200">
-                        <div class="flex items-center justify-between px-5 py-3 text-xs font-semibold tracking-wide uppercase bg-slate-50 text-slate-500">
-                            <span>Detail perjalanan</span>
-                            <span>Kelas {{ $pesanan->Kelas ?? '-' }}</span>
-                        </div>
-                        <div class="grid items-center grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 sm:gap-3 px-4 sm:px-5 py-6 [overflow-wrap:anywhere]">
-                            <div>
-                                <p class="text-xs text-slate-400">Dari</p>
-                                <p class="text-lg font-bold leading-tight text-slate-900">{{ $asal?->Nama_Pelabuhan ?? '-' }}</p>
-                                <p class="text-sm text-slate-500">{{ $asal?->Nama_Kota }}</p>
-                            </div>
-                            <div class="flex flex-col items-center px-1 sm:px-2 text-slate-400">
-                                <svg class="w-7 h-7 text-[#f49855]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M2 20c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/>
-                                    <path d="M4 17l-1-5h18l-2 5"/>
-                                    <path d="M12 12V4l5 3-5 2"/>
-                                </svg>
-                                <span class="w-8 mt-1 border-t border-dashed sm:w-28 border-slate-300"></span>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-xs text-slate-400">Ke</p>
-                                <p class="text-lg font-bold leading-tight text-slate-900">{{ $tujuan?->Nama_Pelabuhan ?? '-' }}</p>
-                                <p class="text-sm text-slate-500">{{ $tujuan?->Nama_Kota }}</p>
-                            </div>
-                        </div>
-                        <dl class="grid grid-cols-2 text-sm border-t sm:grid-cols-4 border-slate-200 divide-slate-200 sm:divide-x">
-                            <div class="px-5 py-3">
-                                <dt class="text-xs text-slate-400">Tanggal</dt>
-                                <dd class="font-semibold text-slate-900">{{ $berangkat?->translatedFormat('D, d M Y') ?? '-' }}</dd>
-                            </div>
-                            <div class="px-5 py-3">
-                                <dt class="text-xs text-slate-400">Jam berangkat</dt>
-                                <dd class="font-semibold text-slate-900">{{ $berangkat?->format('H:i') ?? '-' }} WIB</dd>
-                            </div>
-                            <div class="px-5 py-3">
-                                <dt class="text-xs text-slate-400">Kapal</dt>
-                                <dd class="font-semibold text-slate-900">{{ $rute?->kapal?->Nama_Kapal ?? '-' }}</dd>
-                            </div>
-                            <div class="px-5 py-3">
-                                <dt class="text-xs text-slate-400">Penumpang</dt>
-                                <dd class="font-semibold text-slate-900">{{ $pesanan->penumpangs->count() }} orang</dd>
-                            </div>
-                        </dl>
-                    </div>
-                </section>
-
-                {{-- QR boarding --}}
-                @if ($qr)
-                    <section class="px-6 mt-6 sm:px-8">
-                        <div class="flex flex-col items-center gap-5 p-5 border sm:flex-row rounded-xl border-emerald-200 bg-emerald-50/50">
-                            <img src="{{ $qr }}" alt="QR code check-in {{ $kode }}" class="w-40 h-40 p-2 bg-white border rounded-lg border-slate-200">
-                            <div class="text-center sm:text-left">
-                                <p class="text-xs font-semibold tracking-wide uppercase text-emerald-700">Boarding pass</p>
-                                <p class="mt-1 text-lg font-bold text-slate-900">Tunjukkan QR ini kepada petugas saat naik kapal</p>
-                                <p class="mt-1 text-sm text-slate-600">Satu QR berlaku untuk semua penumpang dalam pesanan ini. Simpan halaman ini atau unduh PDF agar bisa dibuka tanpa internet.</p>
-                                <p class="mt-2 font-mono text-sm font-semibold tracking-wider text-slate-700">{{ $kode }}</p>
-                            </div>
-                        </div>
-                    </section>
-                @endif
-
-                {{-- Penumpang --}}
-                <section class="px-6 mt-8 sm:px-8">
-                    <h2 class="mb-3 text-sm font-semibold text-slate-900">Data penumpang</h2>
-                    <div class="overflow-x-auto border rounded-xl border-slate-200">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs tracking-wide uppercase bg-slate-50 text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 font-semibold">No</th>
-                                    <th class="px-4 py-3 font-semibold">Nama lengkap</th>
-                                    <th class="px-4 py-3 font-semibold">Tipe</th>
-                                    <th class="px-4 py-3 font-semibold">Jenis kelamin</th>
-                                    <th class="px-4 py-3 font-semibold">No. HP</th>
-                                    @if ($qr)
-                                        <th class="px-4 py-3 font-semibold">Check-in</th>
-                                    @endif
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                @foreach ($pesanan->penumpangs as $p)
-                                    <tr>
-                                        <td class="px-4 py-3 text-slate-500">{{ $loop->iteration }}</td>
-                                        <td class="px-4 py-3 font-medium text-slate-900">{{ $p->Nama_Lengkap }}</td>
-                                        <td class="px-4 py-3">
-                                            <span class="px-2 py-0.5 text-xs font-medium rounded-md {{ $p->Tipe_Penumpang === 'anak' ? 'bg-sky-50 text-sky-700' : 'bg-slate-100 text-slate-700' }}">{{ ucfirst($p->Tipe_Penumpang) }}</span>
-                                        </td>
-                                        <td class="px-4 py-3 text-slate-700">{{ ucfirst($p->Jenis_Kelamin) }}</td>
-                                        <td class="px-4 py-3 text-slate-700">{{ $p->Telepon }}</td>
-                                        @if ($qr)
-                                            <td class="px-4 py-3">
-                                                @if ($p->Checkin_Pada)
-                                                    <span class="text-xs font-medium text-emerald-700">Sudah naik {{ $p->Checkin_Pada->format('H:i') }}</span>
-                                                @else
-                                                    <span class="text-xs text-slate-400">Belum</span>
-                                                @endif
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                {{-- Rincian biaya --}}
-                <section class="relative px-6 mt-8 sm:px-8">
-                    @if ($pesanan->Status === Pesanan::STATUS_LUNAS)
-                        <div class="absolute hidden pointer-events-none select-none sm:block left-14 bottom-9 -rotate-12">
-                            <span class="block px-4 py-1 text-2xl font-extrabold tracking-[0.3em] text-emerald-600/30 border-4 border-emerald-600/30 rounded-lg">LUNAS</span>
-                        </div>
-                    @endif
-                    <h2 class="mb-3 text-sm font-semibold text-slate-900">Rincian biaya</h2>
-                    <div class="overflow-x-auto border rounded-xl border-slate-200">
-                        <table class="w-full text-sm">
-                            <thead class="text-xs tracking-wide uppercase bg-slate-50 text-slate-500">
-                                <tr>
-                                    <th class="px-4 py-3 font-semibold text-left">Deskripsi</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Jumlah</th>
-                                    <th class="px-4 py-3 font-semibold text-right">Harga satuan</th>
-                                    <th class="px-4 py-3 font-semibold text-right">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                @foreach ($rincian as $r)
-                                    <tr>
-                                        <td class="px-4 py-3 text-slate-900">Tiket {{ $r['tipe'] }} &middot; Kelas {{ $pesanan->Kelas }}</td>
-                                        <td class="px-4 py-3 text-center text-slate-700">{{ $r['jumlah'] }}</td>
-                                        <td class="px-4 py-3 text-right text-slate-700">{{ rupiah($r['harga']) }}</td>
-                                        <td class="px-4 py-3 font-medium text-right text-slate-900">{{ rupiah($r['subtotal']) }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr class="border-t border-slate-200 bg-slate-50">
-                                    <td colspan="3" class="px-4 py-4 font-semibold text-right text-slate-900">Total pembayaran</td>
-                                    <td class="px-4 py-4 text-lg font-bold text-right text-slate-900">{{ rupiah($pesanan->Total_Harga) }}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <p class="mt-2 text-xs text-right text-slate-500">Metode pembayaran: <span class="font-medium text-slate-700">{{ $pesanan->Metode_Bayar }}</span></p>
-                </section>
-
-                {{-- Catatan --}}
-                <footer class="p-6 mt-8 border-t sm:p-8 border-slate-100 bg-slate-50/60">
-                    <div class="grid gap-6 text-sm sm:grid-cols-2">
-                        <div>
-                            <p class="font-semibold text-slate-900">Informasi keberangkatan</p>
-                            <ul class="mt-2 space-y-1 list-disc list-inside text-slate-600">
-                                <li>Tunjukkan kode booking <span class="font-mono font-semibold text-slate-900">{{ $kode }}</span> saat check-in.</li>
-                                <li>Datang paling lambat 60 menit sebelum jam berangkat.</li>
-                                <li>Bawa identitas (KTP/kartu pelajar) sesuai nama penumpang.</li>
-                            </ul>
-                        </div>
-                        <div class="sm:text-right">
-                            <p class="font-semibold text-slate-900">Terima kasih telah memilih Anang Ferry</p>
-                            <p class="mt-2 text-slate-600">Ada pertanyaan tentang pesanan ini? Hubungi kami di anangferry@gmail.com atau 0896-6969-696.</p>
-                            <p class="mt-3 text-xs text-slate-400">Dokumen ini dibuat otomatis dan sah tanpa tanda tangan.</p>
-                        </div>
-                    </div>
-                </footer>
-            </article>
-
-            {{-- Aksi --}}
-            <div class="flex flex-wrap items-center justify-between gap-3 mt-6 no-print">
-                <a href="/transaksi" class="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-                    Kembali ke transaksi
-                </a>
-                <div class="flex gap-3">
-                    <a href="{{ route('invoice.pdf', $pesanan->ID_Pesanan) }}"
-                        class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-white border rounded-lg shadow-sm text-slate-700 border-slate-300 hover:bg-slate-50">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                        Unduh PDF
-                    </a>
-                    <button type="button" onclick="window.print()"
-                        class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-lg shadow-sm bg-slate-900 hover:bg-slate-800">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
-                        Cetak
-                    </button>
-                </div>
-            </div>
+    <div class="no-print mt-5 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-[28px] font-semibold text-slate-800 dark:text-slate-100">
+                {{ $lunas ? 'E-tiket berhasil diterbitkan' : ($batal ? 'Pesanan ' . Str::lower($pesanan->status_label) : 'Selesaikan pembayaran') }}
+            </h1>
+            <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
+                @if ($lunas) Pembayaran berhasil. Simpan e-tiket dan siapkan identitas asli untuk perjalananmu.
+                @elseif ($batal) Pesanan ini tidak dapat dibayar lagi. Silakan buat pesanan baru.
+                @else Selesaikan pembayaran sebelum batas waktu agar tiketmu dapat diterbitkan. @endif
+            </p>
         </div>
+        @if ($lunas)
+            <a href="/transaksi" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-3 text-xs font-semibold text-[#c8175d] hover:bg-pink-50 dark:border-slate-700 dark:bg-slate-800 dark:text-pink-400 dark:hover:bg-slate-700">
+                Lihat tiket saya <i class="bi bi-arrow-right"></i>
+            </a>
+        @else
+            <div class="flex flex-wrap items-center gap-2">
+                @if ($menunggu)
+                    <a href="{{ route('pesantiket', ['rute' => $pesanan->ID_Rute, 'kelas' => $pesanan->Kelas, 'dewasa' => $pesanan->penumpangs->where('Tipe_Penumpang', 'dewasa')->count() ?: 1, 'anak' => $pesanan->penumpangs->where('Tipe_Penumpang', 'anak')->count() ?: 0]) }}"
+                        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                        <i class="bi bi-arrow-left"></i> Kembali ke 2 data penumpang
+                    </a>
+                @endif
+                <a href="/transaksi" class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-[#c8175d] hover:bg-pink-50 transition dark:border-slate-700 dark:bg-slate-800 dark:text-pink-400 dark:hover:bg-slate-700">
+                    <i class="bi bi-ticket-perforated"></i> Tiket saya
+                </a>
+            </div>
+        @endif
     </div>
+
+    {{-- Langkah --}}
+    <ol class="no-print mt-6 grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-sm md:grid-cols-4 dark:border-slate-800 dark:bg-slate-900">
+        @foreach ($steps as $n => $teks)
+            @php
+                $no = $n + 1;
+                $selesai = $no < $langkah || ($lunas && $no === 4);
+                $sekarang = $no === $langkah;
+                $urlLangkah = null;
+                if ($menunggu && $no === 2) {
+                    $urlLangkah = route('pesantiket', [
+                        'rute' => $pesanan->ID_Rute,
+                        'kelas' => $pesanan->Kelas,
+                        'dewasa' => $pesanan->penumpangs->where('Tipe_Penumpang', 'dewasa')->count() ?: 1,
+                        'anak' => $pesanan->penumpangs->where('Tipe_Penumpang', 'anak')->count() ?: 0,
+                    ]);
+                }
+            @endphp
+            <li class="flex items-center gap-3">
+                @if ($urlLangkah)
+                    <a href="{{ $urlLangkah }}" class="group flex items-center gap-3" title="Kembali ke langkah 2 data penumpang">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-pink-100 text-xs font-semibold text-[#c8175d] transition group-hover:bg-[#c8175d] group-hover:text-white dark:bg-pink-950/60 dark:text-pink-300">
+                            <i class="bi bi-check2"></i>
+                        </span>
+                        <span class="font-medium text-slate-700 transition group-hover:text-[#c8175d] dark:text-slate-300 dark:group-hover:text-pink-400">{{ $teks }}</span>
+                    </a>
+                @else
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold {{ $sekarang ? 'bg-[#c8175d] text-white' : 'bg-pink-50 text-[#c8175d] dark:bg-slate-800 dark:text-pink-400' }}">
+                        @if ($selesai) <i class="bi bi-check2"></i> @else {{ $no }} @endif
+                    </span>
+                    <span class="{{ $sekarang ? 'font-semibold text-[#c8175d] dark:text-pink-400' : 'text-slate-600 dark:text-slate-400' }}">{{ $teks }}</span>
+                @endif
+            </li>
+        @endforeach
+    </ol>
+
+    @if (session('error') || session('success') || (isset($errors) && $errors->any()))
+        <div class="no-print mt-5 rounded-lg p-4 text-sm {{ session('success') ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' }}" role="alert">
+            {{ session('success') ?? (session('error') ?? ($errors?->first() ?? 'Terjadi kesalahan')) }}
+        </div>
+    @endif
+
+    @if ($batal)
+        <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center">
+            <i class="bi bi-x-circle text-4xl text-red-400"></i>
+            <p class="mt-4 text-lg font-semibold text-slate-800">Pesanan {{ $kode }} {{ Str::lower($pesanan->status_label) }}</p>
+            <a href="/dashboard_pengguna" class="mt-5 inline-block rounded-lg bg-[#c8175d] px-6 py-3 text-xs font-semibold text-white hover:bg-[#a6104b]">Pesan tiket baru</a>
+        </div>
+
+    @elseif ($menunggu)
+        {{-- ================= HALAMAN PEMBAYARAN ================= --}}
+        @include('pengguna.bayar')
+
+    @else
+        {{-- ================= E-TIKET TERBIT ================= --}}
+        @php
+            $dibayar = !empty($pesanan->Dibayar_Pada) ? Carbon::parse($pesanan->Dibayar_Pada)->locale('id') : null;
+            $batasCheckin = $berangkat?->copy()->subHours(2);
+        @endphp
+
+        <div class="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_368px]">
+            <div class="flex flex-col gap-5">
+
+                <div class="no-print flex items-center gap-4 rounded-2xl bg-green-50 p-5">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-700 text-xl text-white"><i class="bi bi-check2"></i></span>
+                    <div>
+                        <p class="text-lg font-semibold text-green-700">Pembayaran berhasil, perjalananmu siap!</p>
+                        <p class="mt-1 text-xs text-green-700">E-tiket dapat dilihat di halaman ini{{ $user?->email ? ' dan dikirim ke ' . $user->email : '' }}.</p>
+                    </div>
+                </div>
+
+                {{-- Kartu e-tiket --}}
+                <section class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <div class="flex items-start justify-between border-b border-slate-100 pb-5">
+                        <div>
+                            <p class="text-sm font-bold uppercase text-[#c8175d]">Anang Ferry</p>
+                            <h2 class="mt-1 text-2xl font-semibold text-slate-800">E-tiket perjalanan</h2>
+                        </div>
+                        <span class="rounded-md bg-green-50 px-3 py-2 text-xs font-medium text-green-700">Tiket aktif</span>
+                    </div>
+
+                    <div class="mt-5 grid grid-cols-2 gap-4">
+                        <div><p class="text-xs text-slate-500">Kode booking</p><p class="mt-1 text-3xl font-bold tracking-wide text-[#c8175d]">{{ $kode }}</p></div>
+                        <div><p class="text-xs text-slate-500">Nomor pesanan</p><p class="mt-2 text-base font-semibold text-slate-800">{{ $pesanan->ID_Pesanan }}</p></div>
+                    </div>
+
+                    <div class="mt-5 rounded-xl bg-slate-50 p-5">
+                        <p class="text-sm font-semibold text-slate-800">{{ $rute?->kapal?->Nama_Kapal ?? '-' }} · {{ $pesanan->Kelas ?? '-' }}</p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[11px] uppercase text-slate-500">{{ $berangkat?->translatedFormat('D, d M Y') }}</p>
+                                <p class="mt-1 text-3xl font-semibold text-slate-800">{{ $berangkat?->format('H.i') }} WIB</p>
+                                <p class="mt-2 text-lg font-semibold text-[#c8175d]">{{ $asal }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] uppercase text-slate-500">{{ $tglTiba }}</p>
+                                <p class="mt-1 text-3xl font-semibold text-slate-800">{{ $jamTiba }}</p>
+                                <p class="mt-2 text-lg font-semibold text-[#c8175d]">{{ $tujuan }}</p>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-xs text-slate-500">{{ $rute->Durasi ?? '' }}{{ !empty($rute->Durasi) ? ' · ' : '' }}Langsung · Seluruh waktu dalam WIB</p>
+                    </div>
+
+                    <h3 class="mt-7 text-lg font-semibold text-slate-800">Daftar penumpang</h3>
+                    <div class="mt-4 space-y-3">
+                        @foreach ($pesanan->penumpangs as $i => $pen)
+                            <div class="flex items-start justify-between rounded-xl bg-slate-50 px-5 py-4">
+                                <div class="flex gap-4">
+                                    <span class="text-lg font-semibold text-[#c8175d]">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                    <div>
+                                        <p class="font-semibold text-slate-800">{{ $pen->Nama_Lengkap }}</p>
+                                        <p class="mt-1 text-xs text-slate-500">{{ $pen->Tipe ?? ucfirst($pen->Jenis_Kelamin) }} · {{ $pen->Telepon }}</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-slate-500">{{ $pesanan->Kelas ?? '-' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-6 rounded-xl bg-pink-100/70 p-5">
+                        <p class="font-semibold text-[#c8175d]">Hadir paling lambat pukul {{ $batasCheckin?->format('H.i') }} WIB</p>
+                        <p class="mt-1 text-sm text-slate-700">{{ $berangkat?->translatedFormat('l, d F Y') }} · Pelabuhan {{ $asal }}</p>
+                        <p class="mt-1 text-xs text-slate-500">Bawa e-tiket ini dan identitas asli seluruh penumpang saat check-in.</p>
+                    </div>
+                </section>
+
+                <div class="no-print grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <a href="{{ route('invoice.pdf', $pesanan->ID_Pesanan) }}"
+                        class="block w-full rounded-lg bg-[#c8175d] py-3.5 text-center text-sm font-semibold text-white hover:bg-[#a6104b]">Unduh e-tiket (PDF)</a>
+                    @if (\Illuminate\Support\Facades\Route::has('invoices.resend'))
+                        <form action="{{ route('invoices.resend', $pesanan->ID_Pesanan) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full rounded-lg border border-slate-200 bg-white py-3.5 text-sm font-semibold text-[#c8175d] hover:bg-pink-50">Kirim ulang ke email</button>
+                        </form>
+                    @else
+                        <a href="{{ route('invoices.eticket', $pesanan->ID_Pesanan) }}" class="rounded-lg border border-slate-200 bg-white py-3.5 text-center text-sm font-semibold text-[#c8175d] hover:bg-pink-50">Lihat halaman e-tiket</a>
+                    @endif
+                </div>
+
+                {{-- Ringkasan pembayaran --}}
+                <section class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <h3 class="text-lg font-semibold text-slate-800">Ringkasan pembayaran</h3>
+                    <dl class="mt-5 space-y-4 text-sm">
+                        <div class="flex justify-between"><dt class="text-slate-500">Status pembayaran</dt><dd class="font-semibold text-green-700">Lunas</dd></div>
+                        <div class="flex justify-between"><dt class="text-slate-500">Metode pembayaran</dt><dd class="font-semibold text-slate-800">{{ $pesanan->Metode_Pembayaran ?? 'Midtrans' }}</dd></div>
+                        @if ($dibayar)
+                            <div class="flex justify-between"><dt class="text-slate-500">Waktu pembayaran</dt><dd class="font-semibold text-slate-800">{{ $dibayar->translatedFormat('d F Y · H.i') }} WIB</dd></div>
+                        @endif
+                    </dl>
+                    <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
+                        <span class="text-slate-500">Total dibayar</span>
+                        <span class="text-2xl font-bold text-[#c8175d]">{{ rupiah($pesanan->Total_Harga) }}</span>
+                    </div>
+                </section>
+            </div>
+
+            {{-- Sidebar --}}
+            <aside class="flex flex-col gap-5">
+                <section class="rounded-2xl border border-slate-200 bg-white p-6">
+                    <h3 class="text-lg font-semibold text-slate-800">Kode check-in</h3>
+                    <p class="mt-4 text-xs text-slate-500">Tunjukkan kode ini kepada petugas di pelabuhan.</p>
+                    <div id="qrcode" class="my-6 flex justify-center"></div>
+                    <p class="text-center text-2xl font-bold tracking-wide text-[#c8175d]">{{ $kode }}</p>
+                </section>
+
+                <section class="no-print rounded-2xl border border-slate-200 bg-white p-6">
+                    <h3 class="text-lg font-semibold text-slate-800">Sebelum berangkat</h3>
+                    <ol class="mt-5 space-y-4 text-sm">
+                        <li><p class="font-semibold text-slate-800">1. Simpan e-tiket</p><p class="mt-1 text-xs text-slate-500">Unduh PDF agar tetap dapat dibuka tanpa koneksi internet.</p></li>
+                        <li><p class="font-semibold text-slate-800">2. Siapkan identitas asli</p><p class="mt-1 text-xs text-slate-500">Nama dan identitas harus sesuai dengan data pada tiket.</p></li>
+                        <li><p class="font-semibold text-slate-800">3. Datang 2 jam lebih awal</p><p class="mt-1 text-xs text-slate-500">Lakukan check-in di pelabuhan sebelum keberangkatan.</p></li>
+                    </ol>
+                </section>
+
+                <section class="no-print rounded-2xl border border-slate-200 bg-white p-6">
+                    <h3 class="font-semibold text-slate-800">Ada kendala dengan tiketmu?</h3>
+                    <p class="mt-3 text-xs text-slate-500">Lihat ketentuan perjalanan atau hubungi tim bantuan kami.</p>
+                    <a href="/informasi" class="mt-4 block rounded-lg border border-slate-200 py-3 text-center text-xs font-semibold text-[#c8175d] hover:bg-pink-50">Hubungi bantuan</a>
+                </section>
+            </aside>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script>
+            new QRCode(document.getElementById('qrcode'), {
+                text: @json((string) $kode), width: 176, height: 176, colorDark: '#1d1d1f', colorLight: '#ffffff',
+            });
+        </script>
+    @endif
 @endsection

@@ -63,6 +63,29 @@ class PembayaranController extends Controller
             ->with('info', 'Pesanan dibatalkan dan kursi sudah dilepas.');
     }
 
+    /** Simulasi pembayaran berhasil khusus mode sandbox/testing lokal. */
+    public function simulasiSandbox(Request $request, $id)
+    {
+        if (config('services.midtrans.is_production', false)) {
+            abort(403, 'Simulasi hanya dapat digunakan pada mode Sandbox.');
+        }
+
+        $pesanan = $this->findOwned($request, $id);
+
+        if ($pesanan->menungguPembayaran()) {
+            $pesanan->forceFill([
+                'Status' => Pesanan::STATUS_LUNAS,
+                'Dibayar_Pada' => now(),
+                'Midtrans_Transaction_Id' => 'SANDBOX-' . strtoupper(\Illuminate\Support\Str::random(10)),
+                'Midtrans_Payment_Type' => 'qris',
+                'Metode_Bayar' => 'QRIS (Sandbox Simulasi)',
+            ])->save();
+        }
+
+        return redirect()->route('invoices.show', $pesanan->ID_Pesanan)
+            ->with('success', 'Simulasi pembayaran Sandbox berhasil! E-tiket telah diterbitkan.');
+    }
+
     /** Webhook dari Midtrans (Payment Notification URL). */
     public function notification(Request $request)
     {

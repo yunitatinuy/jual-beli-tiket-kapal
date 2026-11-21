@@ -50,6 +50,25 @@ class LoginController extends Controller
                 ->withInput($request->only('email'));
         }
 
+        $user = Auth::user();
+
+        // Cek apakah email user sudah diverifikasi
+        if (! $user->hasVerifiedEmail()) {
+            $userEmail = $user->email;
+            $userId = $user->id;
+
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect('/register')
+                ->with('status', 'unverified')
+                ->with('show_verify_modal', true)
+                ->with('registered_email', $userEmail)
+                ->with('registered_user_id', $userId)
+                ->with('verify_message', 'Akun Anda belum diverifikasi. Silakan cek email Anda untuk melakukan verifikasi terlebih dahulu sebelum login.');
+        }
+
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 

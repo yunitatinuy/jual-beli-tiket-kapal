@@ -59,10 +59,54 @@ class RegisterController extends Controller
         // Memicu pengiriman email verifikasi
         event(new Registered($user));
 
-        Auth::login($user);
-        $request->session()->regenerate();
+        // Tidak langsung login otomatis agar setelah verifikasi email user diarahkan login
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
-        return redirect()->route('verification.notice')
-            ->with('status', 'registered');
+        return redirect('/register')
+            ->with('status', 'registered')
+            ->with('show_verify_modal', true)
+            ->with('registered_email', $user->email)
+            ->with('registered_user_id', $user->id);
+    }
+
+    /**
+     * Kirim ulang link verifikasi email dari pop-up di halaman register.
+     */
+    public function resendVerification(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $email = $request->input('email');
+
+        $user = null;
+        if ($userId) {
+            $user = User::find($userId);
+        }
+        if (! $user && $email) {
+            $user = User::where('email', $email)->first();
+        }
+
+        if (! $user) {
+            return redirect('/register')
+                ->with('status', 'error')
+                ->with('show_verify_modal', true)
+                ->with('verify_message', 'Data pengguna tidak ditemukan. Silakan lakukan registrasi kembali.');
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('login')
+                ->with('success', 'Email ini sudah diverifikasi sebelumnya. Silakan login untuk melanjutkan.');
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return redirect('/register')
+            ->with('status', 'verification-link-sent')
+            ->with('show_verify_modal', true)
+            ->with('registered_email', $user->email)
+            ->with('registered_user_id', $user->id);
     }
 }

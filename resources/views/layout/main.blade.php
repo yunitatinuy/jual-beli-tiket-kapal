@@ -1,52 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Anang Ferry - Jual Beli Tiket Kapal</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    {{-- Bootstrap Icons --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
+    {{-- Bootstrap Icons (Bootstrap CSS/JS dihapus agar tidak bentrok dengan Tailwind) --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inter:wght@100..900&family=Marko+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
 
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 
-    <title> Jual Beli Tiket Kapal </title>
     <style>
-        .tampilan {
-            display: none;
-        }
-
-        .tampilan.active {
-            display: block;
-        }
-
-        button:hover,
-        button.active:hover {
-            background-color: #0056b3;
-        }
+        body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+        [x-cloak] { display: none !important; }
     </style>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || 'system';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (theme === 'system' && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
 </head>
 
-<body class="bg-white text-gray-900">
+<body class="bg-[#f4f4f5] text-slate-800 antialiased">
     @include('partials.navbar')
 
-    @yield('container')
-    <!-- <div class="w-full h-full bg-scroll bg-no-repeat bg-cover bg-bground1"> -->
+    <main class="mx-auto w-full max-w-[1312px] px-4 sm:px-6 lg:px-0 py-8">
+        @yield('container')
+    </main>
 
-    <!-- </div> -->
     @include('partials.footer')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
-    </script>
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 </body>
 

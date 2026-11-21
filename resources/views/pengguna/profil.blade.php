@@ -1,120 +1,238 @@
 @extends('layout.main')
 
 @section('container')
+    @php
+        use Illuminate\Support\Str;
 
-<!-- CONTENT -->
-<div class="w-full my-10 flex flex-initial px-3 lg:px-28 text-[#161931]  ">
-    <aside class="hidden py-4 w-1/5 md:block bg-gradient-to-b from-[#ffd9c1] to-transparent my-2 rounded-2xl ">
-        <div class="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12 ">
-            <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
-            <a href="/dashboard_pengguna" class="flex items-center px-3 py-2.5 font-semibold hover:bg-[#fcc09b] hover:text-white hover:border-black hover:rounded-full  ">
-                Kembali
-            </a>
-        </div>
-    </aside>
-    
-    <!-- Detail Pengguna -->
-    <div class="grid-cols-2 w-1/2 font-inter">
-    <div class="w-full p-6 rounded-lg shadow-xl">
-        <div class="pb-4">
-            <span class="font-inter font-semibold text-xl ">Detail Akun</span>
-        </div>
-        <!-- Card child container -->
-        <div class="flex flex-col space-y-4">
-            <!-- Repeatable card -->
-            <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
-                <div class="flex items-center space-x-4">
-                    <img src="/img/icons/user.png" class="w-10 h-10">
-                    <div>
-                        <div class="text-lg font-semibold">Nama</div>
-                        <div class="text-sm text-gray-600">{{Auth::user()->name}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
-                <div class="flex items-center space-x-4">
-                    <div>
-                        <div class="text-lg font-semibold">Email</div>
-                        <div class="text-sm text-gray-600">{{$user->email}}</div>
-                    </div>
-                </div>
-            </div>
-           <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
-                <div class="flex items-center space-x-4">
-                    <div>
-                        <div class="text-lg font-semibold">Password</div>
-                        <div class="text-sm text-gray-600">*************</div>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-white">
-                <div class="flex items-center space-x-4">
-                    <div>
-                        <div class="text-lg font-semibold">Pembayaran</div>
-                        <div class="text-sm text-gray-600"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        $errorsBag = $errors ?? new \Illuminate\Support\ViewErrorBag;
+        $email = $user->email;
+        $emailMasked = Str::mask($email, '*', 3, max(strpos($email, '@') - 3, 0));
+        $terverifikasi = !empty($user->email_verified_at);
+        $formAktif = old('_form'); // 'profil' | 'sandi'
+        $hasProfilError = $formAktif === 'profil' || ($errorsBag->has('name') || ($errorsBag->has('email') && $formAktif !== 'sandi'));
+        $hasSandiError = $formAktif === 'sandi' || $errorsBag->has('password') || ($errorsBag->has('current_password') && $formAktif === 'sandi');
+        $input = 'block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#c8175d] focus:outline-none focus:ring-1 focus:ring-[#c8175d] transition';
+        $label = 'mb-2 block text-xs font-semibold text-slate-800';
+    @endphp
 
-<!-- Edit Data Pengguna -->
-<div class="w-1/2 p-6 rounded-lg">
-        <div class="pb-4">
-            <span class="font-inter font-semibold text-xl ">Edit Akun</span>
-        </div>
+    {{-- Breadcrumb --}}
+    <nav class="text-xs text-slate-500 mb-5">
+        <a href="/" class="hover:text-[#c8175d]">Beranda</a> <span class="mx-1.5">/</span>
+        <span class="text-slate-700 font-medium">Profil saya</span>
+    </nav>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+    <h1 class="text-[28px] font-semibold text-slate-800">Profil saya</h1>
+    <p class="mt-2 text-sm text-slate-500">Kelola informasi pribadi dan keamanan akunmu dalam satu tempat.</p>
+
+    {{-- Notifikasi --}}
+    @if (session('success'))
+        <div class="mt-5 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800" role="alert">
+            <i class="bi bi-check-circle-fill text-lg text-emerald-600"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="mt-5 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
+            <i class="bi bi-exclamation-triangle-fill text-lg text-red-600"></i>
+            <span>{{ session('error') }}</span>
         </div>
     @endif
 
-    <form action="{{ route('profile.update') }}" method="POST">
-        @csrf
+    <div class="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[320px_1fr]"
+        x-data="{
+            ubahProfil: {{ $hasProfilError ? 'true' : 'false' }},
+            ubahSandi: {{ $hasSandiError ? 'true' : 'false' }},
+            tab: 'data-pribadi'
+        }">
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" name="name" id="name" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" value="{{ old('name', $user->name) }}" required>
-            @error('name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        {{-- ===== Sidebar ===== --}}
+        <aside class="flex flex-col gap-5">
+            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Akun pengguna</p>
+                <h2 class="mt-2 text-xl font-bold text-slate-800">{{ $user->name }}</h2>
+                <p class="mt-1 text-sm text-slate-500">{{ $emailMasked }}</p>
+
+                @if ($terverifikasi)
+                    <span class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1 text-xs font-medium text-emerald-700">
+                        <i class="bi bi-shield-check text-emerald-600"></i> Akun terverifikasi
+                    </span>
+                @else
+                    <span class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1 text-xs font-medium text-amber-700">
+                        <i class="bi bi-shield-exclamation text-amber-600"></i> Belum diverifikasi
+                    </span>
+                @endif
+
+                <nav class="mt-5 space-y-1.5 border-t border-slate-100 pt-5 text-sm">
+                    <a href="#data-pribadi" @click="tab = 'data-pribadi'"
+                        class="flex items-center justify-between rounded-xl px-3.5 py-2.5 font-medium transition"
+                        :class="tab === 'data-pribadi' ? 'bg-pink-50 font-semibold text-[#c8175d]' : 'text-slate-700 hover:bg-slate-50'">
+                        <span><i class="bi bi-person mr-2"></i> Data pribadi</span>
+                        <i class="bi bi-chevron-right text-xs"></i>
+                    </a>
+                    <a href="#keamanan" @click="tab = 'keamanan'"
+                        class="flex items-center justify-between rounded-xl px-3.5 py-2.5 font-medium transition"
+                        :class="tab === 'keamanan' ? 'bg-pink-50 font-semibold text-[#c8175d]' : 'text-slate-700 hover:bg-slate-50'">
+                        <span><i class="bi bi-shield-lock mr-2"></i> Keamanan akun</span>
+                        <i class="bi bi-chevron-right text-xs"></i>
+                    </a>
+                </nav>
+
+                <form action="{{ route('logout') }}" method="POST" class="mt-5 border-t border-slate-100 pt-4">
+                    @csrf
+                    <button type="submit" class="flex w-full items-center gap-2 text-xs font-semibold text-red-600 hover:text-red-700 hover:underline">
+                        <i class="bi bi-box-arrow-right"></i> Keluar dari akun
+                    </button>
+                </form>
+            </section>
+
+            <section class="rounded-2xl border border-pink-100 bg-pink-50/70 p-6">
+                <h3 class="text-base font-semibold text-[#c8175d]"><i class="bi bi-shield-lock-fill mr-1.5"></i> Privasimu terlindungi</h3>
+                <p class="mt-2 text-xs leading-relaxed text-slate-600">Sebagian informasi ditampilkan tersamar untuk keamanan akun. Data pemesanan tiket Anda tersimpan secara aman.</p>
+            </section>
+
+            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h3 class="font-semibold text-slate-800">Pusat Bantuan</h3>
+                <p class="mt-2 text-xs text-slate-500">Punya kendala pemesanan tiket atau perubahan data penumpang?</p>
+                <a href="/informasi" class="mt-4 block rounded-xl border border-slate-200 py-2.5 text-center text-xs font-semibold text-[#c8175d] hover:bg-pink-50 transition">
+                    Buka pusat bantuan
+                </a>
+            </section>
+        </aside>
+
+        {{-- ===== Konten ===== --}}
+        <div class="flex flex-col gap-6">
+
+            {{-- 1. Data pribadi --}}
+            <section id="data-pribadi" class="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">Data pribadi</h3>
+                        <p class="mt-1 text-sm text-slate-500">Informasi ini digunakan sebagai data kontak dan pemesan tiket default.</p>
+                    </div>
+                    <button type="button" @click="ubahProfil = !ubahProfil"
+                        class="rounded-xl px-4 py-2.5 text-xs font-semibold transition"
+                        :class="ubahProfil ? 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50' : 'bg-[#c8175d] text-white hover:bg-[#a6104b]'"
+                        x-text="ubahProfil ? 'Batal' : 'Ubah profil'"></button>
+                </div>
+
+                {{-- Tampilan Informasi --}}
+                <dl x-show="!ubahProfil" class="mt-6 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div class="rounded-xl bg-slate-50/70 p-4">
+                        <dt class="text-xs font-medium text-slate-500">Nama lengkap</dt>
+                        <dd class="mt-1.5 text-sm font-semibold text-slate-800">{{ $user->name }}</dd>
+                    </div>
+                    <div class="rounded-xl bg-slate-50/70 p-4">
+                        <dt class="text-xs font-medium text-slate-500">Alamat email</dt>
+                        <dd class="mt-1.5 text-sm font-semibold text-slate-800">{{ $emailMasked }}</dd>
+                    </div>
+                    <div class="rounded-xl bg-slate-50/70 p-4 sm:col-span-2">
+                        <dt class="text-xs font-medium text-slate-500">Status verifikasi email</dt>
+                        <dd class="mt-1.5 flex items-center gap-2 text-sm font-semibold {{ $terverifikasi ? 'text-emerald-700' : 'text-amber-700' }}">
+                            <i class="bi {{ $terverifikasi ? 'bi-check-circle-fill text-emerald-600' : 'bi-exclamation-circle-fill text-amber-600' }}"></i>
+                            {{ $terverifikasi ? 'Email sudah diverifikasi' : 'Email belum diverifikasi' }}
+                        </dd>
+                    </div>
+                </dl>
+
+                {{-- Form ubah profil --}}
+                <form x-cloak x-show="ubahProfil" action="{{ route('profile.update') }}" method="POST" class="mt-6 space-y-4">
+                    @csrf
+                    <input type="hidden" name="_form" value="profil">
+
+                    <div>
+                        <label for="name" class="{{ $label }}">Nama lengkap <span class="text-red-500">*</span></label>
+                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required class="{{ $input }}">
+                        @error('name')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="email" class="{{ $label }}">Alamat email <span class="text-red-500">*</span></label>
+                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="{{ $input }}">
+                        <p class="mt-1 text-[11px] text-slate-500">Jika email diubah, Anda perlu memverifikasi email baru.</p>
+                        @error('email')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="current_password_profil" class="{{ $label }}">Kata sandi saat ini</label>
+                        <input type="password" id="current_password_profil" name="current_password" autocomplete="current-password"
+                            placeholder="Wajib diisi hanya jika mengubah email" class="{{ $input }}">
+                        <p class="mt-1 text-[11px] text-slate-500">Konfirmasi kata sandi diperlukan hanya jika Anda mengubah alamat email.</p>
+                        @if ($formAktif === 'profil') @error('current_password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror @endif
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-3">
+                        <button type="submit" class="rounded-xl bg-[#c8175d] px-6 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#a6104b]">
+                            Simpan perubahan
+                        </button>
+                        <button type="button" @click="ubahProfil = false" class="rounded-xl border border-slate-200 px-6 py-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            {{-- 2. Keamanan akun (Kata Sandi) --}}
+            <section id="keamanan" class="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">Keamanan akun</h3>
+                        <p class="mt-1 text-sm text-slate-500">Perbarui kata sandi secara berkala untuk menjaga akunmu tetap aman.</p>
+                    </div>
+                    <button type="button" @click="ubahSandi = !ubahSandi"
+                        class="rounded-xl px-4 py-2.5 text-xs font-semibold transition"
+                        :class="ubahSandi ? 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50' : 'border border-slate-200 bg-white text-[#c8175d] hover:bg-pink-50'"
+                        x-text="ubahSandi ? 'Batal' : 'Ubah kata sandi'"></button>
+                </div>
+
+                {{-- Tampilan Sandi Statis --}}
+                <div x-show="!ubahSandi" class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-slate-50/70 p-4">
+                    <div>
+                        <p class="text-xs font-medium text-slate-500">Kata sandi</p>
+                        <p class="mt-1 text-base tracking-widest text-slate-700">••••••••••••</p>
+                        <p class="mt-1 text-xs text-slate-400">Terakhir diperbarui: akun aktif</p>
+                    </div>
+                    <button type="button" @click="ubahSandi = true"
+                        class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-[#c8175d] hover:bg-pink-50 transition">
+                        Ganti kata sandi
+                    </button>
+                </div>
+
+                {{-- Form ubah sandi --}}
+                <form x-cloak x-show="ubahSandi" action="{{ route('profile.update') }}" method="POST" class="mt-6 space-y-4">
+                    @csrf
+                    <input type="hidden" name="_form" value="sandi">
+                    {{-- name & email dikirimkan agar validasi controller tetap terpenuhi --}}
+                    <input type="hidden" name="name" value="{{ $user->name }}">
+                    <input type="hidden" name="email" value="{{ $user->email }}">
+
+                    <div>
+                        <label for="current_password_sandi" class="{{ $label }}">Kata sandi saat ini <span class="text-red-500">*</span></label>
+                        <input type="password" id="current_password_sandi" name="current_password" autocomplete="current-password" required placeholder="Masukkan kata sandi saat ini" class="{{ $input }}">
+                        @if ($formAktif === 'sandi') @error('current_password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror @endif
+                    </div>
+
+                    <div>
+                        <label for="password" class="{{ $label }}">Kata sandi baru <span class="text-red-500">*</span></label>
+                        <input type="password" id="password" name="password" autocomplete="new-password" required placeholder="Masukkan kata sandi baru" class="{{ $input }}">
+                        <p class="mt-1 text-[11px] text-slate-500">Minimal 8 karakter, harus mengandung huruf dan angka.</p>
+                        @error('password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label for="password_confirmation" class="{{ $label }}">Konfirmasi kata sandi baru <span class="text-red-500">*</span></label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password" required placeholder="Ulangi kata sandi baru" class="{{ $input }}">
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-3">
+                        <button type="submit" class="rounded-xl bg-[#c8175d] px-6 py-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#a6104b]">
+                            Simpan kata sandi
+                        </button>
+                        <button type="button" @click="ubahSandi = false" class="rounded-xl border border-slate-200 px-6 py-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </section>
         </div>
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" id="email" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" value="{{ old('email', $user->email) }}" required>
-            @error('email')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">New Password</label>
-            <input type="password" name="password" id="password" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" placeholder="Masukkan Password Baru . . .">
-            @error('password')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">Confirm New Password</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" placeholder="Confirmasi Password Baru . . .">
-            <p class="mt-1 text-xs text-gray-600">Kosongkan jika tidak ingin mengganti password. Minimal 8 karakter, mengandung huruf dan angka.</p>
-        </div>
-
-        <div class="mb-3">
-            <label for="current_password" class="form-label">Password Saat Ini</label>
-            <input type="password" name="current_password" id="current_password" autocomplete="current-password" class="form-control bg-gray-50 border text-gray-900 sm:text-sm rounded-lg focus:ring-[#c99a7c] focus:ring-2 focus:border-slate-50 focus:bg-slate-300" placeholder="Wajib diisi jika mengganti email atau password">
-            @error('current_password')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <button type="submit" class="btn btn-primary">Update Profile</button>
-    </form>
-</div>
-</div>
-
+    </div>
 @endsection
