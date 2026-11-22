@@ -272,11 +272,11 @@
                         <div>
                             <label class="{{ $label }}">Alamat lengkap *</label>
                             <textarea :name="'penumpang[' + i + '][Alamat]'" x-model="p.alamat" rows="1"
-                                placeholder="Alamat sesuai KTP/identitas" required maxlength="255"
+                                placeholder="Alamat sesuai No HP/identitas" required maxlength="255"
                                 class="{{ $input }}"></textarea>
                         </div>
                     </div>
-                    <p class="mt-4 text-[11px] text-slate-400">Bawa identitas resmi (KTP / Paspor / KIA) yang masih berlaku saat check-in di loket pelabuhan.</p>
+                    <p class="mt-4 text-[11px] text-slate-400">Bawa identitas resmi (No HP / Paspor / KIA) yang masih berlaku saat check-in di loket pelabuhan.</p>
                 </section>
             </template>
 

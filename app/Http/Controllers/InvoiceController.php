@@ -18,9 +18,7 @@ class InvoiceController extends Controller
 
     public function detail($id)
     {
-        $data = $this->invoiceData($id);
-
-        return view('pengguna.detail_pesanan', $data);
+        return redirect()->route('invoices.eticket', $id);
     }
 
     public function show($id)
@@ -28,7 +26,7 @@ class InvoiceController extends Controller
         $pesanan = $this->findOwnedPesanan($id);
 
         if ($pesanan->Status === Pesanan::STATUS_LUNAS) {
-            return redirect()->route('pesanan.detail', $id);
+            return redirect()->route('invoices.eticket', $id);
         }
 
         if ($pesanan->menungguPembayaran()) {
@@ -62,10 +60,9 @@ class InvoiceController extends Controller
 
     public function eticket($id)
     {
-        $pesanan = $this->findOwnedPesanan($id);
-        $pesanan->load(['user', 'rute.kapal', 'rute.pelabuhanAsal', 'rute.pelabuhanTujuan', 'penumpangs']);
+        $data = $this->invoiceData($id);
 
-        return view('pengguna.eticket', compact('pesanan'));
+        return view('pengguna.eticket', $data);
     }
 
     public function generatePDF($id)

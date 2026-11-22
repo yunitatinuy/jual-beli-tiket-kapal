@@ -20,6 +20,8 @@ class Tiket extends Component
     public $Jumlah_Tiket;
 
     public $search;
+    public $filterRute = '';
+    public $filterKelas = '';
     public $updateData = false;
     public $tiketID;
 
@@ -172,10 +174,32 @@ class Tiket extends Component
         $this->resetPage();
     }
 
+    public function updatingFilterRute()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterKelas()
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilter()
+    {
+        $this->reset('search', 'filterRute', 'filterKelas');
+        $this->resetPage();
+    }
+
     public function render()
     {
         $search = '%' . $this->search . '%';
         $dataTiket = ModelsTiket::with(['rute.pelabuhanAsal', 'rute.pelabuhanTujuan', 'harga'])
+            ->when($this->filterRute, function ($q) {
+                $q->where('ID_Rute', $this->filterRute);
+            })
+            ->when($this->filterKelas, function ($q) {
+                $q->whereHas('harga', fn ($h) => $h->where('Kelas', $this->filterKelas));
+            })
             ->where(function ($q) use ($search) {
                 $q->whereHas('rute.pelabuhanAsal', fn ($p) => $p->where('Nama_Pelabuhan', 'like', $search))
                     ->orWhereHas('rute.pelabuhanTujuan', fn ($p) => $p->where('Nama_Pelabuhan', 'like', $search))
@@ -183,14 +207,29 @@ class Tiket extends Component
                     ->orWhereHas('harga', fn ($h) => $h->where('Harga', 'like', $search)->orWhere('Kelas', 'like', $search));
             })
             ->orderBy('ID_Tiket', 'desc')
-            ->paginate(5);
+            ->paginate(10);
 
-        // Disaring per tanggal supaya dropdown tidak berisi ribuan jadwal hasil generator
+        // Disaring per tanggal supaya dropdown form tidak berisi ribuan jadwal hasil generator
         $dataRute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
             ->where(fn ($q) => $q->where('Tanggal', $this->tanggalRute ?: now()->toDateString())
                 ->when($this->ID_Rute, fn ($w) => $w->orWhere('ID_Rute', $this->ID_Rute)))
             ->orderBy('Tanggal')->orderBy('Jam')
             ->get();
+
+        // Daftar rute untuk opsi filter
+        $semuaRute = ModelsRute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
+            ->orderBy('Tanggal', 'desc')
+            ->orderBy('Jam', 'desc')
+            ->take(100)
+            ->get();
+
+        // Daftar kelas untuk opsi filter
+        $semuaKelas = ModelsHarga::select('Kelas')
+            ->whereNotNull('Kelas')
+            ->where('Kelas', '!=', '')
+            ->distinct()
+            ->orderBy('Kelas')
+            ->pluck('Kelas');
 
         // Hanya harga milik rute terpilih yang belum punya tiket (kecuali yang sedang diedit)
         $dataHarga = $this->ID_Rute
@@ -203,6 +242,8 @@ class Tiket extends Component
         return view('livewire.tiket', [
             'dataTiket' => $dataTiket,
             'dataRute' => $dataRute,
+            'semuaRute' => $semuaRute,
+            'semuaKelas' => $semuaKelas,
             'dataHarga' => $dataHarga,
         ])->layout('components.adminTiket');
     }

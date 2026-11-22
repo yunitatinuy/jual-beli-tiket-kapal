@@ -96,12 +96,47 @@
     </div>
 
     {{-- Filter & Search --}}
-    <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-        <div class="relative w-full max-w-xs">
-            <i class="bi bi-search absolute left-3.5 top-3 text-slate-400"></i>
-            <input wire:model.live.debounce.500ms="search" type="search" placeholder="Cari rute / kelas tiket..."
-                class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-[#c8175d]/20 focus:border-[#c8175d] shadow-sm" />
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div class="flex flex-wrap items-center gap-2.5 flex-1 min-w-[280px]">
+            {{-- Pencarian --}}
+            <div class="relative w-full sm:w-64">
+                <i class="bi bi-search absolute left-3.5 top-3 text-slate-400"></i>
+                <input wire:model.live.debounce.500ms="search" type="search" placeholder="Cari rute / kelas tiket..."
+                    class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-[#c8175d]/20 focus:border-[#c8175d] shadow-sm" />
+            </div>
+
+            {{-- Filter Rute Perjalanan --}}
+            <div class="w-full sm:w-56">
+                <select wire:model.live="filterRute"
+                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-[#c8175d]/20 focus:border-[#c8175d] shadow-sm text-slate-700">
+                    <option value="">Semua Rute Perjalanan</option>
+                    @foreach ($semuaRute as $r)
+                        <option value="{{ $r->ID_Rute }}">#{{ $r->ID_Rute }} {{ $r->label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Kelas --}}
+            <div class="w-full sm:w-40">
+                <select wire:model.live="filterKelas"
+                    class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-[#c8175d]/20 focus:border-[#c8175d] shadow-sm text-slate-700">
+                    <option value="">Semua Kelas</option>
+                    @foreach ($semuaKelas as $k)
+                        <option value="{{ $k }}">{{ $k }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Tombol Reset Filter --}}
+            @if ($search || $filterRute || $filterKelas)
+                <button type="button" wire:click="resetFilter"
+                    class="inline-flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[#c8175d] bg-pink-50 hover:bg-pink-100 rounded-xl transition"
+                    title="Reset semua filter">
+                    <i class="bi bi-x-circle"></i> Reset Filter
+                </button>
+            @endif
         </div>
+
         <div class="text-xs text-slate-500">
             {{ $dataTiket->links('vendor.pagination.tailwind') }}
         </div>

@@ -92,7 +92,7 @@
             <datalist id="daftar-pelabuhan">@foreach ($namaPelabuhan as $nama)<option value="{{ $nama }}">@endforeach</datalist>
         @endisset
 
-        <form action="{{ route('informasi') }}" method="GET" class="mt-5 grid grid-cols-1 items-center gap-3 md:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_0.8fr_1fr_auto]"
+        <form action="{{ route('informasi') }}" method="GET" class="mt-5 grid grid-cols-1 items-center gap-3 md:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_1fr_auto]"
             x-data="{
                 bukaAsal: false,
                 bukaTujuan: false,
@@ -125,6 +125,9 @@
                     [this.asal, this.tujuan] = [this.tujuan, this.asal];
                 }
             }">
+
+            <input type="hidden" name="dewasa" value="{{ $dewasa ?: 1 }}">
+            <input type="hidden" name="anak" value="{{ $anak ?: 0 }}">
 
             {{-- Pelabuhan Asal Dropdown --}}
             <div class="relative" @click.outside="bukaAsal = false">
@@ -224,16 +227,6 @@
                         class="w-full border-0 bg-transparent p-0 text-sm font-medium focus:outline-none focus:ring-0"></span>
             </label>
 
-            <div class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-2.5 focus-within:border-[#c8175d]">
-                <i class="bi bi-people text-lg text-slate-400"></i>
-                <div class="flex flex-1 gap-3">
-                    <label class="flex-1"><span class="block text-[11px] text-slate-400">Dewasa</span>
-                        <input type="number" name="dewasa" min="0" max="10" value="{{ $dewasa }}" class="w-full border-0 bg-transparent p-0 text-sm font-medium focus:outline-none focus:ring-0"></label>
-                    <label class="flex-1"><span class="block text-[11px] text-slate-400">Anak</span>
-                        <input type="number" name="anak" min="0" max="10" value="{{ $anak }}" class="w-full border-0 bg-transparent p-0 text-sm font-medium focus:outline-none focus:ring-0"></label>
-                </div>
-            </div>
-
             <button type="submit" class="flex items-center justify-center gap-2 rounded-xl bg-[#c8175d] px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#a6104b] md:col-span-2 lg:col-span-1">
                 <i class="bi bi-search"></i> Cari ulang
             </button>
@@ -311,7 +304,7 @@
                     <div>
                         <h3 class="text-lg font-semibold text-slate-800"><span x-text="jumlahTersedia"></span> tiket tersedia</h3>
                         <p class="mt-1 text-xs text-slate-500">
-                            {{ $asalReq }} <i class="bi bi-arrow-right"></i> {{ $tujuanReq }} · {{ $tanggal->translatedFormat('l, d F Y') }} · {{ $dewasa }} dewasa{{ $anak ? ', ' . $anak . ' anak' : '' }}
+                            {{ $asalReq }} <i class="bi bi-arrow-right"></i> {{ $tujuanReq }} · {{ $tanggal->translatedFormat('l, d F Y') }}
                         </p>
                     </div>
                     <select x-model="urut" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs font-semibold text-[#c8175d] focus:border-[#c8175d] focus:outline-none focus:ring-0">
@@ -354,14 +347,6 @@
                                     @if ($isPenuh)
                                         <span class="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1 font-semibold text-red-700">
                                             <i class="bi bi-x-circle-fill text-red-500"></i> Kursi Kapal Penuh
-                                        </span>
-                                    @elseif ($sisaKursiUtama <= 10)
-                                        <span class="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1 font-semibold text-amber-800 animate-pulse">
-                                            <i class="bi bi-fire text-amber-600"></i> Sisa {{ $sisaKursiUtama }} kursi lagi!
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
-                                            <i class="bi bi-people-fill text-emerald-600"></i> Sisa {{ $sisaKursiUtama }} kursi
                                         </span>
                                     @endif
                                 </div>

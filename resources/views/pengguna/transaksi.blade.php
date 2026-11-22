@@ -162,19 +162,20 @@
                                 </div>
                             @endif
                             <div class="flex items-center gap-2.5">
-                                <a href="{{ route('pesanan.detail', $pesanan->ID_Pesanan) }}"
-                                    class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
-                                    Detail pesanan
-                                </a>
                                 @if ($st === 'terkonfirmasi')
                                     <a href="{{ route('invoices.eticket', $pesanan->ID_Pesanan) }}"
-                                        class="rounded-lg bg-[#c8175d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#a6104b]">
+                                        class="rounded-lg bg-[#c8175d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#a6104b] shadow-sm">
                                         <i class="bi bi-ticket-perforated mr-1"></i> Lihat e-tiket
                                     </a>
                                 @elseif ($st === 'menunggu')
                                     <a href="{{ route('invoices.show', $pesanan->ID_Pesanan) }}"
-                                        class="rounded-lg bg-[#c8175d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#a6104b]">
+                                        class="rounded-lg bg-[#c8175d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#a6104b] shadow-sm">
                                         <i class="bi bi-wallet2 mr-1"></i> Bayar sekarang
+                                    </a>
+                                @else
+                                    <a href="{{ route('invoices.eticket', $pesanan->ID_Pesanan) }}"
+                                        class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                                        <i class="bi bi-ticket-perforated mr-1"></i> Lihat e-tiket
                                     </a>
                                 @endif
                             </div>
@@ -216,7 +217,7 @@
                     <h3 class="text-lg font-semibold text-slate-800">Siap sebelum berlayar</h3>
                     <ol class="mt-5 space-y-5">
                         @foreach ([
-                            ['Siapkan identitas asli', 'Bawa KTP atau identitas sesuai data penumpang.'],
+                            ['Siapkan identitas asli', 'Bawa No HP atau identitas sesuai data penumpang.'],
                             ['Simpan e-tiket', 'Unduh e-tiket agar tetap bisa diakses tanpa internet.'],
                             ['Check-in di pelabuhan', 'Tunjukkan e-tiket dan identitas kepada petugas.'],
                         ] as $n => [$judul, $isi])

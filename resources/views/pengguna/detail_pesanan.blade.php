@@ -50,7 +50,7 @@
         $maskIdentitas = function ($val) {
             $digits = preg_replace('/\D/', '', (string) $val);
             if (strlen($digits) >= 4) {
-                return 'KTP •••• ' . substr($digits, -4);
+                return 'No HP •••• ' . substr($digits, -4);
             }
             return $val ?: '-';
         };
