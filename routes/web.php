@@ -29,8 +29,14 @@ use App\Http\Controllers\API\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\InvoiceController;
 
-// Landing Page
-Route::get('/', [LandingController::class, 'index']);
+// Dashboard / Halaman Utama (Langsung ke dashboard pengguna, dapat diakses tamu)
+Route::get('/', [DashboardController::class, 'dashboard'])->name('home');
+Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard'])->name('pengguna.dashboard');
+
+// Pencarian dan Informasi Jadwal (Dapat diakses tamu tanpa harus login)
+Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
+Route::get('/search', [InformasiController::class, 'index'])->name('search');
+Route::get('/sekalipergi', [InformasiController::class, 'index'])->name('sekalipergi');
 
 // Registrasi dan Login
 Route::middleware('guest')->group(function () {
@@ -47,23 +53,61 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'update'])->middleware('throttle:10,1')->name('password.update');
 });
 
-// Menampilkan halaman verifikasi email
+// Verifikasi email & Notifikasi
 Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware(['auth'])->name('verification.notice');
+    if (Auth::check() && ! Auth::user()->hasVerifiedEmail()) {
+        $email = Auth::user()->email;
+        $id = Auth::user()->id;
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-// verifikasi email
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+        return redirect('/register')
+            ->with('show_verify_modal', true)
+            ->with('registered_email', $email)
+            ->with('registered_user_id', $id);
+    }
 
-    return redirect($request->user()->isAdmin() ? '/admin/dashboard' : '/dashboard_pengguna');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+    return redirect('/register');
+})->name('verification.notice');
+
+// Eksekusi tautan verifikasi dari email: setelah diverifikasi, wajib login terlebih dahulu
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    $user = \App\Models\User::find($id);
+
+    if (! $user) {
+        return redirect()->route('login')->with('loginError', 'Pengguna tidak ditemukan.');
+    }
+
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        return redirect()->route('login')->with('loginError', 'Tautan verifikasi tidak valid atau telah kedaluwarsa.');
+    }
+
+    if (! $user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new \Illuminate\Auth\Events\Verified($user));
+    }
+
+    if (Auth::check()) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    }
+
+    return redirect()->route('login')->with('success', 'Email berhasil diverifikasi! Silakan login untuk melanjutkan ke akun Anda.');
+})->middleware(['signed'])->name('verification.verify');
+
+Route::post('/email/resend-verification', [RegisterController::class, 'resendVerification'])
+    ->middleware('throttle:6,1')
+    ->name('verification.resend');
 
 Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
+    if ($request->user()) {
+        $request->user()->sendEmailVerificationNotification();
+    }
 
     return back()->with('status', 'verification-link-sent');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})->middleware(['throttle:6,1'])->name('verification.send');
 
 // Admin Auth
 Route::prefix('admin')->middleware(['auth', 'verified', 'cekrole:admin'])->group(function () {
@@ -86,25 +130,23 @@ Route::post('/midtrans/notification', [PembayaranController::class, 'notificatio
 // Logout
 Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth')->name('logout');
 
-// Pengguna
-Route::middleware(['auth', 'verified', 'cekrole:pengguna'])->group(function () {
-    Route::get('/dashboard_pengguna', [DashboardController::class, 'dashboard']);
-    Route::get('/informasi', [InformasiController::class, 'index']);
-    Route::get('/transaksi', [TransaksiController::class, 'transaksi']);
-
-    Route::get('/sekalipergi', [SekaliPergiController::class, 'index']);
-    Route::get('/search', [SekaliPergiController::class, 'search'])->name('search');
+// Pengguna (Hanya untuk fitur transaksi & pemesanan tiket yang mewajibkan login)
+Route::middleware(['auth', 'cekrole:pengguna'])->group(function () {
+    Route::get('/transaksi', [TransaksiController::class, 'transaksi'])->name('transaksi');
 
     Route::get('/profil', [UserProfilController::class, 'edit'])->name('pengguna.profil');
     Route::post('/profil', [UserProfilController::class, 'update'])->name('profile.update');
     Route::get('/pesantiket', [PesanTiketController::class, 'index'])->name('pesantiket');
     Route::post('/pesantiket', [PesanTiketController::class, 'store'])->middleware('throttle:20,1')->name('pesantiket.store');
+    Route::get('/pesanan/{id}/detail', [InvoiceController::class, 'detail'])->name('pesanan.detail');
     Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+    Route::get('/invoices/{id}/eticket', [InvoiceController::class, 'eticket'])->name('invoices.eticket');
     Route::get('/invoice/pdf/{id}', [InvoiceController::class, 'generatePDF'])->name('invoice.pdf');
 
     // Pembayaran Midtrans
     Route::post('/pesanan/{id}/bayar', [PembayaranController::class, 'bayar'])->middleware('throttle:20,1')->name('pesanan.bayar');
     Route::post('/pesanan/{id}/cek-status', [PembayaranController::class, 'cekStatus'])->middleware('throttle:20,1')->name('pesanan.cek-status');
     Route::post('/pesanan/{id}/batal', [PembayaranController::class, 'batal'])->name('pesanan.batal');
+    Route::post('/pesanan/{id}/simulasi-bayar', [PembayaranController::class, 'simulasiSandbox'])->name('pesanan.simulasi-bayar');
 });
 

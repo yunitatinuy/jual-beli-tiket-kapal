@@ -9,18 +9,27 @@ use Illuminate\Support\Collection;
 /** Data jadwal untuk halaman publik/pengguna: hanya jadwal yang belum lewat. */
 class JadwalService
 {
-    /** Lintasan (asal -> tujuan) unik yang masih punya jadwal mendatang. */
-    public function rutePopuler(int $limit = 9): Collection
+    /** Lintasan (asal -> tujuan) unik yang masih punya jadwal mendatang, maksimal 6 rute diambil dari yang terlama. */
+    public function rutePopuler(int $limit = 6): Collection
     {
-        return Rute::with(['pelabuhanAsal', 'pelabuhanTujuan'])
-            ->mendatang()
+        $ids = Rute::mendatang()
             ->select('Pelabuhan_Asal', 'Pelabuhan_Tujuan')
-            ->selectRaw('COUNT(*) as jumlah_jadwal')
+            ->selectRaw('MIN(ID_Rute) as min_id')
             ->groupBy('Pelabuhan_Asal', 'Pelabuhan_Tujuan')
-            ->orderByDesc('jumlah_jadwal')
+            ->orderBy('min_id', 'asc')
             ->limit($limit)
+            ->pluck('min_id');
+
+        if ($ids->isEmpty()) {
+            return collect();
+        }
+
+        return Rute::with(['kapal', 'pelabuhanAsal', 'pelabuhanTujuan', 'tiket', 'harga'])
+            ->whereIn('ID_Rute', $ids)
+            ->orderBy('ID_Rute', 'asc')
             ->get()
             ->filter(fn ($r) => $r->pelabuhanAsal && $r->pelabuhanTujuan)
+            ->take($limit)
             ->values();
     }
 

@@ -6,12 +6,14 @@
         'info' => 'bg-sky-50 border-sky-200 text-sky-800',
     ];
 @endphp
-<div class="flex flex-col flex-grow mt-8 mb-10 ms-10 me-10 font-inter">
-    <div class="flex items-center gap-3 p-2">
-        <svg class="w-8 h-8 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+<div class="space-y-6">
+    <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-pink-50 text-2xl text-[#c8175d]">
+            <i class="bi bi-qr-code-scan"></i>
+        </span>
         <div>
-            <h1 class="text-3xl font-bold text-slate-900">Check-in Penumpang</h1>
-            <p class="text-sm text-slate-500">Pindai QR di e-tiket penumpang atau ketik kode booking.</p>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">Check-in Penumpang</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Pindai QR pada e-tiket penumpang atau ketik kode booking untuk validasi naik kapal.</p>
         </div>
     </div>
 

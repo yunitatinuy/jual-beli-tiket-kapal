@@ -16,9 +16,18 @@ class InvoiceController extends Controller
     ) {
     }
 
+    public function detail($id)
+    {
+        return redirect()->route('invoices.eticket', $id);
+    }
+
     public function show($id)
     {
         $pesanan = $this->findOwnedPesanan($id);
+
+        if ($pesanan->Status === Pesanan::STATUS_LUNAS) {
+            return redirect()->route('invoices.eticket', $id);
+        }
 
         if ($pesanan->menungguPembayaran()) {
             // Di localhost webhook Midtrans tidak sampai, jadi cek status langsung
@@ -31,11 +40,29 @@ class InvoiceController extends Controller
 
         $gateway = $this->payment->gateway();
 
+        $snapToken = null;
+        if ($pesanan->menungguPembayaran() && $gateway->isConfigured()) {
+            try {
+                $snapToken = $this->payment->snapToken($pesanan);
+            } catch (\Throwable $e) {
+                // Jangan crash halaman jika ada kendala koneksi Midtrans
+            }
+        }
+
         return view('invoices.show', $this->invoiceData($id) + [
             'midtransSiap' => $gateway->isConfigured(),
             'midtransClientKey' => $gateway->clientKey(),
             'midtransSnapJs' => $gateway->snapJsUrl(),
+            'snapToken' => $snapToken,
+            'batasBayarMenit' => BookingService::batasBayarMenit(),
         ]);
+    }
+
+    public function eticket($id)
+    {
+        $data = $this->invoiceData($id);
+
+        return view('pengguna.eticket', $data);
     }
 
     public function generatePDF($id)

@@ -3,12 +3,14 @@
     $input = 'block w-full p-2.5 text-sm bg-white border rounded-lg border-slate-300 focus:ring-sky-500 focus:border-sky-500';
     $err = 'block mt-1 text-xs text-rose-600';
 @endphp
-<div class="flex flex-col flex-grow mt-8 mb-10 ms-10 me-10 font-inter">
-    <div class="flex items-center gap-3 p-2">
-        <img src="/img/icons/route.png" class="w-8 h-8" alt="">
+<div class="space-y-6">
+    <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-pink-50 text-2xl text-[#c8175d]">
+            <i class="bi bi-arrow-repeat"></i>
+        </span>
         <div>
-            <h1 class="text-3xl font-bold text-slate-900">Jadwal Berulang</h1>
-            <p class="text-sm text-slate-500">Buat banyak jadwal sekaligus, lengkap dengan harga dan kuota tiket.</p>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">Jadwal Berulang</h1>
+            <p class="text-xs sm:text-sm text-slate-500">Buat banyak jadwal sekaligus secara otomatis, lengkap dengan harga dan kuota tiket.</p>
         </div>
     </div>
 
